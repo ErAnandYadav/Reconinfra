@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  margin: 3% auto;
+  padding: 20px;
+}
+#header {
+  font-size: 25px;
+  margin: 0 auto;
+}
+thead {
+  font-weight: bold;
+}
+#errMsg {
+  margin: 0 auto;
+  color: red;
+  font-size: 30px;
+}
+body {
+  text-align: center;
+}
+    </style>
+</head>
+<body>
+    <div id="container" class="card">
+        <p>Enter the IFSC code:</p>
+        <input class="input_field" placeholder="IFSC">
+        <a id="btn" class="waves-effect waves-light btn light-green darken-2">Get Details</a>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script>
+        $(document).ready(function() {
+  start();
+  function start() {
+  var orig = $('#container').html();
+  var backBtn = '<a id="backBtn" class="waves-effect waves-light btn light-green darken-2">Go Back</a>';
+  $('#btn').click(function() {
+     if(!$('#container > input').val()) {
+       alert("IFSC can't be blank!");
+     }
+    else{
+      change(1);
+    }
+  });
+
+  function change(i) {
+    if(i==0) {
+      $('#container').fadeOut(function() {
+        $('#backBtn').remove();
+        $('#container').empty().append(orig);  
+        $('#container').css({
+          'width': '20%'
+        });
+        
+      });
+      $('#container').fadeIn(function() {
+        start();
+      });
+    }
+    else if(i==1) {
+      var ifsc = String($('#container > input').val());
+      $('#container').fadeOut(function() {
+       $('#container').empty();
+       $.getJSON('https://ifsc.razorpay.com/'+ifsc, function(data){
+
+            var table = '<table class="striped">'
+           +'<thead>'
+           +'<tr><td>Bank Name</td><td>IFSC Code</td><td>Branch</td><td>Address</td><td>City</td><td>State</td></tr>'
+           +'</thead>'
+           +'<tbody>'
+           +'<tr><td>'+data.BANK+'</td><td>'+data.IFSC+'</td><td>'+data.BRANCH+'</td><td>'+data.ADDRESS+'</td><td>'+data.CITY+'</td><td>'+data.STATE+'</td></tr>'
+           +'</tbody>'
+           +'</table>';
+           $('#container').append('<div id="header">Bank Details</div>');
+           $('#container').append(table); 
+           $('#backBtn').show(); 
+        
+       }).fail(function(){
+         var msg = '<div id="errMsg">Invalid IFSC code</div>';
+         $('#container').append(msg);
+       });
+       $('#container').css({
+         'width':'90%'
+       });
+       $('body').append(backBtn);
+        
+     });
+      
+     $('#container').fadeIn(function() {
+      $('#backBtn').click(function() {
+          change(0);
+        });
+     });
+     
+    }
+  }
+}
+});
+
+
+      </script>
+</body>
+</html>

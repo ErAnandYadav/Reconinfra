@@ -1,0 +1,101 @@
+
+{% extends 'home/base.html' %}
+
+{% block body %}
+{% load static %}
+<!--=   Location     Start              =-->
+<!--=====================================-->
+<section class="location-wrap1">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-md-7 col-sm-12">
+                <div class="item-heading-center">
+                    <h2 class="section-title mx-autu">Plot Availability</h2>
+                    <div class="bg-title-wrap" style="display: block;">
+                        <span class="background-title solid">Availability</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table border bg-light" style="height: 633px;" width="796">
+                <h2>Plot Availability</h2>
+                <h2>
+                    <strong style="background-color:yellow;">Freeze</strong>
+                    <strong style="background-color: green;">Available</strong>
+                    <strong style="background-color: red;">Booked</strong>
+                </h2>
+                
+                  
+                  <tbody>
+                    <tr>
+                      <td style="background-color: red; text-align: center;">45 <br> 1250sqft</td>
+                      <td>Ali</td>
+                      <td>86</td>
+                      <td>77</td>
+                      <td>87</td>
+                      <td>92</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <td>02</td>
+                      <td>Salman</td>
+                      <td>86</td>
+                      <td>77</td>
+                      <td>87</td>
+                      <td>92</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <td>03</td>
+                      <td>Shan</td>
+                      <td>86</td>
+                      <td>77</td>
+                      <td>87</td>
+                      <td>92</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <td>04</td>
+                      <td>Aliyan</td>
+                      <td>86</td>
+                      <td>77</td>
+                      <td>87</td>
+                      <td>92</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <td>05</td>
+                      <td>Zeeshan</td>
+                      <td>86</td>
+                      <td>77</td>
+                      <td>87</td>
+                      <td>92</td>
+                      <td>95</td>
+                    </tr>
+                  </tbody>
+                  <!-- footer 
+                  <tfoot>
+                    <tr>
+                      <td colspan=3>Maximum Marks: </td>
+                      <td colspan=3>Marks Obtained: </td>
+                      <td colspan=2>Grade: </td>
+                    </tr>
+                  </tfoot> footer ends-->
+               
+            </table>
+            
+        </div>
+        <div class="col lg-12 text-center">
+            <div class="item-img">
+                <img src="{% static 'Frontend_Files/plot/golden-city.jpg' %}" style="width: 700px;">
+            </div>
+        </div>
+
+    </div>
+</section>
+<!--=====================================-->
+{% endblock %}

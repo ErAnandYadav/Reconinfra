@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Recon Group | Home </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon Start Here -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon-homlisti.svg">
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/jquery-ui.css' %}">
+    <!-- Bootstrap Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/bootstrap.min.css' %}">
+    <!-- Animate Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/animate.min.css' %}">
+    <!-- Owl Carousel Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/vendor/owlcarousel/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Frontend_Files/vendor/owlcarousel/owl.theme.default.min.css' %}">
+    <!-- Swiper Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/swiper-bundle.min.css' %}" />
+    <!-- Flaticon Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/flaticon/font/flaticon.css' %}">
+    <!-- Select Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/nice-select.css' %}">
+    <!-- Animate Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/animate.min.css' %}">
+    <!-- Pop Up Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/magnific-popup.css' %}">
+    <!-- All min Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/all.min.css' %}">
+    <!-- Pannellum -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/pannellum.css' %}">
+    
+    <!-- Style Css Start Here -->
+    <link rel="stylesheet" href="{% static 'Frontend_Files/style.css' %}">
+    <link rel="stylesheet" href="{% static 'Frontend_Files/css/custom.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+    
+        
+   <!-- Google Font Start Here -->
+   <link crossorigin href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+   <link crossorigin href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+   
+</head>
+
+<body class="sticky-header">
+    <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    <!--=====================================-->
+    <!--=   Preloader     Start             =-->
+    <!--=====================================-->
+
+    <div id="preloader"></div>
+    <!--=====================================-->
+    <!--=   Preloader     End               =-->
+    <!--=====================================-->
+
+    <div class="wrapper" id="wrapper">
+    <!--=====================================-->
+    <!--=   Header     Start                =-->
+    <!--=====================================-->
+        
+        <header class="header">
+            <div id="rt-sticky-placeholder"></div>
+            <div id="header-menu" class="header-menu menu-layout1 header-menu menu-layout2">
+                <!-- <div class="toolbar">
+                    <div class="container">
+                        <div class="row">
+                           <div class="col-sm-2">
+                            <div class="left-bar">
+                                Customer Support
+                            </div>
+                           </div>
+                           <div class="col-sm-2">
+                            <div class="right-bar">
+                                +919984694243
+                            </div>
+                           </div>
+                            
+                        </div>
+                    </div>
+                </div> -->
+                <div class="container">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-xl-1 col-lg-2">
+                            <div class="logo-area">
+                                <a href="/" class="temp-logo">
+                                    <img src="{% static 'Frontend_Files/img/Recon-Groups-dark-r.png' %}" width="120" height="70" alt="logo" class="img-fluid" style="height:82px; max-width:65px ">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-8 d-flex justify-content-center position-static">
+                            <nav id="dropdown" class="template-main-menu template-main-menu-2">
+                                <ul>
+                                    <li>
+                                        <a href="/" class="{% if request.resolver_match.url_name == 'Home' %}active{% endif %}">Home</a>
+                                        
+                                    </li>
+                                   
+                                    <li>
+                                        <a href="javascript:void(0)">Company</a>
+                                        <ul class="dropdown-menu-col-1">
+                                            <li>
+                                                <a href="{% url 'ReconinfraAboutUs' %}">About Company</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'MissionandVision' %}">Mission and Vision</a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)">Properties</a>
+                                        <ul class="dropdown-menu-col-1">
+                                            <li>
+                                                <a href="http://reconinfra.com/property-details/golden-city-sitapur/">
+                                                   Golden City</a>
+                                            </li>
+                                           
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)">Plot Availability</a>
+                                        <ul class="dropdown-menu-col-1">
+                                            <li>
+                                                <a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plot</a>
+                                               
+                                            </li>
+                                           
+                                        </ul>
+                                    </li>
+                                    <li>
+                                       
+                                            
+                                        
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{% url 'ReconinfraImageGallery' %}" class="{% if request.resolver_match.url_name == 'ReconinfraImageGallery' %}active{% endif %}">Gallery</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'LegalsDocuments' %}" class="{% if request.resolver_match.url_name == 'LegalsDocuments' %}active{% endif %}">Legals</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'ReconinfraContactUs' %}" class="{% if request.resolver_match.url_name == 'ReconinfraContactUs' %}active{% endif %}">Contact Us</a>
+                                        
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 d-flex justify-content-end">
+                            <div class="header-action-layout1 header-action-layout4">
+                                <nav id="dropdown" class="template-main-menu template-main-menu-2">
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0)"  class="cstm-btn">
+                                                <span>
+                                                    <i class="flaticon-user-1"></i>
+                                                </span>
+                                                <span class="item-text">Login</span>
+                                                </a>
+                                            <ul class="dropdown-menu-col-1">
+                                                <li>
+                                                    <a href="{% url 'CustomerLogin' %}">Customer Login</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'AuthLogin' %}">Business Login</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="rt-header-menu mean-container position-relative" id="meanmenu">
+            <div class="mean-bar">
+                <a href="/">
+                    <img src="{% static 'Frontend_Files/img/Recon-Groups-dark-r.png' %}" alt='logo'  class='img-fluid' style="height: 48px;"/>
+                </a>
+                <div class="mean-bar--right">
+                    <div class="actions search">
+                        <a href="#template-search" class="item-icon" title="Search">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </div>
+                    <!-- <div class="actions user">
+                        <a href=""><i class="flaticon-user"></i></a>
+                    </div> -->
+                    <span class="sidebarBtn">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="rt-slide-nav">
+                <div class="offscreen-navigation">
+                    <nav class="menu-main-primary-container">
+                        <ul class="menu">
+                            <li class="list menu-item-parent">
+                                <a class="animation" href="/">Home</a>
+                                
+                            </li>
+                            <li class="list menu-item-parent menu-item-has-children">
+                                <a class="animation" href="javascript:void(0)">Company</a>
+                                <ul class="main-menu__dropdown sub-menu">
+                                    <li>
+                                        <a href="{% url 'ReconinfraAboutUs' %}">About Company</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'MissionandVision' %}">Mission and Vision</a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                            <li class="list menu-item-parent menu-item-has-children">
+                                <a class="animation" href="javascript:void(0)">Properties</a>
+                                <ul class="main-menu__dropdown sub-menu">
+                                    <li><a href="http://reconinfra.com/property-details/golden-city-sitapur/">Golden City</a></li>
+                                </ul>
+                            </li>
+                            <li class="list menu-item-parent menu-item-has-children">
+                                <a class="animation" href="javascript:void(0)">Plot Availability</a>
+                                <ul class="main-menu__dropdown sub-menu">
+                                    <li><a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plot</a></li>
+                                </ul>
+                            </li>
+
+                           
+                            <li class="list menu-item-parent">
+                                <a class="animation" href="{% url 'ReconinfraImageGallery' %}">Gallery</a>
+                                
+                            </li>
+                          
+                            <li class="list menu-item-parent">
+                                <a class="animation" href="{% url 'ReconinfraContactUs' %}">Contact us</a>
+                            </li>
+                            <li class="list menu-item-parent menu-item-has-children">
+                                <a class="animation" href="javascript:void(0)">Login</a>
+                                <ul class="main-menu__dropdown sub-menu">
+                                    <li>
+                                        <a href="http://reconinfra.com/customer-login/">Customer Login</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://reconinfra.com/accounts/auth-login/">Business Login</a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    <!--=====================================-->
+    {% block body %}
+    
+    {% endblock  %}
+    <!--=   Banner    Start                 =-->
+<!--=====================================-->
+
+<section class="banner-collection1 motion-effects-wrap" data-wow-delay=".2s">
+    <div class="shape-img1">
+        <img src="{% static 'Frontend_Files/img/svg/video-bg-2.svg' %}" alt="figure" height="149" width="230">
+    </div>
+    <div class="shape-img2">
+        <img src="{% static 'Frontend_Files/img/svg/video-bg-2.svg' %}" alt="figure" height="149" width="230">
+    </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-md-7">
+                <div class="banner-box1">
+                    <div class="item-img">
+                        <img src="{% static 'Frontend_Files/img/banner/banner1.png' %}" alt="banner" height="252" width="169"
+                            class="img-bg-space">
+                        <div class="motion-effects3"><img src="{% static 'Frontend_Files/img/figure/shape3.png' %}" alt="shape" height="113"
+                                width="113"></div>
+                        <div class="motion-effects4"><img src="{% static 'Frontend_Files/img/figure/shape4.png' %}" alt="shape" height="157"
+                                width="154"></div>
+                        <div class="motion-effects5"><img src="{% static 'Frontend_Files/img/figure/shape5.png' %}" alt="shape" height="91"
+                                width="102"></div>
+                    </div>
+                    <div class="item-content">
+                        <h2 class="heading-title">Become a Real Estate Agent</h2>
+                        <p>We only work with the best companies around the globe to survey</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-5">
+                <div class="banner-button">
+                    <a href="http://reconinfra.com/accounts/auth-register/" class="banner-btn">Register Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+    <!--=   Footer     Start                =-->
+    <!--=====================================-->
+
+    <footer class="footer-area">
+        <div class="footer-top footer-top-style">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                        <div class="footer-logo-area footer-logo-area-2">
+                            <div class="footer-title footer-title-style2">
+                                <h3>About Us</h3>
+                            </div>
+                            <p>Recon Infra stands as a premier real estate builder in India, renowned for its prestigious contributions to the field.
+
+
+
+
+
+                            </p>
+                            <div class="item-social">
+                                <ul>
+                                    <li><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://vimeo.com/" target="_blank"><i class="fab fa-vimeo-v"></i></a></li>
+                                    <li><a href="https://www.pinterest.com/" target="_blank"><i class="fab fa-pinterest-p"></i></a></li>
+                                    <li><a href="https://web.whatsapp.com/" target="_blank"><i class="fab fa-whatsapp"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+                        <div class="footer-link footer-link-style-2">
+                            <div class="footer-title footer-title-style2">
+                                <h3>Quick Links</h3>
+                            </div>
+                            <div class="item-link">
+                                <ul>
+                                    <li><a href="{% url 'ReconinfraAboutUs' %}">Home </a></li>
+                                    <li><a href="{% url 'ReconinfraAboutUs' %}">About Us </a></li>
+                                    <li><a href="{% url 'ReconinfraContactUs' %}">Contact Us </a></li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                        <div class="footer-link footer-link-style-2">
+                            <div class="footer-title footer-title-style2">
+                                <h3>Company Policy</h3>
+                            </div>
+                            <div class="item-link">
+                                <ul>
+                                    
+                                    
+                                    <li><a href="{% url 'ReconinfraImageGallery' %}">Media Center </a></li>
+                                    <li><a href="{% url 'ReconinfraPrivacyPolicy' %}">Privacy Policy</a></li>
+                                    <li><a href="{% url 'ReconinfraTermsAndConditions' %}">Terms & Conditions</a></li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+                        <div class="footer-contact footer-contact-style-2">
+                            <div class="footer-title footer-title-style2">
+                                <h3>Contact</h3>
+                            </div>
+                            <div class="footer-location">
+                                <ul>
+                                    <li class="item-map"><i class="fas fa-map-marker-alt"></i> 8/883/2 Khurram Nagar, Lucknow
+                                        
+                                        226022, India</li>
+                                    <li><a href="mailto:info@reconinfra.com"><i class="fas fa-envelope"></i>info@reconinfra.com</a></li>
+                                    <!-- <li><a href="tel:+123596000"><i class="fas fa-phone-alt"></i>(+123) 596 000</a></li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom footer-bottom-style-2">
+            <div class="container">
+                <div class="row justify-content-center">
+                    
+                    <div class="col-lg-6 col-md-6 mx-auto">
+                        <div class="copyright-area2">
+                            <p>© Copyright 2022-<script>document.write(new Date().getFullYear());</script> | Recon Group | All Right Reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+        
+        <!-- start back to top -->
+        <a href="javascript:void(0)" id="back-to-top">
+            <i class="fas fa-angle-double-up"></i>
+        </a>
+        <!-- End back to top -->
+
+    </div>
+    <div id="template-search" class="template-search">
+        <button type="button" class="close">×</button>
+        <form class="search-form">
+          <input type="search" value="" placeholder="Search" />
+          <button type="submit" class="search-btn btn-ghost style-1">
+            <i class="flaticon-search"></i>
+          </button>
+        </form>
+    </div>
+    <script src="{% static 'Frontend_Files/js/jquery-3.6.0.min.js' %}"></script>
+    <!-- Popper Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/popper.min.js' %}"></script>
+    <!-- Bootstrap Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/bootstrap.min.js' %}"></script>
+    <!-- Wow Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/wow.min.js' %}"></script>
+    <!-- Owl Carousel Js Start Here -->
+    <script src="{% static 'Frontend_Files/vendor/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'Frontend_Files/js/swiper-bundle.min.js' %}"></script>
+    <!-- Count down Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/jquery.appear.min.js' %}"></script>
+    <!-- Pop up Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/jquery.magnific-popup.min.js' %}"></script>
+    <!-- Nice Select Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/jquery.nice-select.min.js' %}"></script>
+    <!-- Parallaxie Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/parallaxie.js' %}"></script>
+    <!-- Tween Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/tween-max.js' %}"></script>
+    <!-- Appear Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/appear.min.js' %}"></script>
+    <!-- Isotope Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/isotope.pkgd.min.js' %}"></script>
+    <!-- Imagesloaded Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/imagesloaded.pkgd.min.js' %}"></script>
+    <!-- noUiRangeSlider -->
+    <script src="{% static 'Frontend_Files/vendor/noUiSlider/nouislider.min.js' %}"></script>
+    <script src="{% static 'Frontend_Files/vendor/noUiSlider/wNumb.js' %}"></script>
+    <!-- Validator Slider -->
+    <script src="{% static 'Frontend_Files/js/validator.min.js' %}"></script>
+    <!-- Pannellum  -->
+    <script src="{% static 'Frontend_Files/js/pannellum.js' %}"></script>
+    <!-- Zoom Image  -->
+    <script src="{% static 'Frontend_Files/js/jquery.zoom.min.js' %}"></script>
+
+    <!-- Main Js Start Here -->
+    <script src="{% static 'Frontend_Files/js/main.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+    {% block js %}
+    <script>
+    </script>
+    {% endblock %}
+</body>
+
+</html>

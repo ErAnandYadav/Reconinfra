@@ -1,0 +1,142 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+
+
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">My Teams</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            <!--begin::Card-->
+            <div class="card">
+                {% for message in messages %}
+                    <!--begin::Alert-->
+                    <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+                        <div class="d-flex flex-column text-light pt-3">
+                            <strong>Message! {{message}}</strong> 
+                            <!--end::Content-->
+                        </div>
+                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                            <span class="svg-icon svg-icon-2x svg-icon-light">
+                                <span class="svg-icon svg-icon-2x svg-icon-light">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                    </svg>
+                                </span>
+                            </span>
+                        </button>
+                        <!--end::Close-->
+                    </div>
+                    <!--end::Alert-->
+
+                    {% endfor %}
+                <!--begin::Card header-->
+                <div class="card-header border-0 pt-6">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center position-relative my-1">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search user">
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                    <!--begin::Card title-->
+                    
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body py-4">
+                     <!--begin::Table-->
+                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
+                        <!--begin::Table head-->
+                        <thead>
+                            <!--begin::Table row-->
+                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                               
+                                <th class="min-w-125px">Full Name</th>
+                                <th class="min-w-125px">Email ID</th>
+                                <th class="min-w-125px">Phone Number</th>
+                                <th class="min-w-125px">Aadhar No.</th>
+                                <th class="min-w-125px">PAN No.</th>
+                                <th class="min-w-100px">Joined Date</th>
+                                <!-- <th class="min-w-125px">Booking Status</th> -->
+                                
+                            </tr>
+                            <!--end::Table row-->
+                        </thead>
+                        <!--end::Table head-->
+                        <!--begin::Table body-->
+                        <tbody class="text-gray-600 fw-semibold">
+                            <!--begin::Table row-->
+                            {% for team in teams %}
+                            <tr>
+                               
+                                <td>
+                                  <span>{{team.first_name}} {{team.last_name}}</span>
+                                   
+                                </td>
+                                <!--end::User=-->
+                                <!--begin::Role=-->
+                                <td>{{team.email}}</td>
+                                <td>{{team.phone_number}}</td>
+                                <td>{{team.aadhar_number}}</td>
+                                <!--end::Role=-->
+                                
+                                
+                                <td>
+                                   {{team.pan_number}}
+                                </td>
+                                <td><div class="badge badge-light fw-bold">{{team.date_joined|date:'d M Y'}}</div></td>
+
+                                <!--begin::Joined-->
+                              
+                            </tr>
+                            <!--end::Table row-->
+                          {% endfor %}
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                    <!--end::Table-->
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::Card-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+{% endblock %}

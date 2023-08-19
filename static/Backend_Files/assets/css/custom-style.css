@@ -1,0 +1,55 @@
+.errorlist{
+  margin-top: 0.5rem;
+  font-size: .925rem;
+  color: #f1416c;
+  list-style: none;
+}
+.card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-wrap: wrap;
+    min-height: 50px;
+    padding: 0 2.25rem;
+    color: var(--kt-card-cap-color);
+    background-color: var(--kt-card-cap-bg);
+    border-bottom: 1px solid var(--kt-card-border-color);
+}
+
+.blink_me {
+    border-radius: 10px;
+    border: none;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial;
+    text-align: center;
+    text-decoration: none;
+    -webkit-animation: glowing 1s infinite;
+    -moz-animation: glowing 1s infinite;
+    -o-animation: glowing 1s infinite;
+    animation: glowing 1s infinite;
+  }
+  @-webkit-keyframes glowing {
+    0% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+    100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @-moz-keyframes glowing {
+    0% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+    100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @-o-keyframes glowing {
+    0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+    100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @keyframes glowing {
+    0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+    100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }

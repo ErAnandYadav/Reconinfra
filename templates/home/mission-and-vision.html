@@ -1,0 +1,64 @@
+{% extends 'home/base.html' %}
+{% block body %}
+{% load static %}
+     <!--=   Breadcrumb     Start            =-->
+    
+<!--=   About     Start                 =-->
+<!--=====================================-->
+
+    <section class="about-wrap2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 col-md-7 col-sm-12">
+                    <div class="item-heading-center">
+                        <h2 class="section-title mx-autu">Company Mission and Vision</h2>
+                        <div class="bg-title-wrap" style="display: block;">
+                            <span class="background-title solid">Mission Vision</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row flex-row-reverse flex-lg-row">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-img">
+                        <img src="{% static 'Frontend_Files/img/blog/mission.jpg' %}" alt="about" width="746" height="587">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-box3 wow fadeInUp" data-wow-delay=".2s">
+                        <span class="item-subtitle">Our Mission </span>
+                        {% comment %} <h2 class="item-title">We're on a Mission to Change  View of RealEstate Field.</h2> {% endcomment %}
+                        <p>Pushing our boundaries constantly with the objective of creating pleasant surroundings for people. What we aim to do is to value customer satisfaction while providing value for all stakeholders. We've progressed a lot in the real estate business via professionalism, transparency, and excellence, but we still have a long way to go. Our goal is to provide the best services and projects as well as to build a sustainable community that will improve people's lives.
+                        </p>
+                        
+                    </div>
+                </div>
+               
+            </div>
+            <div class="row flex-row flex-lg-row-reverse" >
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-layout3">
+                        <div class="item-img">
+                            <img src="{% static 'Frontend_Files/img/blog/vision.jpg' %}" alt="about" width="809" height="587">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="about-layout2">
+                        <span class="item-subtitle">Our Vision </span>
+                        
+                        <p>Our vision reflects our dedication to the essence of real estate success; an innovative, value-embracing attitude; as well as practice ethical, skilled, and accountable practice. We aim to be aware of our social responsibilities in the real estate industry, which could help India grow.
+                        </p>
+                       
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+<!--=====================================-->
+<!--=   Property Banner     Start       =-->
+
+<!--=====================================-->
+{% endblock  %}
