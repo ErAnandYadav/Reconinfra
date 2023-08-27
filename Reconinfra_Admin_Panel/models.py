@@ -51,72 +51,61 @@ class GalleryImages(models.Model):
     image = models.FileField(upload_to='Recon/Media-Center', null=True)
 
 import random
+
+
+
 class PlotBooking(models.Model):
-    agent = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-    location = models.ForeignKey(City, on_delete=models.DO_NOTHING, null=True)
+    associate_id = models.CharField(max_length=10, null=True)
     plot = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
-    booking_id = models.CharField(max_length=6, null=True, blank=True)
-    plot_availability = models.ForeignKey(PlotNumber, on_delete=models.CASCADE, null=True)
-    pin = models.CharField(max_length=100, null=True, blank=True)
+    plot_number = models.CharField(max_length=10, null=True)
+    plot_size = models.CharField(max_length=100, null=True,blank=True)
     customer_name = models.CharField(max_length=100, null=True)
-    customer_father_name = models.CharField(max_length=100, null=True)
+    sun_of = models.CharField(max_length=100, null=True)
+    dob = models.CharField(max_length=100, null=True, blank=True)
+    current_address = models.CharField(max_length=100, null=True, blank=True)
+    current_pin_code = models.CharField(max_length=100, null=True)
+    permanent_address = models.CharField(max_length=100, null=True, blank=True)
+    permanent_pin_code = models.CharField(max_length=100, null=True)
     customer_phone = models.CharField(max_length=100, null=True)
-    plot_number = models.CharField(max_length=100, null=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    down_payment = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    PAYMENT_METHOD = (
+    customer_mobile_phone = models.CharField(max_length=100, null=True)
+    customer_email = models.CharField(max_length=100, null=True)
+    customer_aadhar = models.CharField(max_length=100, null=True)
+    customer_pan = models.CharField(max_length=100, null=True)
+    BOOKING_METHOD = (
         ('Full Payment','Full Payment'),
         ('EMI','EMI')
     )
-    payment_method = models.CharField(max_length=100,choices=PAYMENT_METHOD, default="EMI", null=True)
+    booking_method = models.CharField(max_length=100,choices=BOOKING_METHOD, default="EMI", null=True)
     EMI_PERIOD = (
         ('12', '12 Months'),
-        ('18', '18 Months')
+        ('24', '24 Months'),
+        ('36', '36 Months'),
+        ('48', '48 Months'),
+        ('60', '60 Months'),
     )
     emi_period = models.CharField(max_length=100,choices=EMI_PERIOD, default="12 Months", null=True)
-    STATUS_CHOICES = (
-        ('Approved','Approved'),
-        ('Pending','Pending'),
-        ('Rejected','Rejected')
+    PAYMENT_METHOD = (
+        ('Cheque','Cheque'),
+        ('DD','DD'),
+        ('Cash','Cash'),
     )
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="Pending", null=True)
+    payment_method = models.CharField(max_length=100,choices=PAYMENT_METHOD, default="Cash", null=True)
+    cheque_number = models.CharField(max_length=100, null=True, blank=True)
+    total_amount = models.DecimalField(max_digits=20, decimal_places=2, null=True)
+    down_payment = models.DecimalField(max_digits=20, decimal_places=2, null=True)
+    remaining_balance = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    def __str__(self):
-        # return self.plot.name + ' - ' + self.customer_name
-        return f'{self.plot.name}    Plot No. {self.plot_number}   Booking ID {self.booking_id}'
 
 
-class PaymentHistory(models.Model):
-    agent = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-    booking = models.ForeignKey(PlotBooking, on_delete=models.DO_NOTHING, blank=True)
-    pin = models.CharField(max_length=100, null=True, blank=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    pay_payment = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    remaining_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    PAYMENT_METHOD = (
-        ('Full Payment','Full Payment'),
-        ('EMI','EMI')
-    )
-    payment_method = models.CharField(max_length=100,choices=PAYMENT_METHOD, default="EMI", null=True)
-    EMI_PERIOD = (
-        ('12', '12 Months'),
-        ('18', '18 Months')
-    )
-    emi_period = models.CharField(max_length=100,choices=EMI_PERIOD, default="12 Months", null=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
-
-    def __str__(self):
-        return f'{self.agent}'
-
-    class Meta:
-        ordering = ['-created_at']
 
 class Wallet(models.Model):
-    agent = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-    balance = models.IntegerField(default = 0)
+    associate = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    wallet_balance = models.IntegerField(default = 0, null=True)
+    total_business = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     is_active = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
-        return f'{self.agent}  Your Wallet Balance is  {self.balance}'
+        return f'{self.associate}  Your Wallet Balance is  {self.wallet_balance}'
 
 
 class TransferRequest(models.Model):

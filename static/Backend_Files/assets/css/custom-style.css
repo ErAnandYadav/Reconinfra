@@ -17,7 +17,7 @@
 }
 
 .blink_me {
-    border-radius: 10px;
+    border-radius: 40px;
     border: none;
     color: #FFFFFF;
     cursor: pointer;
@@ -52,4 +52,41 @@
     0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
     50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
     100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }
+.activate_blink_me {
+    border-radius: 40px;
+    border: none;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial;
+    text-align: center;
+    text-decoration: none;
+    -webkit-animation: glowing 1s infinite;
+    -moz-animation: glowing 1s infinite;
+    -o-animation: glowing 1s infinite;
+    animation: activateglowing 1s infinite;
+  }
+  @-webkit-keyframes activateglowing {
+    0% { background-color: #7ce034; -webkit-box-shadow: 0 0 3px #7ce034; }
+    50% { background-color: #0b4a02; -webkit-box-shadow: 0 0 40px #0b4a02; }
+    100% { background-color: #7ce034; -webkit-box-shadow: 0 0 3px #7ce034; }
+  }
+  
+  @-moz-keyframes activateglowing {
+    0% { background-color: #7ce034; -moz-box-shadow: 0 0 3px #7ce034; }
+    50% { background-color: #0b4a02; -moz-box-shadow: 0 0 40px #0b4a02; }
+    100% { background-color: #7ce034; -moz-box-shadow: 0 0 3px #7ce034; }
+  }
+  
+  @-o-keyframes activateglowing {
+    0% { background-color: #7ce034; box-shadow: 0 0 3px #7ce034; }
+    50% { background-color: #0b4a02; box-shadow: 0 0 40px #0b4a02; }
+    100% { background-color: #7ce034; box-shadow: 0 0 3px #7ce034; }
+  }
+  
+  @keyframes activateglowing {
+    0% { background-color: #7ce034; box-shadow: 0 0 3px #7ce034; }
+    50% { background-color: #0b4a02; box-shadow: 0 0 40px #0b4a02; }
+    100% { background-color: #7ce034; box-shadow: 0 0 3px #7ce034; }
   }

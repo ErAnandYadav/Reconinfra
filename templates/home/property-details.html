@@ -2,9 +2,6 @@
 {% block body %}
 {% load static %}
  
-      <!--=   Single Listing     Start        =-->
-      <!--=====================================-->
-
       <section class="single-listing-wrap1">
         <div class="container">
           <div class="single-property">
@@ -32,37 +29,12 @@
                         <li>
                           <i class="fas fa-map-marker-alt"></i>{{get_details.location}}
                         </li>
-                        <li><i class="fas fa-clock"></i>{{get_details.created_at|timesince}} ago /</li>
-                        <li><i class="fas fa-eye"></i>Views: 1,230</li>
+                        <li><i class="fas fa-clock"></i>{{get_details.created_at|timesince}} ago </li>
+                        
                       </ul>
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-12">
-                    <div class="side-button">
-                      <ul>
-                        <li>
-                          <a href="with-sidebar2.html" class="side-btn"
-                            ><i class="flaticon-share"></i
-                          ></a>
-                        </li>
-                        <li>
-                          <a href="with-sidebar2.html" class="side-btn"
-                            ><i class="flaticon-heart"></i
-                          ></a>
-                        </li>
-                        <li>
-                          <a href="with-sidebar2.html" class="side-btn"
-                            ><i class="flaticon-left-and-right-arrows"></i
-                          ></a>
-                        </li>
-                        <li>
-                          <a href="with-sidebar2.html" class="side-btn"
-                            ><i class="flaticon-printer"></i
-                          ></a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
               <div class="row">
@@ -143,6 +115,7 @@
                     </div>
                    
                     
+                    {% if get_details.slug == 'golden-city' %}
                     <div class="overview-area video-box1">
                       <h3 class="item-title">The Golden City</h3>
                       
@@ -153,14 +126,20 @@
                         </video> 
                      
                     </div>
+                    {% endif %}
                     
                   </div>
                 </div>
                 <div class="col-lg-4 widget-break-lg sidebar-widget">
                   <div class="widget widget-contact-box">
-                    <h3 class="widget-subtitle">Plot Details</h3>
+                    <h3 class="widget-subtitle">{{get_details.name}} Map</h3>
+                   {% if get_details.plot_map %}
+                   <img src="{{get_details.plot_map.url}}">
+                   {% else %}
+                   <img src="/static/Frontend_Files/plot/golden-city.jpg">
                    
-                   <img src="{% static 'Frontend_Files/plot/golden-city.jpg' %}"
+                   {% endif %}
+
                   </div>
                  
                 </div>
@@ -172,82 +151,84 @@
       <!--=====================================-->
       <!--=   Property     Start              =-->
       
-    <section class="location-wrap1">
-      <div class="container">
-          <div class="row align-items-center">
-              <div class="col-lg-6 col-md-7">
-                  <div class="item-heading-left">
-                      <span class="section-subtitle">Property Video                      </span>
-                      <h2 class="section-title">Golden City Video's                      </h2>
-                      <div class="bg-title-wrap" style="display: block;">
-                          <span class="background-title solid">Golden City</span>
-                      </div>
-                  </div>
-              </div>
-              
-          </div>
-          <div class="row">
-              <div class="col-lg-6 col-md-12">
-                  <div class="row">
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                          <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
-                            <video width="242" height="300" controls>
-                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-1.mp4' %}" type="video/mp4">
-                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-1.ogg' %}" type="video/ogg">
-                            </video>  
-                          </div>
-                      </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                          <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
-                            <video width="242" height="300" controls>
-                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-2.mp4' %}" type="video/mp4">
-                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-2.ogg' %}" type="video/ogg">
-                            </video> 
-                              
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-6 col-md-12">
-                  <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
-                      
-                      <video width="690" height="280" controls>
-                        <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-4.mp4' %}" type="video/mp4">
-                        <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-4.ogg' %}" type="video/ogg">
-                      </video> 
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="location-box3 wow zoomIn" data-wow-delay=".3s">
-                    <video width="500" height="280" controls>
-                      <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-6.mp4' %}" type="video/mp4">
-                      <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-6.ogg' %}" type="video/ogg">
+   {% if get_details.slug == 'golden-city' %}
+   <section class="location-wrap1">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-7">
+                <div class="item-heading-left">
+                    <span class="section-subtitle">Property Video</span>
+                    <h2 class="section-title">Golden City Video's </h2>
+                    <div class="bg-title-wrap" style="display: block;">
+                        <span class="background-title solid">Golden City</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+                          <video width="242" height="300" controls>
+                            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-1.mp4' %}" type="video/mp4">
+                            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-1.ogg' %}" type="video/ogg">
+                          </video>  
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+                          <video width="242" height="300" controls>
+                            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-2.mp4' %}" type="video/mp4">
+                            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-2.ogg' %}" type="video/ogg">
+                          </video> 
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+                    
+                    <video width="690" height="280" controls>
+                      <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-4.mp4' %}" type="video/mp4">
+                      <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-4.ogg' %}" type="video/ogg">
                     </video> 
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="row">
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                          <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
-                              
-                              <video width="242" height="300" controls>
-                                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.mp4' %}" type="video/mp4">
-                                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.ogg' %}" type="video/ogg">
-                              </video> 
-                          </div>
-                      </div>
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                          <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="location-box3 wow zoomIn" data-wow-delay=".3s">
+                  <video width="500" height="280" controls>
+                    <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-6.mp4' %}" type="video/mp4">
+                    <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-6.ogg' %}" type="video/ogg">
+                  </video> 
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+                            
                             <video width="242" height="300" controls>
-                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-8.mp4' %}" type="video/mp4">
-                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-8.ogg' %}" type="video/ogg">
+                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.mp4' %}" type="video/mp4">
+                              <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.ogg' %}" type="video/ogg">
                             </video> 
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+                          <video width="242" height="300" controls>
+                            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-8.mp4' %}" type="video/mp4">
+                            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-8.ogg' %}" type="video/ogg">
+                          </video> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+   {% endif %}
   <!--=====================================-->
 {% endblock  %}

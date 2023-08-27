@@ -21,22 +21,64 @@ def Home(request):
 
 
 def ReconinfraAboutUs(request):
-    return render(request, 'home/about-us.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/about-us.html', context)
 
 def LegalsDocuments(request):
-    return render(request, 'home/legals-documents.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/legals-documents.html', context)
 
-def PlotAvailability(request):
-    plot_number = PlotNumber.objects.all()
-    return render(request, 'home/plot-availability.html', {'plot_number' : plot_number})
+def GoldenCityPlotAvailability(request):
+    context = {}
+    try:
+        plot_number = PlotNumber.objects.all()
+        all_properties = Properties.objects.all()
+        context['plot_number'] = plot_number
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/golden-city-plot-availability.html', context)
+
+def GreenValleyPlotAvailability(request):
+    context = {}
+    try:
+        plot_number = PlotNumber.objects.all()
+        all_properties = Properties.objects.all()
+        context['plot_number'] = plot_number
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/green-valley-plot-availability.html', context)
 
 
 def MissionandVision(request):
-    return render(request, 'home/mission-and-vision.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/mission-and-vision.html', context)
 
 
 def CustomerLogin(request):
-    return render(request, 'home/login.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/login.html', context)
 
 def ReconinfraContactUs(request):
     try:
@@ -53,6 +95,8 @@ def ReconinfraContactUs(request):
         else:
             form = EnquiryForm()
             context['form'] = form
+            all_properties = Properties.objects.all()
+            context['all_properties'] = all_properties
     except Exception as e:
         print(e)
     return render(request, 'home/contact-us.html', context)
@@ -62,6 +106,8 @@ def PropertiesDetailsView(request, slug):
     context = {}
     try:
         get_details = Properties.objects.get(slug = slug)
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
         context['get_details'] = get_details
     except Exception as e:
         print(e)
@@ -72,6 +118,8 @@ def ReconinfraImageGallery(request):
     context = {}
     try:
         galleries = GalleryImages.objects.all()
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
         print(galleries)
         context['galleries'] = galleries
     except Exception as e:
@@ -79,16 +127,40 @@ def ReconinfraImageGallery(request):
     return render(request, 'home/image-gallery.html', context)
 
 def ReconinfraTermsAndConditions(request):
-    return render(request, 'home/terms-and-conditions.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/terms-and-conditions.html', context)
 
 def ReconinfraPrivacyPolicy(request):
-    return render(request, 'home/privacy-policy.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/privacy-policy.html', context)
 
 def ReconinfraDisclaimer(request):
-    return render(request, 'home/disclaimer.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/disclaimer.html', context)
 
 def CustomerProfile(request):
-    return render(request, 'home/customer-profile.html')
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        context['all_properties'] = all_properties
+    except Exception as e:
+        print(e)
+    return render(request, 'home/customer-profile.html', context)
 
 
 

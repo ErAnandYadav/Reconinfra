@@ -64,6 +64,20 @@ class CustomUser(AbstractUser):
     address = models.CharField(max_length=150, null=True)
     referred_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, null=True, blank=True)
     sponsor_id = models.CharField(max_length = 500, null=True, blank=True)
+    is_wallet_active = models.BooleanField(default=False)
+    BUSINESS_LEVEL = (
+        ('Level1', 'Level1'),
+        ('Level2', 'Level2'),
+        ('Level3', 'Level3'),
+        ('Level4', 'Level4'),
+        ('Level5', 'Level5'),
+        ('Level6', 'Level6'),
+        ('Level7', 'Level7'),
+        ('Level8', 'Level8'),
+        ('Level9', 'Level9'),
+        ('Level10', 'Level10'),
+    )
+    business_level = models.CharField(max_length=20, null=True, blank=True, choices=BUSINESS_LEVEL, default='Level1')
     forget_password_token = models.CharField(max_length=100, null=True, blank=True)
     
     USERNAME_FIELD = 'email'
@@ -81,7 +95,7 @@ class CustomUser(AbstractUser):
         return self.email
 
     def __str__(self):
-        return self.email
+        return f' {self.first_name} {self.last_name} ({self.sponsor_id})'
 
     def save(self, *args, **kwargs):  # new
         if not self.sponsor_id:

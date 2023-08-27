@@ -9,7 +9,7 @@
 <!--begin::Alert-->
 <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row m-4 p-3 mb-10">
     <div class="d-flex flex-column pt-3">
-        <strong>Message! {{message}}</strong> 
+        <strong>{{message}}</strong> 
         <!--end::Content-->
     </div>
     <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
@@ -128,12 +128,19 @@
 								<a href="">
 									<span class="d-block mb-4">{{request.user.sponsor_id|upper}}</span>
 								</a>&nbsp;
-								<!-- <div class="designer mt-3 blink_me">
-									<a href=""class="btn shadow-2 text-uppercase btn-block blink_me">
-										Click Here To Activate Your ID
+								{% if request.user.is_wallet_active %}
+								<div class="designer mt-3 activate_blink_me">
+									<a href=""class="btn shadow-2 text-uppercase btn-block activate_blink_me">
+										Activated
 									</a>
-
-								</div> -->
+								</div>
+								{% else %}
+								<div class="designer mt-3 blink_me">
+									<a href=""class="btn shadow-2 text-uppercase btn-block blink_me">
+										Inactive
+									</a>
+								</div>
+								{% endif %}
 							</div>
 						</div>
 						<!--end::Body-->
@@ -164,7 +171,13 @@
 								</svg>
 							</span>
 							<!--end::Svg Icon-->
-							<div class="text-white fw-bold fs-1 mb-2 mt-5">0.00</div>
+							{% if monthly_business.wallet_balance %}
+							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
+								{{monthly_business.wallet_balance|floatformat:2|intcomma}}</div>
+								{% else %}
+							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
+								0.00</div>
+							{% endif %}
 							<div class="fw-semibold text-white">New Business</div>
 						</div>
 						<!--end::Body-->

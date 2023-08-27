@@ -19,4 +19,6 @@ urlpatterns = [
     path('assign-group/', views.AssignGroupView, name="AssignGroupView" ),
     path('initialize-group-list/', views.InitializeGroupListView, name="InitializeGroupListView" ),
     path('group-details/<pk>/', views.GroupsAgentListView, name="GroupsAgentListView" ),
+    path('edit-facilitator/<str:pk>', views.EditFacilitatorView, name="EditFacilitatorView" ),
+    path('get-associate-name/<str:sponsor_id>', views.getAssociateNameBySponsorIdView, name="getAssociateNameBySponsorIdView" ),
 ]

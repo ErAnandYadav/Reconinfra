@@ -84,8 +84,12 @@ textarea#id_message {
   border: 1px solid;
 }
 .booked{
-  background-color: rgb(232 136 150);
+  background-color: red;
   border: 1px solid;
+  color: #fff;
+}
+.pending {
+  background: orange;
 }
 .registered{
   background-color: #f8f9fa;

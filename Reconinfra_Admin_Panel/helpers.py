@@ -10,3 +10,10 @@ def generate_booking_id():
     return booking_id
 
 
+def assign_label(balance):
+    if balance >= 0 and balance <= 1000000:
+        return "First Label"
+    elif balance >= 1500000:
+        return "Second Label"
+    else:
+        return "No Label"

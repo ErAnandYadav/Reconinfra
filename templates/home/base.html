@@ -113,18 +113,24 @@
                                     <li>
                                         <a href="javascript:void(0)">Properties</a>
                                         <ul class="dropdown-menu-col-1">
+                                            {% for plot in all_properties%}
                                             <li>
-                                                <a href="http://reconinfra.com/property-details/golden-city-sitapur/">
-                                                   Golden City</a>
+                                                <a href="/property-details/{{plot.slug}}/">
+                                                   {{plot.name}}</a>
                                             </li>
+                                            {% endfor %}
                                            
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)">Plot Availability</a>
+                                        <a href="javascript:void(0)">Plots Availability</a>
                                         <ul class="dropdown-menu-col-1">
                                             <li>
-                                                <a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plot</a>
+                                                <a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plots</a>
+                                               
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'GreenValleyPlotAvailability' %}">Green Valley Plots</a>
                                                
                                             </li>
                                            
@@ -222,13 +228,26 @@
                             <li class="list menu-item-parent menu-item-has-children">
                                 <a class="animation" href="javascript:void(0)">Properties</a>
                                 <ul class="main-menu__dropdown sub-menu">
-                                    <li><a href="http://reconinfra.com/property-details/golden-city-sitapur/">Golden City</a></li>
+
+                                    {% for plot in all_properties%}
+                                            <li>
+                                                <a href="/property-details/{{plot.slug}}/">
+                                                   {{plot.name}}</a>
+                                            </li>
+                                            {% endfor %}
                                 </ul>
                             </li>
                             <li class="list menu-item-parent menu-item-has-children">
-                                <a class="animation" href="javascript:void(0)">Plot Availability</a>
+                                <a class="animation" href="javascript:void(0)">Plots Availability</a>
                                 <ul class="main-menu__dropdown sub-menu">
-                                    <li><a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plot</a></li>
+                                    <li>
+                                        <a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plots</a>
+                                       
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'GreenValleyPlotAvailability' %}">Green Valley Plots</a>
+                                       
+                                    </li>
                                 </ul>
                             </li>
 

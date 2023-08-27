@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+	{% load static %}
+	{% load my_filter %}
+	<!--begin::Head-->
+	<head>
+		<title>Reconinfra Admin | Become a Facilitator</title>
+		<meta charset="utf-8">
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link rel="shortcut icon" href="../../../assets/media/logos/favicon.ico">
+		<link href="{% static 'Backend_Files/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css">
+		<link href="{% static 'Backend_Files/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css">
+		<style>
+            ul.errorlist {
+                color: #f1416c;
+                list-style: none;
+				padding: 0;
+            }
+			body#kt_body {
+				background: url(https://d21dlgmglu11i3.cloudfront.net/assets/uploads/images/1576042243lakecounty.jpeg);
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-attachment: fixed;
+			}
+			.form-control{
+				border: 1px solid #c5d1de;
+    			border-radius: 12px;
+			}
+        </style>
+	</head>
+	<body id="kt_body" class="app-blank bgi-size-cover bgi-position-center bgi-no-repeat">
+		
+		<div class="d-flex flex-column flex-root">
+			
+			<div class="d-flex flex-column flex-column-fluid flex-lg-row">
+				
+				<!--begin::Body-->
+				<div class="d-flex flex-center  p-10 mx-auto">
+					<!--begin::Card-->
+					<div class="card rounded-3 w-md-700px">
+						<!--begin::Card body-->
+						<div class="card-body">
+							<!--begin::Form-->
+							<form method="post" class="form w-100" action="" novalidate>
+								<!--begin::Heading-->
+								{% csrf_token %}
+								<div class="text-center mb-11">
+									<!--begin::Title-->
+									<img src="{% static 'Backend_Files/assets/media/logos/page-loader.png' %}" height="100">
+									<h1 class="text-dark fw-bolder mb-3">Recon Group</h1>
+									
+								</div>
+								<!--begin::Heading-->
+								
+								<!--begin::Separator-->
+								<div class="separator separator-content my-14">
+									<span class="w-125px text-gray-500 fw-semibold fs-7">Facilitator Form</span>
+								</div>
+								<!--end::Separator-->
+								<!--begin::Input group=-->
+								<!-- <div class="fv-row mb-8">
+									<div class="row">
+										<div class="col">
+											<label for="prnt_id" class="mb-2">Sponsor ID <span class="text-danger">*</span></label>
+											<input type="text" name="sp_id" class="form-control bg-transparent" value="{{sponsor_id}}" placeholder="Sponsor ID" required>
+											{{form.sponsor_id.errors}}
+										</div>
+									</div>
+								</div> -->
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.first_name|addclass:'form-control bg-transparent'|addplaceholder:'First Name'}}
+                                            {{form.first_name.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.last_name|addclass:'form-control bg-transparent'|addplaceholder:'Last Name'}}
+                                            {{form.last_name.errors}}
+                                        </div>
+									</div>
+								</div>
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.email|addclass:'form-control bg-transparent'|addplaceholder:'Email Address'}}
+                                            {{form.email.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.phone_number|addclass:'form-control bg-transparent'|addplaceholder:'Phone Number'}}
+                                            {{form.phone_number.errors}}
+										</div>
+									</div>
+								</div>
+								
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.aadhar_number|addclass:'form-control bg-transparent'|addplaceholder:'Enter Aadhar Number'}}
+                                            {{form.aadhar_number.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.pan_number|addclass:'form-control bg-transparent'|addplaceholder:'PAN Card Number'}}
+                                            {{form.pan_number.errors}}
+										</div>
+									</div>
+								</div>
+								
+                                <div class="separator separator-content my-14">
+									<span class="w-125px text-gray-500 fw-semibold fs-7">Financial Details</span>
+								</div>
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.account_holder_name|addclass:'form-control bg-transparent'|addplaceholder:'Account Holder Name'}}
+                                            {{form.account_holder_name.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.account_number|addclass:'form-control bg-transparent'|addplaceholder:'Account Number'}}
+                                            {{form.account_number.errors}}
+										</div>
+									</div>
+								</div>
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.account_type|addclass:'form-control bg-transparent'|addplaceholder:'Account Type'}}
+                                            {{form.account_type.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.ifsc_code|addclass:'form-control bg-transparent'|addplaceholder:'IFSC Code'}}
+                                            {{form.ifsc_code.errors}}
+										</div>
+									</div>
+								</div>
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.bank_name|addclass:'form-control bg-transparent'|addplaceholder:'Bank Name'}}
+                                            {{form.bank_name.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.branch_name|addclass:'form-control bg-transparent'|addplaceholder:'Branch Name'}}
+                                            {{form.branch_name.errors}}
+										</div>
+									</div>
+								</div>
+                                <div class="separator separator-content my-14">
+									<span class="w-125px text-gray-500 fw-semibold fs-7">Facilitator Details</span>
+								</div>
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.country|addclass:'form-control bg-transparent'|addplaceholder:'Country'|addid:'country'}}
+                                            {{form.country.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.state|addclass:'form-control bg-transparent'|addplaceholder:'State'|addid:'state'}}
+                                            {{form.state.errors}}
+										</div>
+									</div>
+								</div>
+								<div class="fv-row mb-8">
+									<div class="row">
+										<div class="col-sm-6">
+											{{form.city|addclass:'form-control bg-transparent'|addplaceholder:'City'|addid:'city'}}
+                                            {{form.city.errors}}
+										</div>
+										<div class="col-sm-6">
+											{{form.address|addclass:'form-control bg-transparent'|addplaceholder:'Full Address'}}
+                                            {{form.address.errors}}
+										</div>
+									</div>
+								</div>
+								
+								
+								<div class="d-grid mb-10">
+									<button type="submit" class="btn btn-primary"> Update</button>
+								</div>
+								
+								<div class="text-gray-500 text-center fw-semibold fs-6">Already have an Account? 
+								<a href="{% url 'AuthLogin' %}" class="link-primary fw-semibold">Sign in</a></div>
+								
+							</form>
+							
+						</div>
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			<!--end::Authentication - Sign-up-->
+		</div>
+		
+		<script src="{% static 'Backend_Files/assets/plugins/global/plugins.bundle.js' %}"></script>
+		<script src="{% static 'Backend_Files/assets/js/scripts.bundle.js' %}"></script>
+		{% comment %} <script src="{% static 'Backend_Files/assets/js/general.js' %}"></script> {% endcomment %}
+		<script>
+			$(document).ready(function() {
+				$("#country").select2({
+					placeholder: "Select Country"
+				});
+				$("#state").select2({
+					placeholder: "Select State"
+				});
+				$("#city").select2({
+					placeholder: "Select City"
+				});
+				$("#payment_method").select2({
+					placeholder: "Payment Method"
+				});
+				$("#emi_installments").select2({
+					placeholder: "EMI Installment"
+				});
+				
+				// On Change Append Input Box
+				// $('#payment_method').on('change', function () {
+				//     var value = $(this).val();
+				//     console.log(value)
+				//     if (value == 'EMI') {
+				//         $('#emi_installments').removeClass('d-none');
+				//         $('#down_payment').removeClass('d-none');
+				//     } else {
+				//         $('#emi_installments').addClass('d-none');
+				//     }
+				// });
+			});
+		</script>
+		<!--end::Custom Javascript-->
+	</body>
+	
+</html>

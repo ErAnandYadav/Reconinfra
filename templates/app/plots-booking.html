@@ -1,0 +1,285 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Careers - Apply-->
+            <div class="page-header mb-4">
+                <div class="page-block">
+                    <div class="row align-items-center">
+                        <div class="col-md-12">
+                            <div class="page-header-title">
+                                <h5 class="m-b-10">Dashboard</h5>
+                            </div>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/app/" class="p-1">
+                                        <i class="fas fa-home"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="#!">Plot Booking</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                {% for message in messages %}
+                <!--begin::Alert-->
+                <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+                    <div class="d-flex flex-column text-light pt-3">
+                        <strong>Message! {{message}}</strong>
+                        <!--end::Content-->
+                    </div>
+                    <button type="button"
+                        class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto"
+                        data-bs-dismiss="alert">
+                        <span class="svg-icon svg-icon-2x svg-icon-light">
+                            <span class="svg-icon svg-icon-2x svg-icon-light">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                        transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                    <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                        transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                </svg>
+                            </span>
+                        </span>
+                    </button>
+                    <!--end::Close-->
+                </div>
+                <!--end::Alert-->
+
+                {% endfor %}
+                <!--begin::Body-->
+                
+                <div class="card-body">
+                    <div class="row">
+                        <h2 class="text-center pt-3"> Plot Booking Form</h2>
+                        <hr>
+                        <!--begin::Layout-->
+                        <div class="col-lg-10 mx-auto pt-5 border">
+                            <div class="d-flex flex-column flex-lg-row mb-17">
+                                <!--begin::Content-->
+                                <div class="flex-lg-row-fluid me-0 p-5">
+                                    <!--begin::Form-->
+                                    <form action="" class="form mb-15" method="post" novalidate>
+                                        {% csrf_token %}
+                                        
+                                        <div class="row mb-5">
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                                                    <span class="required">Associate Id</span>
+                                                </label>
+                                                {{form.associate_id|addclass:'form-control form-control-solid'|addid:'associate_id'}}
+                                                {{form.associate_id.errors}}
+                                            </div>
+                                            <!--begin::Col-->
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Project Name</label>
+                                                    {{form.plot|addclass:'form-control form-control-solid'|addid:'plot'}}
+                                                    {{form.plot.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Plot Number</label>
+                                                    {{form.plot_number|addclass:'form-control form-control-solid'|addid:'plot_number'}}
+                                                    {{form.plot_number.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class=" fs-5 fw-semibold mb-2">Plot Size (Optional)</label>
+                                                {{form.plot_size|addclass:'form-control form-control-solid'|addid:'plot_size'}}
+                                                {{form.plot_size.errors}}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Customer Name</label>
+                                                    {{form.customer_name|addclass:'form-control form-control-solid'|addid:'customer_name'}}
+                                                    {{form.customer_name.errors}}
+                                                </div>
+                                            </div>
+                                           <div class="col-sm-6">
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="fs-5 fw-semibold  mb-2">S/W/D of</label>
+                                                {{form.sun_of|addclass:'form-control form-control-solid'|addid:'sun_of'}}
+                                                {{form.sun_of.errors}}
+                                            </div>
+                                           </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Date of Birth</label>
+                                                {{form.dob|addclass:'form-control form-control-solid'|addid:'dob'}}
+                                                {{form.dob.errors}}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Current Address</label>
+                                                    {{form.current_address|addclass:'form-control form-control-solid'|addid:'current_address'}}
+                                                    {{form.current_address.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Pin Code</label>
+                                                    {{form.current_pin_code|addclass:'form-control form-control-solid'|addid:'current_pin_code'}}
+                                                    {{form.current_pin_code.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Permanent Address</label>
+                                                    {{form.permanent_address|addclass:'form-control form-control-solid'|addid:'permanent_address'}}
+                                                    {{form.permanent_address.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Pin Code</label>
+                                                    {{form.permanent_pin_code|addclass:'form-control form-control-solid'|addid:'permanent_pin_code'}}
+                                                    {{form.permanent_pin_code.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Phone Number</label>
+                                                    {{form.customer_phone|addclass:'form-control form-control-solid'|addid:'customer_phone'}}
+                                                    {{form.customer_phone.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Mobile Number</label>
+                                                    {{form.customer_mobile_phone|addclass:'form-control form-control-solid'|addid:'customer_mobile_phone'}}
+                                                    {{form.customer_mobile_phone.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Email Address</label>
+                                                {{form.customer_email|addclass:'form-control form-control-solid'|addid:'customer_email'}}
+                                                {{form.customer_email.errors}}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Aadhar Number</label>
+                                                    {{form.customer_aadhar|addclass:'form-control form-control-solid'|addid:'customer_aadhar'}}
+                                                    {{form.customer_aadhar.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">PAN Number</label>
+                                                    {{form.customer_pan|addclass:'form-control form-control-solid'|addid:'customer_pan'}}
+                                                    {{form.customer_pan.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Booking Method</label>
+                                                {{form.booking_method|addclass:'form-control form-control-solid'|addid:'booking_method'}}
+                                                {{form.booking_method.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">EMI Installment</label>
+                                                {{form.emi_period|addclass:'form-control form-control-solid'|addid:'emi_period'}}
+                                                {{form.emi_period.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Payment Method</label>
+                                                {{form.payment_method|addclass:'form-control form-control-solid'|addid:'payment_method'}}
+                                                {{form.payment_method.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Cheque Number</label>
+                                                {{form.cheque_number|addclass:'form-control form-control-solid'|addid:'cheque_number'}}
+                                                {{form.cheque_number.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Total Amount</label>
+                                                {{form.total_amount|addclass:'form-control form-control-solid'|addid:'total_amount'}}
+                                                {{form.total_amount.errors}}
+                                            </div>                                            
+                                            <div class="d-flex flex-column mb-5 fv-row">                                               
+                                                <label class="required fs-5 fw-semibold mb-2">Down Payment</label>
+                                                {{form.down_payment|addclass:'form-control form-control-solid'|addid:'down_payment'}}
+                                                {{form.down_payment.errors}}
+                                            </div>                         
+                                        </div>
+                                        <hr>
+                                        <div class="row justify-content-between">
+                                            <div class="col-xs-12 col-sm-12 col-md-4 ">
+                                                <a href="/app/booking-list" class="btn btn-secondary mr-0 d-block d-md-inline-block">
+                                                    <i class="fas fa-caret-left"></i>List</a>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-right">
+                                                <button type="submit" class="btn  btn-primary mr-0 btn-block">
+                                                    <i class="fas fa-save"></i>Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                        </div>
+                        <!--end::Layout-->
+                    </div>
+
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Careers - Apply-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+{% block js%}
+<script>
+    $(document).ready(function() {
+        $("#location").select2({
+            placeholder: "Select City"
+        });
+        $("#plot").select2({
+            placeholder: "Select Plot"
+        });
+        $("#emi_period").select2({
+            placeholder: "Select EMI Period"
+        });
+        $("#payment_method").select2({
+            placeholder: "Payment Method"
+        });
+        $("#booking_method").select2({
+            placeholder: "Booking Method"
+        });
+        
+        
+        // On Change Append Input Box
+        $('#payment_method').on('change', function () {
+            var value = $(this).val();
+            console.log(value);
+
+            $('#chequeNumber, #DDNumber').addClass('d-none');
+
+            if (value === 'Cheque') {
+                $('#chequeNumber').removeClass('d-none');
+            } else if (value === 'DD') {
+                $('#chequeNumber').removeClass('d-none');
+                $('#chequeNumberLebel').addClass('d-none');
+                $('#DDNumberLebel').removeClass('d-none');
+            }
+        });
+
+    });
+</script>
+{% endblock %}
+{% endblock %}

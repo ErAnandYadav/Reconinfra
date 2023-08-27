@@ -9,13 +9,19 @@ from .helpers import *
 from .forms import *
 from .models import *
 import random
+from django.utils import timezone
 # Create your views here.
 @login_required(login_url='/accounts/auth-login/')
 def Admin_Panel_Home(request):
     context = {}
     try:
-        balance = Wallet.objects.filter(agent_id = request.user.account_id).aggregate(wallet_balance = Sum("balance"))
+        balance = Wallet.objects.filter(associate_id = request.user.account_id).aggregate(wallet_balance = Sum("balance"))
+        monthly_business = Wallet.objects.filter(associate_id = request.user.account_id, timestamp__month = timezone.now().month).aggregate(wallet_balance = Sum("balance"))
         context['balance'] = balance
+        context['monthly_business'] = monthly_business
+        print(balance['wallet_balance'])
+        user_label = assign_label(balance['wallet_balance'])
+        print(user_label)
     except Exception as e:
         print(e)
     return render(request, 'app/index.html', context)
@@ -224,39 +230,39 @@ def DeleteImageView(request, pk):
 #     return render(request, 'app/plot-booking.html', context)
 
 
-@login_required(login_url='/accounts/auth-login/')
-def PlotBookingView(request):
-    context = {}
-    if request.method =='POST':
-        try:
-            form = PlotBookingForm(request.POST)
-            if form.is_valid():
-                form_obj = form.save(commit=False)
-                form_obj.agent_id = request.user.account_id
-                booking_id = generate_booking_id()
-                form_obj.booking_id = booking_id
-                pin = pin_generate() # Generate 4 Digit PIN
-                form_obj.pin = pin
-                form_obj.save()
-                subject = 'Welcome to the Recon Group'
-                message = f'Congratulation {request.user.first_name}, Your Booking ID is {booking_id} and Your PIN (Personal identification numbers) is {pin} Please do not share your booking ID Thank You!'
-                email_from = settings.EMAIL_HOST_USER
-                recipient_list = [request.user.email, ]
-                try:
-                    send_mail( subject, message, email_from, recipient_list )
-                except Exception as e:
-                    print(e)
-                messages.success(request, "Your Plot Booked Successfully")
-                return redirect('/app/booking-list')
-            else:
-                form.errors['__all__'] = "Somethong wrong"
-                print(form.errors)
-                return render(request, 'app/plot-booking.html', {'form':form})
-        except Exception as e:
-            print("Error", e)
-    form = PlotBookingForm()
-    context['form'] = form
-    return render(request, 'app/plot-booking.html', context)
+# @login_required(login_url='/accounts/auth-login/')
+# def PlotBookingView(request):
+#     context = {}
+#     if request.method =='POST':
+#         try:
+#             form = PlotBookingForm(request.POST)
+#             if form.is_valid():
+#                 form_obj = form.save(commit=False)
+#                 form_obj.agent_id = request.user.account_id
+#                 booking_id = generate_booking_id()
+#                 form_obj.booking_id = booking_id
+#                 pin = pin_generate() # Generate 4 Digit PIN
+#                 form_obj.pin = pin
+#                 form_obj.save()
+#                 subject = 'Welcome to the Recon Group'
+#                 message = f'Congratulation {request.user.first_name}, Your Booking ID is {booking_id} and Your PIN (Personal identification numbers) is {pin} Please do not share your booking ID Thank You!'
+#                 email_from = settings.EMAIL_HOST_USER
+#                 recipient_list = [request.user.email, ]
+#                 try:
+#                     send_mail( subject, message, email_from, recipient_list )
+#                 except Exception as e:
+#                     print(e)
+#                 messages.success(request, "Your Plot Booked Successfully")
+#                 return redirect('/app/booking-list')
+#             else:
+#                 form.errors['__all__'] = "Somethong wrong"
+#                 print(form.errors)
+#                 return render(request, 'app/plot-booking.html', {'form':form})
+#         except Exception as e:
+#             print("Error", e)
+#     form = PlotBookingForm()
+#     context['form'] = form
+#     return render(request, 'app/plot-booking.html', context)
 
 @login_required(login_url='/accounts/auth-login/')
 def BookingList(request):
@@ -288,9 +294,10 @@ def getAgentBookedDetailsView(request):
     booking_id = request.GET.get('booking_id')
     try:
         booking_details = PlotBooking.objects.get(id=booking_id)
+        print(booking_details.agent)
         serialized_data = {
             'id': booking_details.id,
-            'agent': booking_details.agent,  # Replace with your actual fields
+            'agent': booking_details.agent.email,
             'payment_method': booking_details.payment_method,
             'total_amount': booking_details.total_amount,
             'emi_period': booking_details.emi_period,
@@ -414,11 +421,12 @@ def RewardListView(request):
 def FacilitatorListView(request):
     context = {}
     try:
-        facilitators = CustomUser.objects.all()
+        facilitators = CustomUser.objects.all().exclude(is_superuser=True)
         context['facilitators'] = facilitators
     except Exception as e:
         print(e)
     return render(request, "app/facilitator-list.html", context)
+
 
 @login_required(login_url='/accounts/auth-login/')
 def TransferRequestView(request):
@@ -487,3 +495,84 @@ def ViewAgentWithrawalsDetailsView(request, transfer_request_id):
         form = WithdrawalsRequestForm(instance=transfer_request)
     
     return render(request, 'app/view-withdrawals-details.html', {'form': form, 'bank_details':bank_details})
+
+
+
+
+COMMISSION_SLABS = [
+    (1000000, 5),
+    (3000000, 7),
+    (60000000, 8),
+    (15000000, 9),
+    (30000000, 10),
+    (60000000, 11),
+    (100000000, 12),
+    (150000000, 13),
+    (250000000, 14),
+    (250000000, 15),
+]
+
+def calculate_commission(total_amount):
+    for slab, percentage in COMMISSION_SLABS:
+        if total_amount <= slab:
+            return total_amount * percentage / 100
+    return total_amount * 15 / 100 
+
+
+def PlotBookingView(request):
+    context = {}
+    if request.method =='POST':
+        try:
+            form = PlotBookingForm(request.POST)
+            if form.is_valid():
+                form_obj = form.save(commit=False)
+                associate_id = form.cleaned_data.get('associate_id')
+                total_amount = form.cleaned_data.get('total_amount')
+                pay_payment = form.cleaned_data.get('down_payment')
+                remaining_balance = total_amount - pay_payment
+                form_obj.remaining_balance = remaining_balance
+                form_obj.save()
+                associate = CustomUser.objects.filter(sponsor_id=associate_id).first()
+                if associate is None:
+                    form.add_error('associate_id', "Invalid associate id")
+                    context['form'] = form
+                    return render(request, "app/plots-booking.html", context)
+                total_business = Wallet.objects.filter(associate_id=associate.account_id).aggregate(amount=Sum('total_business'))['amount']
+                
+                if total_business is not None:
+                    commission = calculate_commission(total_business)
+                    agent_wallet = get_object_or_404(Wallet, associate_id=associate.account_id)
+                    agent_wallet.wallet_balance += commission
+                    agent_wallet.total_business += pay_payment
+                    agent_wallet.save()
+                    messages.success(request, "Payment Saved Successfully!")
+                    return redirect('/app/payment-history')
+                commission = calculate_commission(pay_payment)
+                Wallet.objects.create(associate_id = associate.account_id, total_business=pay_payment, wallet_balance=commission)
+                messages.success(request, "Payment Saved Successfully!")
+                return redirect('/app/payment-history')
+
+            context['form'] = form
+            return render(request, "app/plots-booking.html", context)
+        except Exception as e:
+            print(e)
+    form = PlotBookingForm()
+    context['form'] = form
+    return render(request, "app/plots-booking.html", context)
+
+from django.http import JsonResponse
+def ActivateIdView(request):
+    if request.method =='POST':
+        sponsor_id = request.POST.get('id')
+        print(sponsor_id)
+        user = CustomUser.objects.get(sponsor_id=sponsor_id)
+        if user.is_wallet_active is True:
+            user.is_wallet_active = False
+        else:
+            user.is_wallet_active = True
+        user.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error_message': 'Item not found'})
+
+
+

@@ -8,7 +8,6 @@ class AddPropertyForm(forms.ModelForm):
         model = Properties
         fields = ['name', 'location', 'city', 'plot_map', 'plot_types', 'description']
 
-
 class PropertyImageForm(forms.ModelForm):
     class Meta:
         model = PropertiesImage
@@ -18,28 +17,6 @@ class AddPlotAvailabilityForm(forms.ModelForm):
     class Meta:
         model = PlotNumber
         fields = ['properties', 'plot_status', 'plot_number']
-
-
-class PlotBookingForm(forms.ModelForm):
-    class Meta:
-        model = PlotBooking
-        fields = [
-            'location','plot',
-            'plot_availability',
-            'customer_name',
-            'customer_father_name',
-            'customer_phone',
-            'plot_number',
-            'total_amount',
-            'down_payment',
-            'payment_method',
-            'emi_period',
-        ]
-
-class PaymentHistoryForm(forms.ModelForm):
-    class Meta:
-        model = PaymentHistory
-        fields = ['agent','booking','total_amount','pay_payment','payment_method','emi_period']
 
 
 class AddGalleryImagesForm(forms.ModelForm):
@@ -61,4 +38,14 @@ class TransferRequestForm(forms.ModelForm):
 class WithdrawalsRequestForm(forms.ModelForm):
     class Meta:
         model = TransferRequest
+        fields = '__all__'
+
+class PlotBookingForm(forms.ModelForm):
+    class Meta:
+        model = PlotBooking
+        fields = '__all__'
+
+class ActivateIdForm(forms.ModelForm):
+    class Meta:
+        model = Wallet
         fields = '__all__'

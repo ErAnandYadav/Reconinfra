@@ -7,6 +7,9 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
 from .models import CustomUser
+from Reconinfra_Admin_Panel.models import *
+from django.db.models import Sum
+from django.utils import timezone
 from .forms import *
 from .helpers import send_forget_password_mail
 import random,math
@@ -35,7 +38,7 @@ def UserRegister(request):
                     user.referred_by_id = user_obj.account_id
                     user.save()
                     subject = 'Welcome to Recon Group'
-                    message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login ID : {user.email} and Password : {password}'
+                    message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login id: {user.sponsor_id} and Password : {password}'
                     email_from = settings.EMAIL_HOST_USER
                     recipient_list = [user.email, ]
                     send_mail( subject, message, email_from, recipient_list )
@@ -43,17 +46,19 @@ def UserRegister(request):
                     return redirect('/accounts/auth-login/')
                 form.add_error('sponsor_id', "Invalid Sponsor ID. Please Enter Valid Sponsor ID!")
                 return render(request, 'app/user-register.html', {'form' : form})
-            user = form.save()
-            user.set_password(user.password)
-            # user.referred_by_id = sp_id
-            user.save()
-            subject = 'Welcome to Recon Group'
-            message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login ID : {user.email} and Password : {password}'
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user.email, ]
-            send_mail( subject, message, email_from, recipient_list )
-            messages.success(request, 'Account Created Successfully! Please Check Mail')
-            return redirect('/accounts/auth-login/')
+            form.add_error('sponsor_id', "Please enter sponsor id")
+            return render(request, 'app/user-register.html', {'form' : form})
+            # user = form.save()
+            # user.set_password(user.password)
+            # # user.referred_by_id = sp_id
+            # user.save()
+            # subject = 'Welcome to Recon Group'
+            # message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login ID : {user.email} and Password : {password}'
+            # email_from = settings.EMAIL_HOST_USER
+            # recipient_list = [user.email, ]
+            # send_mail( subject, message, email_from, recipient_list )
+            # messages.success(request, 'Account Created Successfully! Please Check Mail')
+            # return redirect('/accounts/auth-login/')
         else:
             form.errors['__all__'] = "Email Already"
             return render(request, 'app/user-register.html', {'form' : form})
@@ -81,25 +86,27 @@ def ReferralLinkView(request, sponsor_id):
                     user.referred_by_id = user_obj.account_id
                     user.save()
                     subject = 'Welcome to Recon Group'
-                    message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login ID : {user.email} and Password : {password}'
+                    message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login id : {user.sponsor_id} and Password : {password}'
                     email_from = settings.EMAIL_HOST_USER
                     recipient_list = [user.email, ]
-                    send_mail( subject, message, email_from, recipient_list )
+                    send_mail(subject, message, email_from, recipient_list )
                     messages.success(request, 'Account Created Successfully! Please Check Mail')
                     return redirect('/accounts/auth-login/')
                 form.add_error('sponsor_id', "Invalid Sponsor ID. Please Enter Valid Sponsor ID!")
                 return render(request, 'app/user-register.html', {'form' : form})
-            user = form.save()
-            user.set_password(user.password)
-            # user.referred_by_id = sp_id
-            user.save()
-            subject = 'Welcome to Recon Group'
-            message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login ID : {user.email} and Password : {password}'
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user.email, ]
-            send_mail( subject, message, email_from, recipient_list )
-            messages.success(request, 'Account Created Successfully! Please Check Mail')
-            return redirect('/accounts/auth-login/')
+            form.add_error('sponsor_id', "Please enter sponsor id")
+            return render(request, 'app/user-register.html', {'form' : form})
+            # user = form.save()
+            # user.set_password(user.password)
+            # # user.referred_by_id = sp_id
+            # user.save()
+            # subject = 'Welcome to Recon Group'
+            # message = f'Dear {user.first_name} {user.last_name}, Thank You For Registering in Recon Group. Your Login ID  {user.email} and Password : {password}'
+            # email_from = settings.EMAIL_HOST_USER
+            # recipient_list = [user.email, ]
+            # send_mail( subject, message, email_from, recipient_list )
+            # messages.success(request, 'Account Created Successfully! Please Check Mail')
+            # return redirect('/accounts/auth-login/')
         else:
             form.errors['__all__'] = "Email Already"
             return render(request, 'app/user-register.html', {'form' : form, 'sponsor_id': sponsor_id})
@@ -108,19 +115,24 @@ def ReferralLinkView(request, sponsor_id):
 
 def LoginView(request):
     if request.method =='POST':
-        email = request.POST.get('email')
+        sponsor_id = request.POST.get('sponsor_id')
         password = request.POST.get('password')
-        print("xxxxxxxxxxx", email, password)
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request , user)
-            messages.success(request, f'Welcome {email}')
-            return HttpResponseRedirect('/app/')
-        # messages.info(request, "Your Have Not Permission!")
-        # return redirect('/accounts/auth-login/')
-        else:
-            messages.info(request, "Credential Are Not Match!")
-            return redirect('/accounts/auth-login/')
+        print("xxxxxxxxxxx", sponsor_id, password)
+        user_obj = CustomUser.objects.filter(sponsor_id=sponsor_id).first()
+        if user_obj:
+            user = authenticate(request, email=user_obj.email, password=password)
+            print(user)
+            if user is not None:
+                login(request , user)
+                messages.success(request, f'Welcome to the Recon Group Mr. {user_obj.first_name} {user_obj.last_name}')
+                return HttpResponseRedirect('/app/')
+            # messages.info(request, "Your Have Not Permission!")
+            # return redirect('/accounts/auth-login/')
+            else:
+                messages.info(request, "Credential Are Not Match!")
+                return redirect('/accounts/auth-login/')
+        messages.info(request, "Invalid username or password. Please check your credentials and try again.")
+        return redirect('/accounts/auth-login/')
     return render(request, 'app/sign-in.html')
 
 def LogoutView(request):
@@ -133,6 +145,7 @@ def LogoutView(request):
 
 
 def Profile(request, id):
+    context = {}
     instance = get_object_or_404(CustomUser, account_id=id)
     form = UserUpdateForm(request.POST or None,request.FILES or None, instance=instance)
     if form.is_valid():
@@ -140,9 +153,14 @@ def Profile(request, id):
         print(profile_pic)
         form.save()
         return redirect('/app/')
+    balance = Wallet.objects.filter(agent_id = request.user.account_id).aggregate(wallet_balance = Sum("balance"))
+    monthly_business = Wallet.objects.filter(agent_id = request.user.account_id, timestamp__month = timezone.now().month).aggregate(wallet_balance = Sum("balance"))
+    context['balance'] = balance
+    context['monthly_business'] = monthly_business
+    context['form'] = form
     form.errors['__all__'] = "Something went wrong"
     print(form.errors)
-    return render(request, "app/profile.html",{'form': form})
+    return render(request, "app/profile.html",context)
 
 
 def UpdateBankDetails(request):
@@ -156,6 +174,8 @@ def UpdateBankDetails(request):
 
 
 def MyTeamsView(request):
+    if not request.user.is_authenticated:
+        return redirect('/accounts/auth-login/')
     context = {}
     try:
         teams = CustomUser.objects.filter(referred_by_id = request.user.account_id)
@@ -170,7 +190,7 @@ def ForgetPasswordView(request):
             email = request.POST.get('email')
             if not CustomUser.objects.filter(email=email).first():
                 messages.error(request, "User Not Found!")
-                return redirect('/app/forget-password/')
+                return redirect('/accounts/forget-password/')
             user_obj = CustomUser.objects.get(email=email)
             token = str(uuid.uuid4())
             user_obj.forget_password_token = token
@@ -191,7 +211,7 @@ def ChangePasswordView(request, token):
             confirm_password = request.POST.get('confirm-password')
             user_id = request.POST.get('user_id')
             if user_id is None:
-                messages.error(request, "User ID not Found!")
+                messages.error(request, "User not Found!")
                 return redirect(f'/accounts/change-password/{token}/')
             if password !=confirm_password:
                 messages.error(request, "New Password and Confirm Password are Not Same!")
@@ -259,3 +279,28 @@ def GroupsAgentListView(request, pk):
     print(agents)
     context['agents'] = agents
     return render(request, "app/agents-in-group.html", context)
+
+def EditFacilitatorView(request, pk):
+    associate = get_object_or_404(CustomUser, pk=pk)
+    if request.method == 'POST':
+        form = UpdateRegisterForm(request.POST, instance=associate)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Facilitator details updated successfully")
+            return redirect('/app/facilitator-list')
+    else:
+        form = UpdateRegisterForm(instance=associate)
+
+    return render(request, 'app/edit-facilitator.html', {'form': form})
+
+
+from django.http import JsonResponse
+def getAssociateNameBySponsorIdView(request, sponsor_id):
+    print(sponsor_id)
+    try:
+        user = CustomUser.objects.get(sponsor_id=sponsor_id)
+        data = {'name': user.first_name+ ' ' +user.last_name}
+    except CustomUser.DoesNotExist:
+        data = {'name': 'Not found'}
+
+    return JsonResponse(data)

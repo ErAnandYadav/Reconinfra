@@ -25,6 +25,28 @@ class UserRegisterForm(forms.ModelForm):
         'sponsor_id',
         'password'
       ]
+class UpdateRegisterForm(forms.ModelForm):
+    class Meta:
+      model = CustomUser
+      fields = [
+        'first_name', 
+        'last_name',
+        'email',
+        'phone_number',
+        'aadhar_number',
+        'pan_number',
+        'account_holder_name',
+        'account_number',
+        'account_type',
+        'ifsc_code',
+        'bank_name',
+        'branch_name',
+        'country',
+        'state',
+        'city',
+        'address',
+      
+      ]
     
 class UserUpdateForm(forms.ModelForm):
   class Meta:

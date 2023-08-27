@@ -55,7 +55,7 @@
 								<!--begin::Heading-->
 								{% for message in messages %}
 								<div class="alert {{message.tags}} alert-dismissible fade show" role="alert">
-									<strong>Message!</strong> {{message}}
+									<strong></strong> {{message}}
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 									</button>
@@ -64,14 +64,14 @@
 								
 								<!--begin::Separator-->
 								<div class="separator separator-content my-14">
-									<span class="w-125px text-gray-500 fw-semibold fs-7">Or with email</span>
+									<span class="w-200px text-gray-500 fw-semibold fs-7">Login with Associate ID</span>
 								</div>
 								<!--end::Separator-->
 								<!--begin::Input group=-->
 								
 								<div class="fv-row mb-8">
 									<!--begin::Email-->
-									<input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent">
+									<input type="text" placeholder="Enter Associate ID" name="sponsor_id" autocomplete="off" class="form-control bg-transparent">
 									<!--end::Email-->
 								</div>
 								<!--end::Input group=-->

@@ -20,7 +20,7 @@ def send_otp(request):
     
 def send_forget_password_mail(email, token):
     subject = "Your Forget Password Link"
-    message = f"Hi, clink on the link to reset your password http://127.0.0.1:8000/accounts/change-password/{token}/"
+    message = f"Hi, clink on the link to reset your password http://reconinfra.com/accounts/change-password/{token}/"
     from_email = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)

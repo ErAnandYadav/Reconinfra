@@ -86,10 +86,12 @@
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                
                                 <th class="min-w-125px">Full Name</th>
+                                <th class="min-w-125px">Associate ID</th>
                                 <th class="min-w-125px">Email ID</th>
                                 <th class="min-w-125px">Phone Number</th>
                                 <th class="min-w-125px">Aadhar No.</th>
                                 <th class="min-w-125px">PAN No.</th>
+                                <th class="min-w-125px">Level</th>
                                 <th class="min-w-100px">Joined Date</th>
                                 <!-- <th class="min-w-125px">Booking Status</th> -->
                                 
@@ -109,6 +111,7 @@
                                 </td>
                                 <!--end::User=-->
                                 <!--begin::Role=-->
+                                <td><span class="badge badge-primary">{{team.sponsor_id}}</span></td>
                                 <td>{{team.email}}</td>
                                 <td>{{team.phone_number}}</td>
                                 <td>{{team.aadhar_number}}</td>
@@ -117,6 +120,10 @@
                                 
                                 <td>
                                    {{team.pan_number}}
+                                </td>
+                                <td>
+                                    <div class="badge badge-info fw-bold">Level -1</div>
+                                   
                                 </td>
                                 <td><div class="badge badge-light fw-bold">{{team.date_joined|date:'d M Y'}}</div></td>
 
