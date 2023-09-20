@@ -9,19 +9,32 @@ from .helpers import *
 from .forms import *
 from .models import *
 import random
+
 from django.utils import timezone
 # Create your views here.
 @login_required(login_url='/accounts/auth-login/')
 def Admin_Panel_Home(request):
     context = {}
     try:
-        balance = Wallet.objects.filter(associate_id = request.user.account_id).aggregate(wallet_balance = Sum("balance"))
-        monthly_business = Wallet.objects.filter(associate_id = request.user.account_id, timestamp__month = timezone.now().month).aggregate(wallet_balance = Sum("balance"))
-        context['balance'] = balance
-        context['monthly_business'] = monthly_business
-        print(balance['wallet_balance'])
-        user_label = assign_label(balance['wallet_balance'])
-        print(user_label)
+        if request.user.is_superuser:
+
+            balance = PlotBooking.objects.all().aggregate(wallet_balance = Sum("down_payment"))
+            monthly_business = PlotBooking.objects.filter(created_at__month = timezone.now().month).aggregate(wallet_balance = Sum("down_payment"))
+            context['balance'] = balance
+            context['monthly_business'] = monthly_business
+            activeUser = CustomUser.objects.filter(is_wallet_active = True).exclude(is_superuser=True).count
+            inactiveUser = CustomUser.objects.filter(is_wallet_active = False).exclude(is_superuser=True).count
+            context['activeUser'] = activeUser
+            context['inactiveUser'] = inactiveUser
+        else:
+            balance = Wallet.objects.filter(associate= request.user).aggregate(wallet_balance = Sum("wallet_balance"))
+            monthly_business = Wallet.objects.filter(associate = request.user, timestamp__month = timezone.now().month).aggregate(wallet_balance = Sum("wallet_balance"))
+            context['balance'] = balance
+            context['monthly_business'] = monthly_business
+            activeUser = CustomUser.objects.filter(is_wallet_active = True).exclude(is_superuser=True).count
+            inactiveUser = CustomUser.objects.filter(is_wallet_active = False).exclude(is_superuser=True).count
+            context['activeUser'] = activeUser
+            context['inactiveUser'] = inactiveUser
     except Exception as e:
         print(e)
     return render(request, 'app/index.html', context)
@@ -56,6 +69,21 @@ def PropertyList(request):
     except Exception as e:
         print(e)
     return render(request, 'app/property-list.html', context)
+
+@login_required(login_url='/accounts/auth-login/')
+def UpdatePropertiesView(request, pk):
+    obj = get_object_or_404(Properties, pk=pk) 
+    if request.method == 'POST':
+        form = AddPropertyForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Plot has been updated successfully!")
+            return redirect('/app/property-list')  
+    else:
+        form = AddPropertyForm(instance=obj) 
+    
+    return render(request, 'app/edit-property.html', {'form': form})
+
 
 @login_required(login_url='/accounts/auth-login/')
 def DeletePlotView(request, pk):
@@ -112,7 +140,7 @@ def AddGalleryImage(request):
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Successfully Inserted!')
-                return redirect('/app/add-gallery-images')
+                return redirect('/app/list-gallery-images')
             else:
                 form.errors['__all__'] = "Somethong wrong"
                 return render(request, 'app/add-gallery-image.html', {'form':form})
@@ -140,152 +168,16 @@ def DeleteImageView(request, pk):
     return redirect('/app/list-gallery-images')
 
 
-# @login_required(login_url='/accounts/auth-login/')
-# def PlotBookingView(request):
-#     context = {}
-#     if request.method =='POST':
-#         try:
-#             form = PlotBookingForm(request.POST, request.FILES)
-#             if form.is_valid():
-#                 total_amount = form.cleaned_data.get('total_amount')
-#                 down_payment = form.cleaned_data.get('down_payment')
-#                 # calculate min 20 %
-#                 perc = total_amount * 20 / 100
-#                 if down_payment != perc:
-#                     form.add_error('down_payment', "Booking Amount Minimum 20%")
-#                     return render(request, 'app/plot-booking.html', {'form' : form})
-#                 booking_obj =form.save()
-#                 pin = pin_generate()
-#                 booking_obj.pin = pin
-#                 booking_obj.agent_id = request.user.account_id
-#                 booking_obj.save()
-#                 subject = 'Welcome to Recon Group'
-#                 message = f'Congratulation {request.user.first_name}, Your Plot Booking PIN(Payment Identification Number) is {pin}'
-#                 email_from = settings.EMAIL_HOST_USER
-#                 recipient_list = [request.user.email, ]
-#                 try:
-#                     send_mail( subject, message, email_from, recipient_list )
-#                 except Exception as e:
-#                     print(e)
-
-#                 # Bronze - Less than 1500 points.
-#                 # Silver - 1500-1999 points.
-#                 # Gold - 2000-2499 points.
-#                 # Platinum - 2500-2999 points.
-#                 # Diamond - 3000-3499 points.
-#                 # Master - More than 3500 points.
-#                 # Grandmaster - Top 500 players in the ranked leaderboard.
-
-#                 wallet_balance = Wallet.objects.filter(agent_id = request.user.account_id).aggregate(total_balance = Sum('balance'))
-#                 print("wallet_balance",wallet_balance)
-
-#                 if wallet_balance['total_balance'] is None:
-#                     _5_perc_com = down_payment * 5 / 100 
-#                     Wallet.objects.create(agent_id = request.user.account_id,balance=_5_perc_com)
-
-#                 # amount = [0, 2500000, 5000000, 10000000, 50000000, 100000000]
-#                 # for amt in amount:
-#                 #     print("ammount Loop", amt)
-
-#                 if wallet_balance['total_balance'] <= 2500000: # 0 to 25lac
-#                     print("5% Commission Slab")
-#                     _5_perc = down_payment * 5 / 100 
-#                     Wallet.objects.create(agent_id = request.user.account_id, balance=_5_perc)
-
-#                 elif wallet_balance['total_balance'] <= 5000000: # 25lac to 50lac
-#                     print("8% Commission Slab")
-#                     _8_perc = down_payment * 8 / 100
-#                     Wallet.objects.create(agent_id = request.user.account_id, balance=_8_perc)
-                    
-#                 elif wallet <= 10000000: # 50lac to 1cr
-#                     print("10% Commission Slab")
-#                     _10_perc = down_payment * 10 / 100
-#                     Wallet.objects.create(agent_id = request.user.account_id, balance=_10_perc)
-                    
-#                 elif wallet <= 50000000: # 1cr to 5cr
-#                     print("12% Commission Slab")
-#                     _12_perc = down_payment * 12 / 100
-#                     Wallet.objects.create(agent_id = request.user.account_id, balance=_12_perc)
-
-#                 elif wallet <= 100000000: # 5cr to 10cr
-#                     print("14% Commission Slab")
-#                     _14_perc = down_payment * 14 / 100
-#                     Wallet.objects.create(agent_id = request.user.account_id, balance=_14_perc)
-
-#                 elif wallet > 100000000: # 10cr to Above
-#                     print("15% Commission Slab")
-#                     _15_perc = down_payment * 15 / 100
-#                     Wallet.objects.create(agent_id = request.user.account_id, balance=_15_perc)
-
-#                 messages.success(request, "Plot Booked Successfully")
-#                 return redirect('/app/booking-list')
-#             else:
-#                 form.errors['__all__'] = "Somethong wrong"
-#                 print(form.errors)
-#                 return render(request, 'app/plot-booking.html', {'form':form})
-#         except Exception as e:
-#             print(e)
-#     form = PlotBookingForm()
-#     context['form'] = form
-#     return render(request, 'app/plot-booking.html', context)
-
-
-# @login_required(login_url='/accounts/auth-login/')
-# def PlotBookingView(request):
-#     context = {}
-#     if request.method =='POST':
-#         try:
-#             form = PlotBookingForm(request.POST)
-#             if form.is_valid():
-#                 form_obj = form.save(commit=False)
-#                 form_obj.agent_id = request.user.account_id
-#                 booking_id = generate_booking_id()
-#                 form_obj.booking_id = booking_id
-#                 pin = pin_generate() # Generate 4 Digit PIN
-#                 form_obj.pin = pin
-#                 form_obj.save()
-#                 subject = 'Welcome to the Recon Group'
-#                 message = f'Congratulation {request.user.first_name}, Your Booking ID is {booking_id} and Your PIN (Personal identification numbers) is {pin} Please do not share your booking ID Thank You!'
-#                 email_from = settings.EMAIL_HOST_USER
-#                 recipient_list = [request.user.email, ]
-#                 try:
-#                     send_mail( subject, message, email_from, recipient_list )
-#                 except Exception as e:
-#                     print(e)
-#                 messages.success(request, "Your Plot Booked Successfully")
-#                 return redirect('/app/booking-list')
-#             else:
-#                 form.errors['__all__'] = "Somethong wrong"
-#                 print(form.errors)
-#                 return render(request, 'app/plot-booking.html', {'form':form})
-#         except Exception as e:
-#             print("Error", e)
-#     form = PlotBookingForm()
-#     context['form'] = form
-#     return render(request, 'app/plot-booking.html', context)
-
 @login_required(login_url='/accounts/auth-login/')
-def BookingList(request):
+def MyOrdersView(request):
     contaxt = {}
     try:
-        booking_plot = PlotBooking.objects.filter(agent=request.user).order_by('-created_at')
-        contaxt['booking_plot']= booking_plot
+        my_orders = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).order_by('-created_at')
+        contaxt['my_orders']= my_orders
     except Exception as e:
         print(e)
-    return render(request, 'app/booking-list.html', contaxt)
+    return render(request, 'app/my-orders.html', contaxt)
 
-@login_required(login_url='/accounts/auth-login/')
-def UpdateBookingPlot(request, booking_id):
-    obj = get_object_or_404(PlotBooking, pk = booking_id)
-    if request.method =='POST':
-        form = PlotBookingForm(request.POST, instance=obj)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Booking updated successfully!")
-            return redirect('/app/booking-list')
-    else:
-        form = PlotBookingForm(instance= obj)
-    return render(request, "app/edit-booking-plot.html", {'form' : form})
 
 from django.http import JsonResponse
 
@@ -307,86 +199,7 @@ def getAgentBookedDetailsView(request):
         return JsonResponse(serialized_data)
     except PlotBooking.DoesNotExist:
         return JsonResponse({'error': 'Booking not found'}, status=404)
-@login_required(login_url='/accounts/auth-login/')
-def AddPaymentView(request):
-    context = {}
-    if request.method=='POST':
-        form = PaymentHistoryForm(request.POST)
-        if form.is_valid():
-            form_obj =form.save(commit=False)
-            agent = form.cleaned_data.get('agent')
-            pay_payment = form.cleaned_data.get('pay_payment')
-            booking = form.cleaned_data.get('booking')
-            total_amount = form.cleaned_data.get('total_amount')
-            remaining_balance = total_amount - pay_payment
-            form_obj.remaining_balance = remaining_balance
-            form_obj.save()
-            
-            total_business = PaymentHistory.objects.filter(agent=agent).aggregate(amount = Sum('pay_payment'))
-            print(total_business['amount'])
-            # Commissions Create
-            if total_business['amount'] <= 2500000: # 0 To 25lac
-                print("5% Commission Slab")
-                _5_perc_com = total_business['amount'] * 5 / 100
-                agent_wallet = Wallet.objects.filter(agent_id = agent.account_id)
-                if not agent_wallet:
-                    Wallet.objects.create(agent_id = agent.account_id, balance = _5_perc_com)
-                else:
-                    wallet_obj = Wallet.objects.get(agent_id = agent.account_id)
-                    wallet_obj.balance += _5_perc_com
-                    wallet_obj.save()
-            
-            elif total_business['amount'] <= 5000000: # 25lac To 50lac
-                print("8% Commission")
-                _8_perc_com = total_business['amount'] * 8 / 100 
-                agent_wallet = Wallet.objects.get(agent_id = agent.account_id)
-                agent_wallet.balance += _8_perc_com
-                agent_wallet.save()
-
-            elif total_business['amount'] <= 10000000: # 50lac to 1cr
-                print("10% Commission")
-                _10_perc_com = total_business['amount'] * 10 / 100
-                agent_wallet = Wallet.objects.get(agent_id = agent.account_id)
-                agent_wallet.balance += _10_perc_com
-                agent_wallet.save()
-
-            elif total_business['amount'] <= 50000000: # 1cr To 5cr
-                print("12% Commission")
-                _12_perc_com = total_business['amount'] * 12 / 100
-                agent_wallet = Wallet.objects.get(agent_id = agent.account_id)
-                agent_wallet.balance += _12_perc_com
-                agent_wallet.save()
-
-            elif total_business['amount'] <= 100000000: # 5cr  To 10cr
-                print("14% Commission")
-                _14_perc_com = total_business['amount'] * 14 / 100
-                agent_wallet = Wallet.objects.get(agent_id = agent.account_id)
-                agent_wallet.balance += _14_perc_com
-                agent_wallet.save()
-
-            elif total_business['amount'] < 100000000: # 10cr To Above
-                print("15% Commission")
-                _15_perc_com = total_business['amount'] * 15 / 100
-                agent_wallet = Wallet.objects.get(agent_id = agent.account_id)
-                agent_wallet.balance += _15_perc_com
-                agent_wallet.save()
-
-            messages.success(request, "Payment Save Successfully!")
-            return redirect('/app/payment-history')
-    form = PaymentHistoryForm()
-    context['form'] = form
-    return render(request, 'app/add-payment.html', context)
-
-@login_required(login_url='/accounts/auth-login/')
-def PaymentHistoryView(request):
-    context = {}
-    try:
-        payment_history = PaymentHistory.objects.all()
-        context['payment_history'] = payment_history
-    except Exception as e:
-        print(e)
-    return render(request, "app/payment-history.html", context)
-
+    
 @login_required(login_url='/accounts/auth-login/')
 def AddRewardView(request):
     context = {}
@@ -421,7 +234,7 @@ def RewardListView(request):
 def FacilitatorListView(request):
     context = {}
     try:
-        facilitators = CustomUser.objects.all().exclude(is_superuser=True)
+        facilitators = CustomUser.objects.all().exclude(is_superuser=True).order_by('date_joined')
         context['facilitators'] = facilitators
     except Exception as e:
         print(e)
@@ -444,14 +257,14 @@ def TransferRequestView(request):
                 transfer_request = form.save(commit=False)
                 transfer_request.user = request.user
                 transfer_request.status = "pending"
-                walletObject.balance -=amount
+                walletObject.wallet_balance -=amount
                 walletObject.save()
                 transfer_request.save()
                 messages.success(request, "Your transfer request has been successfully sent")
                 return redirect('/app/transfer-request')
         except Exception as e:
             print(e)
-    balance = Wallet.objects.filter(agent_id = request.user.account_id).aggregate(wallet_balance = Sum("balance"))
+    balance = Wallet.objects.filter(associate_id = request.user.account_id).aggregate(wallet_balance = Sum("wallet_balance"))
     form = TransferRequestForm()
     context['form'] = form
     context['balance'] = balance
@@ -496,69 +309,146 @@ def ViewAgentWithrawalsDetailsView(request, transfer_request_id):
     
     return render(request, 'app/view-withdrawals-details.html', {'form': form, 'bank_details':bank_details})
 
+@login_required(login_url='/accounts/auth-login/')
+def BookingHistoryView(request):
+    context = {}
+    try:
+        booking_history = PlotBooking.objects.all()
 
+        context['booking_history'] = booking_history
+    except Exception as e:
+        print(e)
+    return render(request, "app/booking-history.html", context)
 
-
-COMMISSION_SLABS = [
-    (1000000, 5),
-    (3000000, 7),
-    (60000000, 8),
-    (15000000, 9),
-    (30000000, 10),
-    (60000000, 11),
-    (100000000, 12),
-    (150000000, 13),
-    (250000000, 14),
-    (250000000, 15),
-]
-
-def calculate_commission(total_amount):
-    for slab, percentage in COMMISSION_SLABS:
-        if total_amount <= slab:
-            return total_amount * percentage / 100
-    return total_amount * 15 / 100 
-
-
+@login_required(login_url='/accounts/auth-login/')
 def PlotBookingView(request):
     context = {}
-    if request.method =='POST':
+    if request.method == 'POST':
         try:
             form = PlotBookingForm(request.POST)
             if form.is_valid():
+                booking_id = generate_booking_id()
                 form_obj = form.save(commit=False)
+                form_obj.booking_id = booking_id
+                form_obj.save()
+                customerName = form.cleaned_data.get('customer_name')
+                email = form.cleaned_data.get('customer_email')
                 associate_id = form.cleaned_data.get('associate_id')
                 total_amount = form.cleaned_data.get('total_amount')
                 pay_payment = form.cleaned_data.get('down_payment')
-                remaining_balance = total_amount - pay_payment
-                form_obj.remaining_balance = remaining_balance
-                form_obj.save()
+                customer_username = email.split('@')[0]
+                customer_password = CustomUser.objects.make_random_password()
+                if pay_payment is None:
+                    pay_payment = total_amount
+                # if pay_payment:
+                #     remaining_balance = total_amount - pay_payment
+                #     print(remaining_balance,"877777777777")
+                #     form_obj.remaining_balance = remaining_balance
+                #     form_obj.customer_username = customer_username
+                #     form_obj.save()
+                # else:
+                #     form_obj.customer_username = customer_username
+                #     pay_payment = total_amount
+                #     form_obj.save()
                 associate = CustomUser.objects.filter(sponsor_id=associate_id).first()
                 if associate is None:
                     form.add_error('associate_id', "Invalid associate id")
                     context['form'] = form
                     return render(request, "app/plots-booking.html", context)
-                total_business = Wallet.objects.filter(associate_id=associate.account_id).aggregate(amount=Sum('total_business'))['amount']
-                
-                if total_business is not None:
-                    commission = calculate_commission(total_business)
-                    agent_wallet = get_object_or_404(Wallet, associate_id=associate.account_id)
-                    agent_wallet.wallet_balance += commission
-                    agent_wallet.total_business += pay_payment
-                    agent_wallet.save()
-                    messages.success(request, "Payment Saved Successfully!")
-                    return redirect('/app/payment-history')
-                commission = calculate_commission(pay_payment)
-                Wallet.objects.create(associate_id = associate.account_id, total_business=pay_payment, wallet_balance=commission)
+                commission = calculate_commission(pay_payment, associate.business_level)
+                agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
+                agent_wallet.wallet_balance += commission
+                agent_wallet.total_business += pay_payment
+                agent_wallet.is_active = True
+                agent_wallet.save()
+                commission_level = find_commission_level(agent_wallet.total_business)
+                if commission_level:
+                    print(f"Commission Level for {agent_wallet.total_business}: {commission_level}")
+                    associate.business_level = commission_level
+                    associate.save()
+                else:
+                    print("Total amount exceeds the highest slab.")
+                html_content = f"Dear {customerName},Your booking has been successfully confirmed. Your login ID Username: {customer_username} and Password: {customer_password} Thank you for choosing Recon Group."
+                html_content2 = f"Dear {associate.first_name},Your booking has been successfully confirmed booking id {booking_id}.Thank you for choosing Recon Group."
+                subject ="Booking Confirmation"
+                send_email(html_content, subject, email)
+                send_email2(html_content2, subject, associate.email)
                 messages.success(request, "Payment Saved Successfully!")
-                return redirect('/app/payment-history')
-
+                return redirect('/app/booking-history')
             context['form'] = form
             return render(request, "app/plots-booking.html", context)
         except Exception as e:
-            print(e)
+            print("An error occurred:",e)
     form = PlotBookingForm()
     context['form'] = form
     return render(request, "app/plots-booking.html", context)
+
+
+@login_required(login_url='/accounts/auth-login/')
+def UpdateBookingPlot(request, booking_id):
+    obj = get_object_or_404(PlotBooking, pk = booking_id)
+    if request.method =='POST':
+        form = PlotBookingForm(request.POST, instance=obj)
+        if form.is_valid():
+            form_obj = form.save()
+            customerName = form.cleaned_data.get('customer_name')
+            email = form.cleaned_data.get('customer_email')
+            associate_id = form.cleaned_data.get('associate_id')
+            total_amount = form.cleaned_data.get('total_amount')
+            pay_payment = form.cleaned_data.get('down_payment')
+            booking_status = form.cleaned_data.get('booking_status')
+            customer_username = email.split('@')[0]
+            customer_password = CustomUser.objects.make_random_password()
+            if pay_payment is None:
+                    pay_payment = total_amount
+            # print(pay_payment,"877777777777777777777777777777")
+            # if pay_payment:
+            #     remaining_balance = total_amount - pay_payment
+            #     print(remaining_balance,"877777777777")
+            #     form_obj.remaining_balance = remaining_balance
+            #     form_obj.customer_username = customer_username
+            #     form_obj.save()
+            # else:
+            #     print("45555555555555555555555555555555554")
+            #     form_obj.customer_username = customer_username
+            #     pay_payment = total_amount
+            #     form_obj.save()
+            associate = CustomUser.objects.filter(sponsor_id=associate_id).first()
+            if associate is None:
+                form.add_error('associate_id', "Invalid associate id")
+                context['form'] = form
+                return render(request, "app/plots-booking.html", context)
+            commission = calculate_commission(pay_payment, associate.business_level)
+            agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
+            agent_wallet.wallet_balance += commission
+            agent_wallet.total_business += pay_payment
+            agent_wallet.is_active = True
+            agent_wallet.save()
+            commission_level = find_commission_level(agent_wallet.total_business)
+            if commission_level:
+                print(f"Commission Level for {agent_wallet.total_business}: {commission_level}")
+                associate.business_level = commission_level
+                associate.save()
+            else:
+                print("Total amount exceeds the highest slab.")
+            html_content = f"Dear {customerName}! We are delighted to inform you that your booking with Recon Group has been {booking_status}."
+            subject ="Booking Confirmation"
+            send_email(html_content, subject, email)
+            messages.success(request, "Booking updated successfully!")
+            return redirect('/app/booking-history')
+    else:
+        form = PlotBookingForm(instance= obj)
+    return render(request, "app/edit-booking-plot.html", {'form' : form})
+
+@login_required(login_url='/accounts/auth-login/')
+def DeleteBookingView(request, booking_id):
+    try:
+        obj = get_object_or_404(PlotBooking, pk = booking_id)
+        obj.delete()
+        messages.success(request, "Plot Booking History Deleted Successfully!")
+        return redirect('/app/booking-history')
+    except Exception as e:
+        print(e)
 
 from django.http import JsonResponse
 def ActivateIdView(request):
@@ -573,6 +463,156 @@ def ActivateIdView(request):
         user.save()
         return JsonResponse({'success': True})
     return JsonResponse({'success': False, 'error_message': 'Item not found'})
+
+
+@login_required(login_url='/accounts/auth-login/')
+def MyTreeTeamView(request):
+    def build_team_tree(user):
+        children = CustomUser.objects.filter(referred_by_id=user.account_id)
+        children_list = []
+
+        for child in children:
+            child_data = {
+                "name": child.first_name,
+                "sponsor_id": child.sponsor_id,
+                "children": build_team_tree(child)  # Recursively build children's tree
+            }
+            children_list.append(child_data)
+
+        return children_list
+
+    superusers = CustomUser.objects.filter(referred_by=None)
+    teams_list = []
+
+    for superuser in superusers:
+        team_data = {
+            "name": superuser.first_name,
+            "sponsor_id": superuser.sponsor_id,
+            "children": build_team_tree(superuser)  # Build tree for each superuser
+        }
+        teams_list.append(team_data)
+
+    print(teams_list, "87777777777777777")
+
+    return render(request, 'app/tree.html', {'teams': teams_list})
+
+
+def tryGetAllUsersView(request):
+    teams_list = []
+    if request.user.is_superuser:
+        teams = CustomUser.objects.filter(is_superuser=True)
+        for team in teams:
+            data = {
+                "reffered_by": team.referred_by_id,
+                "is_superuser": team.is_superuser,
+                "name": team.first_name,
+                "sponsor_id": team.sponsor_id
+            }
+            teams_list.append(data)
+        print(teams_list)
+        return JsonResponse(teams_list, safe=False)
+
+
+
+from django.http import JsonResponse
+
+def GetAllUsersView(request):
+    def build_team_tree(user):
+        children = CustomUser.objects.filter(referred_by_id=user.account_id)
+        children_list = []
+        for child in children:
+            child_data = {
+                "name": child.first_name+ ' ' + child.last_name,
+                "sponsor_id": child.sponsor_id,
+                "image": '/static/app-assets/media/user-icon.png',
+                "children": build_team_tree(child) 
+            }
+            children_list.append(child_data)
+        return children_list
+
+    superusers = CustomUser.objects.filter(account_id=request.user.account_id)
+    teams_list = []
+    for superuser in superusers:
+        team_data = {
+            "name": superuser.first_name+ ' ' + superuser.last_name,
+            "sponsor_id": superuser.sponsor_id,
+            "image": '/static/app-assets/media/user-icon.png',
+            "children": build_team_tree(superuser)  
+        }
+        teams_list.append(team_data)
+
+    print(teams_list, "87777777777777777")
+    return JsonResponse(teams_list, safe=False)
+
+
+
+import csv
+from django.shortcuts import render, redirect
+from .forms import CSVUploadForm
+
+def import_csv(request):
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            # Assuming the CSV file has headers that match the model fields
+            data = csv.DictReader(csv_file.read().decode('utf-8').splitlines())
+            for row in data:
+                # Handle file uploads for fields like profile pic, Aadhar front/back, PAN front/back
+                profile_pic = row.get('profile_pic')
+                aadhar_front = row.get('aadhar_front')
+                aadhar_back = row.get('aadhar_back')
+                pan_front = row.get('pan_front')
+                pan_back = row.get('pan_back')
+
+                # Create a new CustomUser instance and save it
+                user = CustomUser(
+                    account_id=row['account_id'],
+                    email=row['email'],
+                    phone_number=row['phone_number'],
+                    first_name=row['first_name'],
+                    last_name=row['last_name'],
+                    is_admin=row['is_admin'],
+                    is_facilitator=row['is_facilitator'],
+                    is_accountent=row['is_accountent'],
+                    aadhar_number=row['aadhar_number'],
+                    pan_number=row['pan_number'],
+                    account_holder_name=row['account_holder_name'],
+                    account_number=row['account_number'],
+                    account_type=row['account_type'],
+                    ifsc_code=row['ifsc_code'],
+                    bank_name=row['bank_name'],
+                    branch_name=row['branch_name'],
+                     # Adjust field name based on your actual model
+                    address=row['address'],
+                    referred_by_id=row['referred_by_id'],  # Adjust field name based on your actual model
+                    sponsor_id=row['sponsor_id'],
+                    is_wallet_active=row['is_wallet_active'],
+                    # business_level=row['business_level'],
+                    forget_password_token=row['forget_password_token'],
+                    password=row['password']
+                )
+
+                # Handle file uploads for fields like profile pic, Aadhar front/back, PAN front/back
+                if profile_pic:
+                    user.profile_pic.save(profile_pic, profile_pic)
+                if aadhar_front:
+                    user.aadhar_front.save(aadhar_front, aadhar_front)
+                if aadhar_back:
+                    user.aadhar_back.save(aadhar_back, aadhar_back)
+                if pan_front:
+                    user.pan_front.save(pan_front, pan_front)
+                if pan_back:
+                    user.pan_back.save(pan_back, pan_back)
+
+                user.save()
+
+            return redirect('success_page')  # Replace 'success_page' with the URL name for your success page
+    else:
+        form = CSVUploadForm()
+    return render(request, 'app/import.html', {'form': form})
+
+
 
 
 

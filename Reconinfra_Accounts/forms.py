@@ -42,9 +42,11 @@ class UpdateRegisterForm(forms.ModelForm):
         'bank_name',
         'branch_name',
         'country',
+        'business_level',
         'state',
         'city',
         'address',
+        'referred_by',
       
       ]
     
@@ -95,3 +97,4 @@ class GroupInitializeForm(forms.ModelForm):
   class Meta:
     model = GroupInitialize
     fields = ['group','agent','is_admin']
+  

@@ -11,7 +11,7 @@ def Home(request):
     try:
         form = EnquiryForm()
         all_properties = Properties.objects.all()
-        galleyImage = GalleryImages.objects.all()
+        galleyImage = GalleryImages.objects.all()[0:8]
         context['form'] = form
         context['galleyImage'] = galleyImage
         context['all_properties'] = all_properties

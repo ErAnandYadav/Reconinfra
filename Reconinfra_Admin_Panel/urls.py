@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.Admin_Panel_Home, name="admin_dashboard" ),
     path('add-property', views.AddProperties, name="AddProperties" ),
     path('property-list', views.PropertyList, name="PropertyList" ),
+    path('edit-property/<int:pk>', views.UpdatePropertiesView, name="UpdatePropertiesView" ),
     path('delete-plot/<int:pk>', views.DeletePlotView, name="DeletePlotView" ),
     path('add-plot-images', views.AddPlotImages, name="AddPlotImages" ),
     path('add-gallery-images', views.AddGalleryImage, name="AddGalleryImage" ),
@@ -12,11 +13,9 @@ urlpatterns = [
     path('delete-gallery-images/<int:pk>', views.DeleteImageView, name="DeleteImageView" ),
     path('add-plot-availability', views.AddPlotAvailability, name="AddPlotAvailability" ),
     
-    path('booking-list', views.BookingList, name="BookingList" ),
-    path('update-booking-plot/<int:booking_id>', views.UpdateBookingPlot, name="UpdateBookingPlot" ),
+    path('my-orders', views.MyOrdersView, name="MyOrdersView" ),
     path('get-agent-booked-details/', views.getAgentBookedDetailsView, name="getAgentBookedDetailsView" ),
-    path('add-payment', views.AddPaymentView, name="AddPaymentView" ),
-    path('payment-history', views.PaymentHistoryView, name="PaymentHistoryView" ),
+    path('booking-history', views.BookingHistoryView, name="BookingHistoryView" ),
     path('add-reward', views.AddRewardView, name="AddRewardView" ),
     path('reward-list', views.RewardListView, name="RewardListView" ),
     path('facilitator-list', views.FacilitatorListView, name="FacilitatorListView" ),
@@ -26,5 +25,9 @@ urlpatterns = [
     path('view-withdrawals-details/<int:transfer_request_id>', views.ViewAgentWithrawalsDetailsView, name="ViewAgentWithrawalsDetailsView" ),
     path('activate-id', views.ActivateIdView, name="ActivateIdView" ),
     path('plot-booking', views.PlotBookingView, name="PlotBookingView" ),
-
+    path('update-booking-plot/<int:booking_id>', views.UpdateBookingPlot, name="UpdateBookingPlot" ),
+    path('delete-booking-plot/<int:booking_id>', views.DeleteBookingView, name="DeleteBookingView" ),
+    path('my-team-tree', views.MyTreeTeamView, name="MyTreeTeamView" ),
+    path('get-teams', views.GetAllUsersView, name="GetAllUsersView" ),
+    path('import-csv', views.import_csv, name="import_csv" ),
 ]

@@ -40,7 +40,12 @@
    <!-- Google Font Start Here -->
    <link crossorigin href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
    <link crossorigin href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-   
+   <style>
+    .tooltip-inner {
+    max-width: 1000px !important; 
+    background-color: rgb(5, 16, 42) !important;
+}
+   </style>
 </head>
 
 <body class="sticky-header">
@@ -171,7 +176,7 @@
                                                     <a href="{% url 'CustomerLogin' %}">Customer Login</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{% url 'AuthLogin' %}">Business Login</a>
+                                                    <a href="/app/">Business Login</a>
                                                 </li>
                                             </ul>
                                         </li>

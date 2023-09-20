@@ -36,7 +36,7 @@
                                 {% if request.user.profile_pic %}
                                 <img src="{{request.user.profile_pic.url}}" alt="image">
                                 {% else %}
-                                <img src="{% static 'Backend_Files/assets/media/user-icon.png' %}" alt="image">
+                                <img src="/static/app-assets/media/user-icon.png" alt="image">
                                 {% endif %}
                                 <div
                                     class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px">
@@ -176,8 +176,11 @@
                                 <a class="nav-link text-left p-4" href="{% url 'UpdateBankDetails' %}" role="tab">BANK
                                     DETAILS</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a class="nav-link text-left p-4" href="" role="tab">CHANGE PASSWORD</a>
+                            </li> -->
+                            <li>
+                                <a class="nav-link text-left p-4" href="{% url 'ChangeProfilePicture' %}" role="tab">CHANGE PROFILE PICTURE</a>
                             </li>
                         </ul>
                     </div>
@@ -203,65 +206,8 @@
                                     {% csrf_token %}
                                     <!--begin::Input group-->
                                     <div class="row mb-6">
-                                        <!--begin::Label-->
-                                        <label class="col-form-label fw-semibold fs-6">Profile Picture</label>
-                                        <!--end::Label-->
-                                        <!--begin::Col-->
-                                        <div class="">
-                                            <!--begin::Image input-->
-                                            {% if not request.user.profile_pic %}
-                                            <div class="image-input image-input-outline" data-kt-image-input="true"
-                                                style="background-image: url({% static 'Backend_Files/assets/media/not_found.png' %})">
-                                                <!--begin::Preview existing avatar-->
-
-                                                <!--end::Preview existing avatar-->
-                                                <!--begin::Label-->
-                                                {% else %}
-                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({% static 'Backend_Files/assets/media/not_found.png' %})">
-                                                    <!--begin::Preview existing avatar-->
-
-                                                    <div class="image-input-wrapper w-125px h-125px"
-                                                        style="background-image: url({{request.user.profile_pic.url}})">
-                                                    </div>
-                                                    <!--end::Preview existing avatar-->
-                                                    <!--begin::Label-->
-                                                    {% endif %}
-                                                    <label
-                                                        class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                                        data-kt-image-input-action="change" data-bs-toggle="tooltip"
-                                                        title="Change avatar">
-                                                        <i class="bi bi-pencil-fill fs-7"></i>
-                                                        <!--begin::Inputs-->
-
-                                                        <input type="file" name="profile_pic">
-                                                        <input type="hidden" name="avatar_remove">
-                                                        <!--end::Inputs-->
-                                                    </label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Cancel-->
-                                                    <span
-                                                        class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
-                                                        title="Cancel avatar">
-                                                        <i class="bi bi-x fs-2"></i>
-                                                    </span>
-                                                    <!--end::Cancel-->
-                                                    <!--begin::Remove-->
-                                                    <span
-                                                        class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip"
-                                                        title="Remove avatar">
-                                                        <i class="bi bi-x fs-2"></i>
-                                                    </span>
-                                                    <!--end::Remove-->
-                                                </div>
-                                                <!--end::Image input-->
-                                                <!--begin::Hint-->
-                                                <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
-                                                <!--end::Hint-->
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
+                                        
+                                        
 
                                         <div class="row mb-6">
                                             <!--begin::Label-->

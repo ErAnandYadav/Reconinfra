@@ -10,6 +10,7 @@ from django.dispatch import receiver
 from django.conf import settings
 
 
+
 # Create your models here.
 
 
@@ -35,34 +36,34 @@ class CustomUser(AbstractUser):
     username = None
     account_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(_('email address'),unique=True)
-    phone_number = models.CharField(max_length=17, null=True, unique=True)
+    phone_number = models.CharField(max_length=17, null=True,)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(upload_to='Recon/User/Profile-Picture', null=True, blank=True)
     is_admin = models.BooleanField(default=False)
     is_facilitator = models.BooleanField(default=False)
     is_accountent = models.BooleanField(default=False)
-    aadhar_number = models.CharField(max_length=20, null=True,unique=True)
+    aadhar_number = models.CharField(max_length=20, null=True, unique=True, blank=True)
     aadhar_front = models.ImageField(upload_to='Recon/User/Aadhar', null=True, blank=True)
     aadhar_back = models.ImageField(upload_to='Recon/User/Aadhar', null=True, blank=True)
-    pan_number = models.CharField(max_length=11, null=True,unique=True)
+    pan_number = models.CharField(max_length=11, null=True, unique=True, blank=True)
     pan_front = models.ImageField(upload_to='Recon/User/PAN', null=True, blank=True)
     pan_back = models.ImageField(upload_to='Recon/User/PAN', null=True, blank=True)
-    account_holder_name = models.CharField(max_length = 50, null=True)
-    account_number= models.CharField(max_length=25, null=True)
+    account_holder_name = models.CharField(max_length = 50, null=True, blank=True)
+    account_number= models.CharField(max_length=25, null=True, blank=True)
     ACCOUNT_TYPE = (
         ('Saving', 'Saving'),
         ('Current', 'Current')
     )
-    account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPE, default='Saving', null=True)
-    ifsc_code = models.CharField(max_length=15, null=True)
-    bank_name = models.CharField(max_length=50, null=True)
-    branch_name = models.CharField(max_length=100, null=True)
+    account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPE, default='Saving', null=True, blank=True)
+    ifsc_code = models.CharField(max_length=15, null=True, blank=True)
+    bank_name = models.CharField(max_length=50, null=True, blank=True)
+    branch_name = models.CharField(max_length=100, null=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.DO_NOTHING, null=True)
     state = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True)
     city = models.ForeignKey(City, on_delete=models.DO_NOTHING, null=True)
     address = models.CharField(max_length=150, null=True)
-    referred_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, null=True, blank=True)
+    referred_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='sponsored_by', null=True, blank=True)
     sponsor_id = models.CharField(max_length = 500, null=True, blank=True)
     is_wallet_active = models.BooleanField(default=False)
     BUSINESS_LEVEL = (
@@ -101,6 +102,10 @@ class CustomUser(AbstractUser):
         if not self.sponsor_id:
             self.sponsor_id = generator_sponsor_id()
         return super().save(*args, **kwargs)
+    
+    def calculate_total_business(self):
+        # Calculate total business for this team member
+        return PlotBooking.objects.filter(associate_id=self.sponsor_id).aggregate(wallet_balance=Sum("down_payment"))['wallet_balance'] or 0
 
 import string
 import random
@@ -119,4 +124,4 @@ class GroupInitialize(models.Model):
     agent = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    
+

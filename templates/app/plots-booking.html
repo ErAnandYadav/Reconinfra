@@ -79,6 +79,7 @@
                                                     <span class="required">Associate Id</span>
                                                 </label>
                                                 {{form.associate_id|addclass:'form-control form-control-solid'|addid:'associate_id'}}
+                                                <div id="output"></div>
                                                 {{form.associate_id.errors}}
                                             </div>
                                             <!--begin::Col-->
@@ -186,7 +187,7 @@
                                                 {{form.booking_method|addclass:'form-control form-control-solid'|addid:'booking_method'}}
                                                 {{form.booking_method.errors}}
                                             </div>
-                                            <div class="d-flex flex-column mb-5 fv-row">
+                                            <div class="d-flex flex-column mb-5 fv-row" id="emiPeriod">
                                                 <label class="required fs-5 fw-semibold mb-2">EMI Installment</label>
                                                 {{form.emi_period|addclass:'form-control form-control-solid'|addid:'emi_period'}}
                                                 {{form.emi_period.errors}}
@@ -196,8 +197,10 @@
                                                 {{form.payment_method|addclass:'form-control form-control-solid'|addid:'payment_method'}}
                                                 {{form.payment_method.errors}}
                                             </div>
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <label class="required fs-5 fw-semibold mb-2">Cheque Number</label>
+                                            <div class="d-flex flex-column mb-5 d-none fv-row" id="chequeNumber">
+                                                <label class="required fs-5 fw-semibold mb-2" id="chequeNumberLebel">Cheque Number</label>
+                                                <label class="required fs-5 fw-semibold mb-2" id="otherMethod">NEFT/IMPS/RTGS</label>
+                                                <label class="required fs-5 fw-semibold d-none mb-2" id="DDNumberLebel">DD Number</label>
                                                 {{form.cheque_number|addclass:'form-control form-control-solid'|addid:'cheque_number'}}
                                                 {{form.cheque_number.errors}}
                                             </div>
@@ -206,17 +209,32 @@
                                                 {{form.total_amount|addclass:'form-control form-control-solid'|addid:'total_amount'}}
                                                 {{form.total_amount.errors}}
                                             </div>                                            
-                                            <div class="d-flex flex-column mb-5 fv-row">                                               
+                                            <div class="d-flex flex-column mb-5 fv-row" id="downPayment">                                               
                                                 <label class="required fs-5 fw-semibold mb-2">Down Payment</label>
                                                 {{form.down_payment|addclass:'form-control form-control-solid'|addid:'down_payment'}}
                                                 {{form.down_payment.errors}}
+                                            </div>                         
+                                            <div class="d-flex flex-column mb-5 fv-row" id="downPayment">                                               
+                                                <label class=" fs-5 fw-semibold mb-2">Plot Rate(Square fit)</label>
+                                                {{form.plot_rate_square_fit|addclass:'form-control form-control-solid'|addid:'plot_rate_square_fit'}}
+                                                {{form.plot_rate_square_fit.errors}}
+                                            </div>                         
+                                            <div class="d-flex flex-column mb-5 fv-row">                                               
+                                                <label class="required fs-5 fw-semibold mb-2">Booking Date</label>
+                                                {{form.booking_date|addclass:'form-control form-control-solid'|addid:'booking_date'}}
+                                                {{form.booking_date.errors}}
+                                            </div>                         
+                                            <div class="d-flex flex-column mb-5 fv-row" id="bookingStatus">                                               
+                                                <label class="required fs-5 fw-semibold mb-2">Booking Status</label>
+                                                {{form.booking_status|addclass:'form-control form-control-solid'|addid:'booking_status'}}
+                                                {{form.booking_status.errors}}
                                             </div>                         
                                         </div>
                                         <hr>
                                         <div class="row justify-content-between">
                                             <div class="col-xs-12 col-sm-12 col-md-4 ">
-                                                <a href="/app/booking-list" class="btn btn-secondary mr-0 d-block d-md-inline-block">
-                                                    <i class="fas fa-caret-left"></i>List</a>
+                                                <a href="/app/booking-history" class="btn btn-secondary mr-0 d-block d-md-inline-block">
+                                                <i class="fas fa-caret-left"></i>List</a>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-right">
                                                 <button type="submit" class="btn  btn-primary mr-0 btn-block">
@@ -246,8 +264,29 @@
 {% block js%}
 <script>
     $(document).ready(function() {
-        $("#location").select2({
-            placeholder: "Select City"
+        $('#associate_id').attr('maxlength', 8);
+        $('#associate_id').on('keyup', function() {
+        const id = this.value;
+        console.log(id);
+        const nameContainer = document.getElementById("output");
+
+        if (id.length === 8) {
+        console.log("Request sent");
+        fetch(`/accounts/get-associate-name/${id}`)
+            .then(response => response.json())
+            .then(data => {
+            nameContainer.innerHTML = `<span class="text-success" style="font-style: italic;font-family: sans-serif;">${data.name}</span>`;
+            })
+            .catch(error => {
+            console.error('Error:', error);
+            });
+        } else {
+        nameContainer.innerHTML = "";
+        }
+    });
+        $("#booking_date").flatpickr();
+        $("#booking_status").select2({
+            placeholder: "Select Booking Status"
         });
         $("#plot").select2({
             placeholder: "Select Plot"
@@ -267,16 +306,37 @@
         $('#payment_method').on('change', function () {
             var value = $(this).val();
             console.log(value);
-
             $('#chequeNumber, #DDNumber').addClass('d-none');
-
+            
             if (value === 'Cheque') {
                 $('#chequeNumber').removeClass('d-none');
+                $('#chequeNumberLebel').removeClass('d-none');
+                $('#DDNumberLebel').addClass('d-none');
+                $('#otherMethod').addClass('d-none');
             } else if (value === 'DD') {
-                $('#chequeNumber').removeClass('d-none');
                 $('#chequeNumberLebel').addClass('d-none');
+                $('#otherMethod').addClass('d-none');
+                $('#chequeNumber').removeClass('d-none');
                 $('#DDNumberLebel').removeClass('d-none');
             }
+            else if (value === 'NEFT/IMPS/RTGS') {
+                $('#chequeNumberLebel').addClass('d-none');
+                $('#otherMethod').removeClass('d-none');
+                $('#chequeNumber').removeClass('d-none');
+               
+                $('#DDNumberLebel').addClass('d-none');
+            }
+        });
+        $('#booking_method').on('change', function () {
+            var value = $(this).val();
+            if(value === 'Full Payment'){
+                $('#emiPeriod').addClass('d-none');
+                $('#downPayment').addClass('d-none');
+            } else {
+                $('#emiPeriod').removeClass('d-none');
+                $('#downPayment').removeClass('d-none');
+            }
+            
         });
 
     });

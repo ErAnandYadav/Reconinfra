@@ -62,11 +62,11 @@
         </div>
         <div class="row gx-0">
             {% for gallery in galleries %}
-            <div class="col-xl-4 col-lg-4 col-md-4">
+            <div class="col-xl-3 col-lg-4 col-md-4">
                 <div class="location-box1 m-3 wow zoomIn" data-wow-delay=".2s">
                     <div class="item-img">
                         <a href="{{gallery.image.url}}" data-lightbox="photos">
-                            <img class="img-fluid" src="{{gallery.image.url}}">
+                            <img class="img-fluid" src="{{gallery.image.url}}" style="height: 270px;">
                         </a>
                     </div>
                 </div>

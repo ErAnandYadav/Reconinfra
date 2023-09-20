@@ -41,7 +41,7 @@
                     {% for message in messages %}
                     <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
                         <strong></strong> {{message}}
-                        
+
                     </div>
 
                     {% endfor %}
@@ -111,33 +111,39 @@
 <section class="about-wrap-3">
     <div class="container">
         <div class="row flex-row-reverse flex-lg-row">
-                <div class="col-xl-6 col-lg-6">
-                    <div class="about-img">
-                        <img src="{% static 'Frontend_Files/img/home-about.jpg' %}" alt="about" width="746" height="587">
-                    </div>
+            <div class="col-xl-6 col-lg-6">
+                <div class="about-img">
+                    <img src="{% static 'Frontend_Files/img/home-about.jpg' %}" alt="about" width="746" height="587">
                 </div>
-                <div class="col-xl-6 col-lg-6">
-                    <div class="about-box3 wow fadeInUp" data-wow-delay=".2s">
-                        
-                        <h4 class="item-title" style="margin-bottom: 25px;">Welcome to the Recon Group</h4> 
-                        <p>
-                            Recon Group, one of the leading real estate builder in india, is a prestigious name in the field of
-            real estate.The company largely deals in residential and commercial properties located in Lucknow. It is
-            most reputed builder to buy properties, flats and apartments. We are an independent infrastructure provider
-            with committed customer base. Backed by a group of dynamic investors from India. The real estate market has
-            long worked on a simple system: If you want to buy a new house, sell the old one and use the equity for a
-            down payment. But the last few years of low ownership costs and rising rents have some move-up buyers trying
-            a new approach: Buy the new house.
-                        </p>
-                        
-                        <div class="property-button">
-                            <a href="/about-company/" class="item-btn">Read More</a>
-                        </div>
-                    </div>
-                </div>
-               
             </div>
-       
+            <div class="col-xl-6 col-lg-6">
+                <div class="about-box3 wow fadeInUp" data-wow-delay=".2s">
+
+                    <h4 class="item-title" style="margin-bottom: 25px;">Welcome to the Recon Group</h4>
+                    <p>
+                        Recon Group, one of the leading real estate builder in india, is a prestigious name in the field
+                        of
+                        real estate.The company largely deals in residential and commercial properties located in
+                        Lucknow. It is
+                        most reputed builder to buy properties, flats and apartments. We are an independent
+                        infrastructure provider
+                        with committed customer base. Backed by a group of dynamic investors from India. The real estate
+                        market has
+                        long worked on a simple system: If you want to buy a new house, sell the old one and use the
+                        equity for a
+                        down payment. But the last few years of low ownership costs and rising rents have some move-up
+                        buyers trying
+                        a new approach: Buy the new house.
+                    </p>
+
+                    <div class="property-button">
+                        <a href="/about-company/" class="item-btn">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </section>
 <!--=====================================-->
@@ -214,10 +220,13 @@
             {% for property in all_properties %}
             <div class="col-xl-4 col-lg-6 col-md-6 ">
                 <div class="property-box2 wow animated fadeInUp" data-wow-delay=".3s">
-                    <div class="item-img" style="height: 263px;">
+                    <div class="item-img" style="height: 200px;">
                         {% with property.propertiesimage_set.all|first as prop_img %}
-                        <a href="{% url 'PropertyDetails' property.slug %}"><img src="{{prop_img.image.url}}" alt="blog"
+                        <a href="{% url 'PropertyDetails' property.slug %}">
+                           
+                            <img src="{{prop_img.image.url}}" alt="blog"
                                 width="510" height="340"></a>
+                       
                         {% endwith %}
                         <div class="item-category-box1">
                             <div class="item-category">{{property.plot_types}}</div>
@@ -226,8 +235,8 @@
 
                     <div class="item-content text-center p-1">
                         <div class="verified-area d-flex justify-content-center"">
-                            <h3 class="item-title"><a
-                                    href="{% url 'PropertyDetails' property.slug %}">{{property.name}}</a></h3>
+                            <h3 class=" item-title"><a
+                                href="{% url 'PropertyDetails' property.slug %}">{{property.name}}</a></h3>
                         </div>
                         <div class="location-area"><i class="flaticon-maps-and-flags"></i>{{property.location}}</div>
 
@@ -242,7 +251,7 @@
     <div class="property-button">
         <a href="" class="item-btn">View All Properties</a>
     </div>
-    
+
     </div>
 </section>
 <!--=====================================-->
@@ -278,25 +287,21 @@
             </div>
             <div class="col-lg-6 col-md-5">
                 <div class="heading-button">
-                    <a href="javascript:void(0)" class="heading-btn item-btn-2">Explore More</a>
+                    <a href="/media-canter/" class="heading-btn item-btn-2">Explore More</a>
                 </div>
             </div>
         </div>
         <!-- Gallery -->
-<div class="row">
-    {% for image in galleyImage %}
-    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-      <img
-        src="{{image.image}}"
-        class="w-100 shadow-1-strong rounded mb-4"
-        alt="Boat on Calm Water"
-      />
-  
-    </div>
-  {% endfor %}
-   
-  </div>
-  <!-- Gallery -->
+        <div class="row">
+            {% for image in galleyImage %}
+            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <img src="{{image.image}}" class="w-100 shadow-1-strong rounded mb-4" alt="Boat on Calm Water" style="height: 270px;" />
+
+            </div>
+            {% endfor %}
+
+        </div>
+        <!-- Gallery -->
     </div>
 </section>
 <!--=====================================-->
@@ -498,16 +503,16 @@
 
 {% block js %}
 <script>
-    $(document).ready(function() {
-	$('#playBtn').click(function(event){
-	   event.preventDefault();
-	  //var url = $(this).html(); //this will not work	
-	   $("#ytVideo").append('<iframe width="1220" height="500" src="https://www.youtube.com/embed/LXb3EKWsInQ?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
-		$(this).hide();
-		//$('video-poster').css('z-index','-1');
-		
-	});
-});
+    $(document).ready(function () {
+        $('#playBtn').click(function (event) {
+            event.preventDefault();
+            //var url = $(this).html(); //this will not work	
+            $("#ytVideo").append('<iframe width="1220" height="500" src="https://www.youtube.com/embed/LXb3EKWsInQ?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+            $(this).hide();
+            //$('video-poster').css('z-index','-1');
+
+        });
+    });
 </script>
 {% endblock %}
 {% endblock %}

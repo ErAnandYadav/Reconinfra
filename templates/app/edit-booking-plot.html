@@ -72,113 +72,163 @@
                                     <!--begin::Form-->
                                     <form action="" class="form mb-15" method="post" novalidate>
                                         {% csrf_token %}
-                                        <!--begin::Input group-->
+                                        
                                         <div class="row mb-5">
                                             <div class="d-flex flex-column mb-5 fv-row">
-                                               
-                                                <!--begin::Label-->
                                                 <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
-                                                    <span class="required">location</span>
+                                                    <span class="required">Associate Id</span>
                                                 </label>
-                                                {{form.location|addclass:'form-control form-control-solid'|addid:'location'}}
-                                                {{form.location.errors}}
+                                                {{form.associate_id|addclass:'form-control form-control-solid'|addid:'associate_id'}}
+                                                <div id="output"></div>
+                                                {{form.associate_id.errors}}
                                             </div>
                                             <!--begin::Col-->
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Plot</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.plot|addclass:'form-control form-control-solid'|addid:'plot'}}
-                                                {{form.plot.errors}}
-
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Project Name</label>
+                                                    {{form.plot|addclass:'form-control form-control-solid'|addid:'plot'}}
+                                                    {{form.plot.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Plot Number</label>
+                                                    {{form.plot_number|addclass:'form-control form-control-solid'|addid:'plot_number'}}
+                                                    {{form.plot_number.errors}}
+                                                </div>
                                             </div>
                                             <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Select Plot
-                                                    Availability</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.plot_availability|addclass:'form-control form-control-solid'|addid:'plot_availability'}}
-                                                {{form.plot_availability.errors}}
-
+                                                <label class=" fs-5 fw-semibold mb-2">Plot Size (Optional)</label>
+                                                {{form.plot_size|addclass:'form-control form-control-solid'|addid:'plot_size'}}
+                                                {{form.plot_size.errors}}
                                             </div>
-
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Customer Name</label>
+                                                    {{form.customer_name|addclass:'form-control form-control-solid'|addid:'customer_name'}}
+                                                    {{form.customer_name.errors}}
+                                                </div>
+                                            </div>
+                                           <div class="col-sm-6">
                                             <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Total Amount</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.total_amount|addclass:'form-control form-control-solid'|addid:'total_amount'}}
-                                                {{form.total_amount.errors}}
-
+                                                <label class="fs-5 fw-semibold  mb-2">S/W/D of</label>
+                                                {{form.sun_of|addclass:'form-control form-control-solid'|addid:'sun_of'}}
+                                                {{form.sun_of.errors}}
+                                            </div>
+                                           </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Date of Birth</label>
+                                                {{form.dob|addclass:'form-control form-control-solid'|addid:'dob'}}
+                                                {{form.dob.errors}}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Current Address</label>
+                                                    {{form.current_address|addclass:'form-control form-control-solid'|addid:'current_address'}}
+                                                    {{form.current_address.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Pin Code</label>
+                                                    {{form.current_pin_code|addclass:'form-control form-control-solid'|addid:'current_pin_code'}}
+                                                    {{form.current_pin_code.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Permanent Address</label>
+                                                    {{form.permanent_address|addclass:'form-control form-control-solid'|addid:'permanent_address'}}
+                                                    {{form.permanent_address.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Pin Code</label>
+                                                    {{form.permanent_pin_code|addclass:'form-control form-control-solid'|addid:'permanent_pin_code'}}
+                                                    {{form.permanent_pin_code.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Phone Number</label>
+                                                    {{form.customer_phone|addclass:'form-control form-control-solid'|addid:'customer_phone'}}
+                                                    {{form.customer_phone.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Mobile Number</label>
+                                                    {{form.customer_mobile_phone|addclass:'form-control form-control-solid'|addid:'customer_mobile_phone'}}
+                                                    {{form.customer_mobile_phone.errors}}
+                                                </div>
                                             </div>
                                             <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
+                                                <label class="required fs-5 fw-semibold mb-2">Email Address</label>
+                                                {{form.customer_email|addclass:'form-control form-control-solid'|addid:'customer_email'}}
+                                                {{form.customer_email.errors}}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">Aadhar Number</label>
+                                                    {{form.customer_aadhar|addclass:'form-control form-control-solid'|addid:'customer_aadhar'}}
+                                                    {{form.customer_aadhar.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex flex-column mb-5 fv-row">
+                                                    <label class="required fs-5 fw-semibold mb-2">PAN Number</label>
+                                                    {{form.customer_pan|addclass:'form-control form-control-solid'|addid:'customer_pan'}}
+                                                    {{form.customer_pan.errors}}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required fs-5 fw-semibold mb-2">Booking Method</label>
+                                                {{form.booking_method|addclass:'form-control form-control-solid'|addid:'booking_method'}}
+                                                {{form.booking_method.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row" id="emiPeriod">
+                                                <label class="required fs-5 fw-semibold mb-2">EMI Installment</label>
+                                                {{form.emi_period|addclass:'form-control form-control-solid'|addid:'emi_period'}}
+                                                {{form.emi_period.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
                                                 <label class="required fs-5 fw-semibold mb-2">Payment Method</label>
-                                                <!--end::Label-->
-                                                 <!--end::Input-->
                                                 {{form.payment_method|addclass:'form-control form-control-solid'|addid:'payment_method'}}
                                                 {{form.payment_method.errors}}
                                             </div>
+                                            <div class="d-flex flex-column mb-5 fv-row" id="chequeNumber">
+                                                <!-- <label class="required fs-5 fw-semibold mb-2" id="chequeNumberLebel">Cheque Number</label>
+                                                <label class="required fs-5 fw-semibold d-none mb-2" id="DDNumberLebel">DD Number</label> -->
+                                                {{form.cheque_number|addclass:'form-control form-control-solid'|addid:'cheque_number'}}
+                                                {{form.cheque_number.errors}}
+                                            </div>
                                             <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
+                                                <label class="required fs-5 fw-semibold mb-2">Total Amount</label>
+                                                {{form.total_amount|addclass:'form-control form-control-solid'|addid:'total_amount'}}
+                                                {{form.total_amount.errors}}
+                                            </div>                                            
+                                            <div class="d-flex flex-column mb-5 fv-row" id="downPayment">                                               
                                                 <label class="required fs-5 fw-semibold mb-2">Down Payment</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
                                                 {{form.down_payment|addclass:'form-control form-control-solid'|addid:'down_payment'}}
                                                 {{form.down_payment.errors}}
-
                                             </div>
-                           
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">EMI Period</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.emi_period|addclass:'form-control form-control-solid'|addid:'emi_period'}}
-                                                {{form.emi_period.errors}}
-
-                                            </div>
-
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Customer Name</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.customer_name|addclass:'form-control form-control-solid'|addplaceholder:'Customer Name'}}
-                                                {{form.customer_name.errors}}
-                                            </div>
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Customer Father Name</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.customer_father_name|addclass:'form-control form-control-solid'|addplaceholder:'Customer Father Name'}}
-                                                {{form.customer_father_name.errors}}
-                                            </div>
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Customer Phone No.</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.customer_phone|addclass:'form-control form-control-solid'|addplaceholder:'Customer Phone'}}
-                                                {{form.customer_phone.errors}}
-                                            </div>
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required fs-5 fw-semibold mb-2">Plot Number</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.plot_number|addclass:'form-control form-control-solid'|addplaceholder:'Plot Number'}}
-                                                {{form.plot_number.errors}}
-                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">                                               
+                                                <label class="required fs-5 fw-semibold mb-2">Booking Date</label>
+                                                {{form.booking_date|addclass:'form-control form-control-solid'|addid:'booking_date'}}
+                                                {{form.booking_date.errors}}
+                                            </div>                         
+                                            <div class="d-flex flex-column mb-5 fv-row" id="bookingStatus">                                               
+                                                <label class="required fs-5 fw-semibold mb-2">Booking Status</label>
+                                                {{form.booking_status|addclass:'form-control form-control-solid'|addid:'booking_status'}}
+                                                {{form.booking_status.errors}}
+                                            </div>                         
                                         </div>
                                         <hr>
                                         <div class="row justify-content-between">
                                             <div class="col-xs-12 col-sm-12 col-md-4 ">
-                                                <a href="/app/booking-list" class="btn btn-secondary mr-0 d-block d-md-inline-block">
-                                                    <i class="fas fa-caret-left"></i>List</a>
+                                                <a href="/app/booking-history" class="btn btn-secondary mr-0 d-block d-md-inline-block">
+                                                <i class="fas fa-caret-left"></i>List</a>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-right">
                                                 <button type="submit" class="btn  btn-primary mr-0 btn-block">
@@ -208,34 +258,85 @@
 {% block js%}
 <script>
     $(document).ready(function() {
-        $("#location").select2({
-            placeholder: "Select City"
+        
+        
+        $('#associate_id').attr('maxlength', 8);
+        $('#associate_id').on('keyup', function() {
+        const id = this.value;
+        console.log(id);
+        const nameContainer = document.getElementById("output");
+
+        if (id.length === 8) {
+        console.log("Request sent");
+        fetch(`/accounts/get-associate-name/${id}`)
+            .then(response => response.json())
+            .then(data => {
+            nameContainer.innerHTML = `<span class="text-success" style="font-style: italic;font-family: sans-serif;">${data.name}</span>`;
+            })
+            .catch(error => {
+            console.error('Error:', error);
+            });
+        } else {
+        nameContainer.innerHTML = "";
+        }
+    });
+        $("#booking_date").flatpickr();
+        $("#booking_status").select2({
+            placeholder: "Select Booking Status"
         });
         $("#plot").select2({
             placeholder: "Select Plot"
         });
-        $("#plot_availability").select2({
-            placeholder: "Select Plot Availability"
+        $("#emi_period").select2({
+            placeholder: "Select EMI Period"
         });
         $("#payment_method").select2({
             placeholder: "Payment Method"
         });
-        $("#emi_installments").select2({
-            placeholder: "EMI Installment"
+        $("#booking_method").select2({
+            placeholder: "Booking Method"
         });
         
+        
         // On Change Append Input Box
-        // $('#payment_method').on('change', function () {
-        //     var value = $(this).val();
-        //     console.log(value)
-        //     if (value == 'EMI') {
-        //         $('#emi_installments').removeClass('d-none');
-        //         $('#down_payment').removeClass('d-none');
-        //     } else {
-        //         $('#emi_installments').addClass('d-none');
-        //     }
-        // });
+        // On Change Append Input Box
+        $('#payment_method').on('change', function () {
+            var value = $(this).val();
+            $('#chequeNumber, #DDNumber').addClass('d-none');
+            
+            if (value === 'Cheque') {
+                $('#chequeNumber').removeClass('d-none');
+                $('#chequeNumberLebel').removeClass('d-none');
+                $('#DDNumberLebel').addClass('d-none');
+                $('#otherMethod').addClass('d-none');
+            } else if (value === 'DD') {
+                $('#chequeNumberLebel').addClass('d-none');
+                $('#otherMethod').addClass('d-none');
+                $('#chequeNumber').removeClass('d-none');
+                $('#DDNumberLebel').removeClass('d-none');
+            }
+            else if (value === 'NEFT/IMPS/RTGS') {
+                $('#chequeNumberLebel').addClass('d-none');
+                $('#otherMethod').removeClass('d-none');
+                $('#chequeNumber').removeClass('d-none');
+               
+                $('#DDNumberLebel').addClass('d-none');
+            }
+        });
+        $('#booking_method').on('change', function () {
+            var value = $(this).val();
+            if(value === 'Full Payment'){
+                $('#emiPeriod').addClass('d-none');
+                $('#downPayment').addClass('d-none');
+            } else {
+                $('#emiPeriod').removeClass('d-none');
+                $('#downPayment').removeClass('d-none');
+            }
+            
+        });
+
     });
+
 </script>
 {% endblock %}
 {% endblock %}

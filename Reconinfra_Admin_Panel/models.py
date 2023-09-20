@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify 
 from Reconinfra_Accounts.models import *
+from django.contrib.auth.hashers import make_password
+
 
 # Create your models here.
 class Properties(models.Model):
@@ -57,7 +59,9 @@ import random
 class PlotBooking(models.Model):
     associate_id = models.CharField(max_length=10, null=True)
     plot = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
-    plot_number = models.CharField(max_length=10, null=True)
+    plot_number = models.CharField(max_length=10, null=True, unique=True, error_messages={
+        'unique': "This plot number has been already booked!"
+    })
     plot_size = models.CharField(max_length=100, null=True,blank=True)
     customer_name = models.CharField(max_length=100, null=True)
     sun_of = models.CharField(max_length=100, null=True)
@@ -68,9 +72,11 @@ class PlotBooking(models.Model):
     permanent_pin_code = models.CharField(max_length=100, null=True)
     customer_phone = models.CharField(max_length=100, null=True)
     customer_mobile_phone = models.CharField(max_length=100, null=True)
-    customer_email = models.CharField(max_length=100, null=True)
+    customer_email = models.CharField(max_length=100, null=True, blank=True)
+    customer_username = models.CharField(max_length=100, null=True, blank=True)
+    customer_password = models.CharField(max_length=100, null=True, blank=True)
     customer_aadhar = models.CharField(max_length=100, null=True)
-    customer_pan = models.CharField(max_length=100, null=True)
+    customer_pan = models.CharField(max_length=100, null=True, blank=True)
     BOOKING_METHOD = (
         ('Full Payment','Full Payment'),
         ('EMI','EMI')
@@ -83,19 +89,59 @@ class PlotBooking(models.Model):
         ('48', '48 Months'),
         ('60', '60 Months'),
     )
-    emi_period = models.CharField(max_length=100,choices=EMI_PERIOD, default="12 Months", null=True)
+    emi_period = models.CharField(max_length=100,choices=EMI_PERIOD, default=0, null=True, blank=True)
     PAYMENT_METHOD = (
         ('Cheque','Cheque'),
         ('DD','DD'),
         ('Cash','Cash'),
+        ('NEFT/IMPS/RTGS','NEFT/IMPS/RTGS'),
     )
     payment_method = models.CharField(max_length=100,choices=PAYMENT_METHOD, default="Cash", null=True)
     cheque_number = models.CharField(max_length=100, null=True, blank=True)
     total_amount = models.DecimalField(max_digits=20, decimal_places=2, null=True)
-    down_payment = models.DecimalField(max_digits=20, decimal_places=2, null=True)
-    remaining_balance = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    plot_rate_square_fit = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    down_payment = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    remaining_balance = models.DecimalField(max_digits=20, default=0, decimal_places=2, null=True, blank=True)
+    BOOKING_STATUS = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Disapproved', 'Disapproved'),
+    )
+    booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Pending', null=True)
+    booking_date = models.CharField(max_length=100, null=True)
+    booking_id = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if self.down_payment:
+            self.remaining_balance = self.total_amount - self.down_payment
+        super(PlotBooking, self).save(*args, **kwargs)
+
+    def calculate_emi(self):
+        emi = self.emi_period
+        if emi is None:
+            emi = 0
+        remaining_balance = self.remaining_balance
+        if remaining_balance is None:
+            remaining_balance = 0
+        if self.remaining_balance > 0 and int(emi) > 0:
+            emi_amount = remaining_balance / int(emi)
+            return round(emi_amount, 2)
+        else:
+            return 0
+            
+    def set_password(self, raw_password):
+        self.customer_password = make_password(raw_password)
+    
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.customer_password)
+
+
+class EMIHistory(models.Model):
+    booking_id = models.ForeignKey(PlotBooking, on_delete=models.CASCADE, null=True, blank=True)
+    emi_amount = models.DecimalField(max_digits=10, decimal_places=2 ,null=True, blank=True)
+    emi_date = models.CharField(max_length=100,null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
 
 
 class Wallet(models.Model):

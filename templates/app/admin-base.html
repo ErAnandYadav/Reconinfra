@@ -12,16 +12,99 @@
 		<meta property="og:site_name" content="Webxender | Er Anand Yadav">
 		<link rel="shortcut icon" href="assets/media/logos/favicon.ico">
 		
-		<link href="{% static 'Backend_Files/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css">
-		<link href="{% static 'Backend_Files/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css">
-		<link href="{% static 'Backend_Files/assets/css/custom-style.css' %}" rel="stylesheet" type="text/css">
-		<link href="{% static 'Backend_Files/assets/css/datatables.bundle.css' %}" rel="stylesheet" type="text/css">
-		
+		<link href="/static/app-assets//css/datatables.bundle.css" rel="stylesheet" type="text/css">
+		<link href="/static/app-assets//plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css">
+		<link href="/static/app-assets//css/style.bundle.css" rel="stylesheet" type="text/css">
+		<link href="/static/app-assets//css/custom-style.css" rel="stylesheet" type="text/css">
+		<link href="/static/Backend_Files/assets/orgchart.css" rel="stylesheet">
+		<link href="/static/Backend_Files/assets/orgchart.css" rel="stylesheet">
 		<style>
 			#ifsc_code{
 				text-transform:uppercase;
 			}
-			
+			.errorlist{
+				padding: 0;
+			}
+			.org_chart_wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  width: 100vw;
+}
+.org_chart_wrap #chart-container {
+  display: flex;
+  justify-content: center;
+}
+.org_chart_wrap .orgchart > table > tr:first-child td .node {
+  background: transparent !important;
+}
+.org_chart_wrap .orgchart .lines > td {
+  border-color: rgba(179, 176, 176, 0.8) !important;
+}
+.org_chart_wrap .orgchart .lines > td .downLine {
+  background-color: rgba(179, 176, 176, 0.8) !important;
+}
+.org_chart_wrap .orgchart .verticalNodes td::before {
+  border-color: rgba(179, 176, 176, 0.8) !important;
+}
+.org_chart_wrap .orgchart .verticalNodes ul > li::after, .org_chart_wrap .orgchart .verticalNodes ul > li::before {
+  border-color: rgba(179, 176, 176, 0.8) !important;
+}
+.org_chart_wrap .orgchart .node {
+  width: 160px !important;
+  margin: 0 10px !important;
+  padding: 5px 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+.org_chart_wrap .orgchart .node .toggleBtn {
+  display: flex;
+  justify-content: c;
+  align-items: center;
+  line-height: 1;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.5);
+}
+.org_chart_wrap .orgchart .node .toggleBtn.orgchart .node .toggleBtn::before {
+  background-color: rgba(68, 157, 68, 0.9);
+}
+.org_chart_wrap .orgchart .node .org_card_wrap {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  padding: 4px 6px !important;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  border-top: 3px solid #36a3f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.org_chart_wrap .orgchart .node .org_card_wrap .image {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+}
+.org_chart_wrap .orgchart .node .org_card_wrap .image img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.org_chart_wrap .orgchart .node .org_card_wrap .title {
+  text-align: center;
+  white-space: nowrap;
+  color: #515165;
+}
+.org_chart_wrap .orgchart .node .org_card_wrap .content {
+  color: #989898;
+  font-weight: 500;
+}
+.custom-card{
+	box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px !important;
+}
+
 		</style>
 	</head>
 	<!--end::Head-->
@@ -43,7 +126,7 @@
 								{% if request.user.profile_pic %}
 								<img src="{{request.user.profile_pic.url}}" alt="{{request.user.first_name}}">
 								{% else %}
-								<img src="{% static 'Backend_Files/assets/media/user-icon.png' %}" alt="{{request.user.first_name}}">
+								<img src="/static/app-assets/media/user-icon.png" alt="{{request.user.first_name}}">
 								{% endif %}
 							</div>
 							<!--end::Symbol-->
@@ -69,7 +152,7 @@
 													<path d="M17.1 12.1C17.1 14.9 14.9 17.1 12.1 17.1C9.30001 17.1 7.10001 14.9 7.10001 12.1C7.10001 9.29998 9.30001 7.09998 12.1 7.09998C14.9 7.09998 17.1 9.29998 17.1 12.1ZM12.1 10.1C11 10.1 10.1 11 10.1 12.1C10.1 13.2 11 14.1 12.1 14.1C13.2 14.1 14.1 13.2 14.1 12.1C14.1 11 13.2 10.1 12.1 10.1Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</a>
 										<!--begin::User account menu-->
 										<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -81,7 +164,7 @@
 														{% if request.user.profile_pic %}
 														<img src="{{request.user.profile_pic.url}}" alt="{{request.user.first_name}}">
 														{% else %}
-														<img src="{% static 'Backend_Files/assets/media/user-icon.png' %}" alt="{{request.user.first_name}}">
+														<img src="/static/app-assets//media/user-icon.png" alt="{{request.user.first_name}}">
 														{% endif %}
 													</div>
 													<!--end::Avatar-->
@@ -138,7 +221,7 @@
 							<div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-									<!--begin:Menu link-->
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
@@ -150,7 +233,7 @@
 													<rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor"></rect>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Dashboards</span>
 	
@@ -161,7 +244,7 @@
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
 								<div class="menu-item">
-									<!--begin:Menu link-->
+									
 									<a class="menu-link" href="/accounts/auth-register/">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
@@ -171,7 +254,7 @@
 													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor"></rect>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 											
 										</span>
 										<span class="menu-title">User Register</span>
@@ -179,7 +262,7 @@
 									<!--end:Menu link-->
 								</div>
 								<div class="menu-item">
-									<!--begin:Menu link-->
+									
 									<a class="menu-link" href="{% url 'Profile' request.user.account_id %}">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
@@ -189,7 +272,7 @@
 													<path opacity="0.3" d="M17 22H3C2.4 22 2 21.6 2 21V3C2 2.4 2.4 2 3 2H17C17.6 2 18 2.4 18 3V21C18 21.6 17.6 22 17 22ZM10 7C8.9 7 8 7.9 8 9C8 10.1 8.9 11 10 11C11.1 11 12 10.1 12 9C12 7.9 11.1 7 10 7ZM13.3 16C14 16 14.5 15.3 14.3 14.7C13.7 13.2 12 12 10.1 12C8.10001 12 6.49999 13.1 5.89999 14.7C5.59999 15.3 6.19999 16 7.39999 16H13.3Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 											
 										</span>
 										<span class="menu-title">My Profile</span>
@@ -209,7 +292,7 @@
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
@@ -221,7 +304,7 @@
 												<rect opacity="0.3" x="6" y="5" width="8" height="8" rx="4" fill="currentColor"/>
 												</svg>
 												</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Group Management</span>
 										<span class="menu-arrow"></span>
@@ -231,7 +314,7 @@
 									<div class="menu-sub menu-sub-accordion {% if request.resolver_match.url_name == 'GroupListView' %} hover show{% endif %} {% if request.resolver_match.url_name == 'InitializeGroupListView' %} hover show{% endif %}">
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link {% if request.resolver_match.url_name == 'GroupListView' %} active{% endif %}" href="{% url 'GroupListView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -242,7 +325,7 @@
 										</div>
 										
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link {% if request.resolver_match.url_name == 'InitializeGroupListView' %} active{% endif %}" href="{% url 'InitializeGroupListView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -257,38 +340,38 @@
 								</div>
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
+								<!-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									
 									<span class="menu-link">
 										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
+											
 											<span class="svg-icon svg-icon-2">
 												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 													<path d="M18 21.6C16.6 20.4 9.1 20.3 6.3 21.2C5.7 21.4 5.1 21.2 4.7 20.8L2 18C4.2 15.8 10.8 15.1 15.8 15.8C16.2 18.3 17 20.5 18 21.6ZM18.8 2.8C18.4 2.4 17.8 2.20001 17.2 2.40001C14.4 3.30001 6.9 3.2 5.5 2C6.8 3.3 7.4 5.5 7.7 7.7C9 7.9 10.3 8 11.7 8C15.8 8 19.8 7.2 21.5 5.5L18.8 2.8Z" fill="currentColor"></path>
 													<path opacity="0.3" d="M21.2 17.3C21.4 17.9 21.2 18.5 20.8 18.9L18 21.6C15.8 19.4 15.1 12.8 15.8 7.8C18.3 7.4 20.4 6.70001 21.5 5.60001C20.4 7.00001 20.2 14.5 21.2 17.3ZM8 11.7C8 9 7.7 4.2 5.5 2L2.8 4.8C2.4 5.2 2.2 5.80001 2.4 6.40001C2.7 7.40001 3.00001 9.2 3.10001 11.7C3.10001 15.5 2.40001 17.6 2.10001 18C3.20001 16.9 5.3 16.2 7.8 15.8C8 14.2 8 12.7 8 11.7Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Plot Availability</span>
 										<span class="menu-arrow"></span>
 									</span>
-									<!--end:Menu link-->
-									<!--begin:Menu sub-->
+									
+									
 									<div class="menu-sub menu-sub-accordion">
-										<!--begin:Menu item-->
+										
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link" href="{% url 'AddPlotAvailability' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
 												<span class="menu-title">Add Plot Availability</span>
 											</a>
-											<!--end:Menu link-->
+											
 										</div>
-										<!--begin:Menu item-->
-										<!-- <div class="menu-item">
+										
+										
 											
 											<a class="menu-link" href="/plot-availability/">
 												<span class="menu-bullet">
@@ -297,14 +380,14 @@
 												<span class="menu-title">Check Plot Availability</span>
 											</a>
 											
-										</div> -->
+										</div>
 									</div>
-									<!--end:Menu sub-->
-								</div>
-								<!--end:Menu item-->
-								<!--begin:Menu item-->
+									
+								</div> -->
+								
+								
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
@@ -314,7 +397,7 @@
 													<path d="M11.05 11.025L2.84998 7.725C1.84998 7.325 1.84998 5.925 2.84998 5.525L11.05 2.225C11.75 1.925 12.45 1.925 13.15 2.225L21.35 5.525C22.35 5.925 22.35 7.325 21.35 7.725L13.05 11.025C12.45 11.325 11.65 11.325 11.05 11.025Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Properties</span>
 										<span class="menu-arrow"></span>
@@ -324,7 +407,7 @@
 									<div class="menu-sub menu-sub-accordion">
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link" href="{% url 'AddProperties' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -335,7 +418,7 @@
 										</div>
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link" href="/app/add-plot-images">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -346,7 +429,7 @@
 										</div>
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link" href="{% url 'PropertyList' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -361,7 +444,7 @@
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
@@ -371,7 +454,7 @@
 													<path opacity="0.3" d="M17.5 22H6.5C4 22 2 20 2 17.5C2 15 4 13 6.5 13H17.5C20 13 22 15 22 17.5C22 20 20 22 17.5 22ZM4 17.5C4 18.9 5.1 20 6.5 20C7.9 20 9 18.9 9 17.5C9 16.1 7.9 15 6.5 15C5.1 15 4 16.1 4 17.5Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Gallery Images</span>
 										<span class="menu-arrow"></span>
@@ -381,7 +464,7 @@
 									<div class="menu-sub menu-sub-accordion {% if request.resolver_match.url_name == 'AddGalleryImage' %}hover show{% endif %} {% if request.resolver_match.url_name == 'ListGalleryImages' %}hover show{% endif %}">
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link {% if request.resolver_match.url_name == 'AddGalleryImage' %}active{% endif %}" href="{% url 'AddGalleryImage' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -392,7 +475,7 @@
 										</div>
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link {% if request.resolver_match.url_name == 'ListGalleryImages' %}active{% endif %}" href="{% url 'ListGalleryImages' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -407,7 +490,7 @@
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/art/art007.svg-->
@@ -417,7 +500,7 @@
 													<path d="M14.8 10.184C14.7447 10.1843 14.6895 10.1796 14.635 10.1699L5.816 8.69997C5.55436 8.65634 5.32077 8.51055 5.16661 8.29469C5.01246 8.07884 4.95035 7.8106 4.99397 7.54897C5.0376 7.28733 5.18339 7.05371 5.39925 6.89955C5.6151 6.7454 5.88334 6.68332 6.14498 6.72694L14.963 8.19692C15.2112 8.23733 15.435 8.36982 15.59 8.56789C15.7449 8.76596 15.8195 9.01502 15.7989 9.26564C15.7784 9.51626 15.6642 9.75001 15.479 9.92018C15.2939 10.0904 15.0514 10.1846 14.8 10.184ZM17 18.6229C17 19.0281 17.0985 19.4272 17.287 19.7859C17.4755 20.1446 17.7484 20.4521 18.0821 20.6819C18.4158 20.9117 18.8004 21.0571 19.2027 21.1052C19.605 21.1534 20.0131 21.103 20.3916 20.9585C20.7702 20.814 21.1079 20.5797 21.3758 20.2757C21.6437 19.9716 21.8336 19.607 21.9293 19.2133C22.025 18.8195 22.0235 18.4085 21.925 18.0154C21.8266 17.6223 21.634 17.259 21.364 16.9569L19.843 15.257C19.7999 15.2085 19.7471 15.1697 19.688 15.1432C19.6289 15.1167 19.5648 15.1029 19.5 15.1029C19.4352 15.1029 19.3711 15.1167 19.312 15.1432C19.2529 15.1697 19.2001 15.2085 19.157 15.257L17.636 16.9569C17.2254 17.4146 16.9988 18.0081 17 18.6229ZM10.388 20.9409L17.736 13.5929H1.99999C1.99921 13.7291 2.02532 13.8643 2.0768 13.9904C2.12828 14.1165 2.2041 14.2311 2.29997 14.3279L8.91399 20.9409C9.01055 21.0381 9.12539 21.1152 9.25188 21.1679C9.37836 21.2205 9.51399 21.2476 9.65099 21.2476C9.78798 21.2476 9.92361 21.2205 10.0501 21.1679C10.1766 21.1152 10.2914 21.0381 10.388 20.9409Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Rewards</span>
 										<span class="menu-arrow"></span>
@@ -427,7 +510,7 @@
 									<div class="menu-sub menu-sub-accordion">
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link" href="{% url 'AddRewardView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -438,7 +521,7 @@
 										</div>
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link" href="{% url 'RewardListView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -452,21 +535,22 @@
 								</div>
 								
 								<div class="menu-item">
-									<!--begin:Menu link-->
+									
 									<a class="menu-link {% if request.resolver_match.url_name == 'FacilitatorListView' %}active{% endif %}" href="{% url 'FacilitatorListView' %}"" href="">
 										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/coding/cod003.svg-->
+											
 											<span class="svg-icon svg-icon-2">
 												<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 													<path d="M16.95 18.9688C16.75 18.9688 16.55 18.8688 16.35 18.7688C15.85 18.4688 15.75 17.8688 16.05 17.3688L19.65 11.9688L16.05 6.56876C15.75 6.06876 15.85 5.46873 16.35 5.16873C16.85 4.86873 17.45 4.96878 17.75 5.46878L21.75 11.4688C21.95 11.7688 21.95 12.2688 21.75 12.5688L17.75 18.5688C17.55 18.7688 17.25 18.9688 16.95 18.9688ZM7.55001 18.7688C8.05001 18.4688 8.15 17.8688 7.85 17.3688L4.25001 11.9688L7.85 6.56876C8.15 6.06876 8.05001 5.46873 7.55001 5.16873C7.05001 4.86873 6.45 4.96878 6.15 5.46878L2.15 11.4688C1.95 11.7688 1.95 12.2688 2.15 12.5688L6.15 18.5688C6.35 18.8688 6.65 18.9688 6.95 18.9688C7.15 18.9688 7.35001 18.8688 7.55001 18.7688Z" fill="currentColor"></path>
 													<path opacity="0.3" d="M10.45 18.9687C10.35 18.9687 10.25 18.9687 10.25 18.9687C9.75 18.8687 9.35 18.2688 9.55 17.7688L12.55 5.76878C12.65 5.26878 13.25 4.8687 13.75 5.0687C14.25 5.1687 14.65 5.76878 14.45 6.26878L11.45 18.2688C11.35 18.6688 10.85 18.9687 10.45 18.9687Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
-										<span class="menu-title">Facilitator List</span>
+										<span class="menu-title">Associates List</span>
 									</a>
 								</div>
+								
 								
 								{% endif %}
 								<!--begin:Menu item-->
@@ -483,8 +567,8 @@
 								
 								
 								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {% if request.resolver_match.url_name == 'PlotBookingView' %}hover show{% endif %} {% if request.resolver_match.url_name == 'PaymentHistoryView' %}hover show{% endif %}">
-									<!--begin:Menu link-->
+								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {% if request.resolver_match.url_name == 'PlotBookingView' %}hover show{% endif %} {% if request.resolver_match.url_name == 'BookingHistoryView' %}hover show{% endif %}">
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
@@ -494,7 +578,7 @@
 													<path opacity="0.3" d="M21.2 17.3C21.4 17.9 21.2 18.5 20.8 18.9L18 21.6C15.8 19.4 15.1 12.8 15.8 7.8C18.3 7.4 20.4 6.70001 21.5 5.60001C20.4 7.00001 20.2 14.5 21.2 17.3ZM8 11.7C8 9 7.7 4.2 5.5 2L2.8 4.8C2.4 5.2 2.2 5.80001 2.4 6.40001C2.7 7.40001 3.00001 9.2 3.10001 11.7C3.10001 15.5 2.40001 17.6 2.10001 18C3.20001 16.9 5.3 16.2 7.8 15.8C8 14.2 8 12.7 8 11.7Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Payout</span>
 										<span class="menu-arrow"></span>
@@ -504,7 +588,7 @@
 									<div class="menu-sub menu-sub-accordion">
 										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link {% if request.resolver_match.url_name == 'PlotBookingView' %}active{% endif %}" href="{% url 'PlotBookingView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -515,8 +599,8 @@
 										</div>
 										
 										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link {% if request.resolver_match.url_name == 'PaymentHistoryView' %}active{% endif %}" href="{% url 'PaymentHistoryView' %}">
+											
+											<a class="menu-link {% if request.resolver_match.url_name == 'BookingHistoryView' %}active{% endif %}" href="{% url 'BookingHistoryView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -530,22 +614,22 @@
 								</div>
 								
 								<div class="menu-item">
-									<!--begin:Menu link-->
+									
 									<a class="menu-link {% if request.resolver_match.url_name == 'WithdrawalsRequestListView' %}active{% endif %}" href="{% url 'WithdrawalsRequestListView' %}"" href="">
 										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/coding/cod003.svg-->
+											
 											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 												<path opacity="0.3" d="M4.05424 15.1982C8.34524 7.76818 13.5782 3.26318 20.9282 2.01418C21.0729 1.98837 21.2216 1.99789 21.3618 2.04193C21.502 2.08597 21.6294 2.16323 21.7333 2.26712C21.8372 2.37101 21.9144 2.49846 21.9585 2.63863C22.0025 2.7788 22.012 2.92754 21.9862 3.07218C20.7372 10.4222 16.2322 15.6552 8.80224 19.9462L4.05424 15.1982ZM3.81924 17.3372L2.63324 20.4482C2.58427 20.5765 2.5735 20.7163 2.6022 20.8507C2.63091 20.9851 2.69788 21.1082 2.79503 21.2054C2.89218 21.3025 3.01536 21.3695 3.14972 21.3982C3.28408 21.4269 3.42387 21.4161 3.55224 21.3672L6.66524 20.1802L3.81924 17.3372ZM16.5002 5.99818C16.2036 5.99818 15.9136 6.08615 15.6669 6.25097C15.4202 6.41579 15.228 6.65006 15.1144 6.92415C15.0009 7.19824 14.9712 7.49984 15.0291 7.79081C15.0869 8.08178 15.2298 8.34906 15.4396 8.55884C15.6494 8.76862 15.9166 8.91148 16.2076 8.96935C16.4986 9.02723 16.8002 8.99753 17.0743 8.884C17.3484 8.77046 17.5826 8.5782 17.7474 8.33153C17.9123 8.08486 18.0002 7.79485 18.0002 7.49818C18.0002 7.10035 17.8422 6.71882 17.5609 6.43752C17.2796 6.15621 16.8981 5.99818 16.5002 5.99818Z" fill="currentColor"></path>
 												<path d="M4.05423 15.1982L2.24723 13.3912C2.15505 13.299 2.08547 13.1867 2.04395 13.0632C2.00243 12.9396 1.9901 12.8081 2.00793 12.679C2.02575 12.5498 2.07325 12.4266 2.14669 12.3189C2.22013 12.2112 2.31752 12.1219 2.43123 12.0582L9.15323 8.28918C7.17353 10.3717 5.4607 12.6926 4.05423 15.1982ZM8.80023 19.9442L10.6072 21.7512C10.6994 21.8434 10.8117 21.9129 10.9352 21.9545C11.0588 21.996 11.1903 22.0083 11.3195 21.9905C11.4486 21.9727 11.5718 21.9252 11.6795 21.8517C11.7872 21.7783 11.8765 21.6809 11.9402 21.5672L15.7092 14.8442C13.6269 16.8245 11.3061 18.5377 8.80023 19.9442ZM7.04023 18.1832L12.5832 12.6402C12.7381 12.4759 12.8228 12.2577 12.8195 12.032C12.8161 11.8063 12.725 11.5907 12.5653 11.4311C12.4057 11.2714 12.1901 11.1803 11.9644 11.1769C11.7387 11.1736 11.5205 11.2583 11.3562 11.4132L5.81323 16.9562L7.04023 18.1832Z" fill="currentColor"></path>
 											</svg>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Withdrawals Confirmation</span>
 									</a>
 									<!--end:Menu link-->
 								</div>
 								<div class="menu-item">
-									<!--begin:Menu link-->
+									
 									<a class="menu-link" href="" onclick="alert('Coming soon')">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
@@ -574,8 +658,8 @@
 								</div>
 								<!--end:Menu item-->
 								<div class="menu-item">
-									<!--begin:Menu link-->
-									<a class="menu-link" href="{% url 'BookingList' %}">
+									
+									<a class="menu-link" href="{% url 'MyOrdersView' %}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
 												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -604,7 +688,6 @@
 								
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/abstract/abs048.svg-->
@@ -614,17 +697,16 @@
 													<path d="M8.70001 6C8.10001 5.7 7.39999 5.40001 6.79999 5.10001C7.79999 4.00001 8.90001 3 10.1 2.2C10.7 2.1 11.4 2 12 2C12.7 2 13.3 2.1 13.9 2.2C12 3.2 10.2 4.5 8.70001 6ZM12 8.39999C13.9 6.59999 16.2 5.30001 18.7 4.60001C18.1 4.00001 17.4 3.6 16.7 3.2C14.4 4.1 12.2 5.40001 10.5 7.10001C11 7.50001 11.5 7.89999 12 8.39999ZM7 20C7 20.2 7 20.4 7 20.6C6.2 20.1 5.49999 19.6 4.89999 19C4.59999 18 4.00001 17.2 3.20001 16.6C2.80001 15.8 2.49999 15 2.29999 14.1C4.99999 14.7 7 17.1 7 20ZM10.6 9.89999C8.70001 8.09999 6.39999 6.9 3.79999 6.3C3.39999 6.9 2.99999 7.5 2.79999 8.2C5.39999 8.6 7.7 9.80001 9.5 11.6C9.8 10.9 10.2 10.4 10.6 9.89999ZM2.20001 10.1C2.10001 10.7 2 11.4 2 12C2 12 2 12 2 12.1C4.3 12.4 6.40001 13.7 7.60001 15.6C7.80001 14.8 8.09999 14.1 8.39999 13.4C6.89999 11.6 4.70001 10.4 2.20001 10.1ZM11 20C11 14 15.4 9.00001 21.2 8.10001C20.9 7.40001 20.6 6.8 20.2 6.2C13.8 7.5 9 13.1 9 19.9C9 20.4 9.00001 21 9.10001 21.5C9.80001 21.7 10.5 21.8 11.2 21.9C11.1 21.3 11 20.7 11 20ZM19.1 19C19.4 18 20 17.2 20.8 16.6C21.2 15.8 21.5 15 21.7 14.1C19 14.7 16.9 17.1 16.9 20C16.9 20.2 16.9 20.4 16.9 20.6C17.8 20.2 18.5 19.6 19.1 19ZM15 20C15 15.9 18.1 12.6 22 12.1C22 12.1 22 12.1 22 12C22 11.3 21.9 10.7 21.8 10.1C16.8 10.7 13 14.9 13 20C13 20.7 13.1 21.3 13.2 21.9C13.9 21.8 14.5 21.7 15.2 21.5C15.1 21 15 20.5 15 20Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">My Team</span>
 										<span class="menu-arrow"></span>
 									</span>
 									<!--end:Menu link-->
 									<!--begin:Menu sub-->
+									{% if request.user.is_superuser %}
 									<div class="menu-sub menu-sub-accordion">
-										
 										<div class="menu-item">
-											<!--begin:Menu link-->
 											<a class="menu-link" href="{% url 'MyTeamsView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -633,14 +715,26 @@
 											</a>
 											<!--end:Menu link-->
 										</div>
-										
 									</div>
+									{% else %}
+									<div class="menu-sub menu-sub-accordion">
+										<div class="menu-item">
+											<a class="menu-link" href="{% url 'MyTeamsView' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Teams</span>
+											</a>
+											<!--end:Menu link-->
+										</div>
+									</div>
+									{% endif %}
 									<!--end:Menu sub-->
 								</div>
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion {% if request.resolver_match.url_name == 'TransferRequestView' %}hover show{% endif %} {% if request.resolver_match.url_name == 'TransferRequestListView' %}hover show{% endif %}">
-									<!--begin:Menu link-->
+									
 									<span class="menu-link">
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/finance/fin001.svg-->
@@ -650,7 +744,7 @@
 													<path opacity="0.3" d="M22 6.725V7.725C22 8.325 21.6 8.725 21 8.725H18C18.6 8.725 19 9.125 19 9.725C19 10.325 18.6 10.725 18 10.725V15.725C18.6 15.725 19 16.125 19 16.725V17.725H15V16.725C15 16.125 15.4 15.725 16 15.725V10.725C15.4 10.725 15 10.325 15 9.725C15 9.125 15.4 8.725 16 8.725H13C13.6 8.725 14 9.125 14 9.725C14 10.325 13.6 10.725 13 10.725V15.725C13.6 15.725 14 16.125 14 16.725V17.725H10V16.725C10 16.125 10.4 15.725 11 15.725V10.725C10.4 10.725 10 10.325 10 9.725C10 9.125 10.4 8.725 11 8.725H8C8.6 8.725 9 9.125 9 9.725C9 10.325 8.6 10.725 8 10.725V15.725C8.6 15.725 9 16.125 9 16.725V17.725H5V16.725C5 16.125 5.4 15.725 6 15.725V10.725C5.4 10.725 5 10.325 5 9.725C5 9.125 5.4 8.725 6 8.725H3C2.4 8.725 2 8.325 2 7.725V6.725L11 2.225C11.6 1.925 12.4 1.925 13.1 2.225L22 6.725ZM12 3.725C11.2 3.725 10.5 4.425 10.5 5.225C10.5 6.025 11.2 6.725 12 6.725C12.8 6.725 13.5 6.025 13.5 5.225C13.5 4.425 12.8 3.725 12 3.725Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Wallet</span>
 										<span class="menu-arrow"></span>
@@ -694,7 +788,7 @@
 										</div> -->
 										<!--end:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link  {% if request.resolver_match.url_name == 'TransferRequestListView' %}active{% endif %}" href="{% url 'TransferRequestListView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -706,7 +800,7 @@
 										
 										<!--end:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
+											
 											<a class="menu-link {% if request.resolver_match.url_name == 'TransferRequestView' %}active{% endif %}" href="{% url 'TransferRequestView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
@@ -732,17 +826,17 @@
 								</div>
 								<!--begin:Menu item-->
 								<div class="menu-item">
-									<!--begin:Menu link-->
+									
 									<a class="menu-link" href="{% url 'LogoutView' %}">
 										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/coding/cod003.svg-->
+											
 											<span class="svg-icon svg-icon-2">
 												<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 													<path d="M16.95 18.9688C16.75 18.9688 16.55 18.8688 16.35 18.7688C15.85 18.4688 15.75 17.8688 16.05 17.3688L19.65 11.9688L16.05 6.56876C15.75 6.06876 15.85 5.46873 16.35 5.16873C16.85 4.86873 17.45 4.96878 17.75 5.46878L21.75 11.4688C21.95 11.7688 21.95 12.2688 21.75 12.5688L17.75 18.5688C17.55 18.7688 17.25 18.9688 16.95 18.9688ZM7.55001 18.7688C8.05001 18.4688 8.15 17.8688 7.85 17.3688L4.25001 11.9688L7.85 6.56876C8.15 6.06876 8.05001 5.46873 7.55001 5.16873C7.05001 4.86873 6.45 4.96878 6.15 5.46878L2.15 11.4688C1.95 11.7688 1.95 12.2688 2.15 12.5688L6.15 18.5688C6.35 18.8688 6.65 18.9688 6.95 18.9688C7.15 18.9688 7.35001 18.8688 7.55001 18.7688Z" fill="currentColor"></path>
 													<path opacity="0.3" d="M10.45 18.9687C10.35 18.9687 10.25 18.9687 10.25 18.9687C9.75 18.8687 9.35 18.2688 9.55 17.7688L12.55 5.76878C12.65 5.26878 13.25 4.8687 13.75 5.0687C14.25 5.1687 14.65 5.76878 14.45 6.26878L11.45 18.2688C11.35 18.6688 10.85 18.9687 10.45 18.9687Z" fill="currentColor"></path>
 												</svg>
 											</span>
-											<!--end::Svg Icon-->
+											
 										</span>
 										<span class="menu-title">Logout</span>
 									</a>
@@ -765,7 +859,7 @@
 						<div class="header-brand">
 							<!--begin::Logo-->
 							<a href="/app/">
-								<img alt="Logo" src="{% static 'Backend_Files/assets/media/logos/page-loader.png' %}" class="h-70px h-lg-70px" style="height:70px">
+								<img alt="Logo" src="/static/app-assets//media/logos/page-loader.png" class="h-70px h-lg-70px" style="height:70px">
 							</a>
 							<!--end::Logo-->
 							<!--begin::Aside minimize-->
@@ -778,7 +872,7 @@
 										<path opacity="0.5" d="M16 5V6C16 6.55228 15.5523 7 15 7C14.4477 7 14 6.55228 14 6C14 5.44772 13.5523 5 13 5H6C5.44771 5 5 5.44772 5 6V18C5 18.5523 5.44771 19 6 19H13C13.5523 19 14 18.5523 14 18C14 17.4477 14.4477 17 15 17C15.5523 17 16 17.4477 16 18V19C16 20.1046 15.1046 21 14 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H14C15.1046 3 16 3.89543 16 5Z" fill="currentColor"></path>
 									</svg>
 								</span>
-								<!--end::Svg Icon-->
+								
 								<!--begin::Svg Icon | path: icons/duotune/arrows/arr076.svg-->
 								<span class="svg-icon svg-icon-1 minimize-active">
 									<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -787,7 +881,7 @@
 										<path d="M8 5V6C8 6.55228 8.44772 7 9 7C9.55228 7 10 6.55228 10 6C10 5.44772 10.4477 5 11 5H18C18.5523 5 19 5.44772 19 6V18C19 18.5523 18.5523 19 18 19H11C10.4477 19 10 18.5523 10 18C10 17.4477 9.55228 17 9 17C8.44772 17 8 17.4477 8 18V19C8 20.1046 8.89543 21 10 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H10C8.89543 3 8 3.89543 8 5Z" fill="currentColor"></path>
 									</svg>
 								</span>
-								<!--end::Svg Icon-->
+								
 							</div>
 							<!--end::Aside minimize-->
 							<!--begin::Aside toggle-->
@@ -800,7 +894,7 @@
 											<path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="currentColor"></path>
 										</svg>
 									</span>
-									<!--end::Svg Icon-->
+									
 								</div>
 							</div>
 							<!--end::Aside toggle-->
@@ -864,11 +958,23 @@
 		</div>
 	
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="{% static 'Backend_Files/assets/plugins/global/plugins.bundle.js' %}"></script>
-		<script src="{% static 'Backend_Files/assets/js/scripts.bundle.js' %}"></script>
-		<script src="{% static 'Backend_Files/assets/js/custom-js.js' %}"></script>
-		<script src="{% static 'Backend_Files/assets/js/datatables.bundle.js' %}"></script>
-		<script src="{% static 'Backend_Files/assets/js/table.js' %}"></script>
+		
+
+		<script src="/static/app-assets/js/custom-js.js"></script>
+	
+	
+		<script src="/static/app-assets/plugins/global/plugins.bundle.js"></script>
+		<script src="/static/app-assets/js/scripts.bundle.js"></script>
+	
+		<script src="/static/app-assets/plugins/custom/datatables/datatables.bundle.js"></script>
+	
+		<script src="/static/app-assets/js/custom/apps/user-management/users/list/table.js"></script>
+		<script src="/static/app-assets/js/custom/apps/user-management/users/list/export-users.js"></script>
+		<script src="/static/app-assets/js/custom/apps/user-management/users/list/add.js"></script>
+		<script src="/static/app-assets/js/widgets.bundle.js"></script>
+		<script src="/static/app-assets/js/custom/widgets.js"></script>
+		<script src="/static/app-assets/js/custom/apps/chat/chat.js"></script>
+		<script src="/static/app-assets/js/custom/utilities/modals/users-search.js"></script>
 <script>
     $(document).ready(function () {
         $(document).on('change', '#activateId', function () {
@@ -894,6 +1000,7 @@
             });
         });
     });
+	
 </script>
 
 		{% block js%}

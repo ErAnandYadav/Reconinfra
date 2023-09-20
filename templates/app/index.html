@@ -53,6 +53,7 @@
 				</div>
 			</div>
 			<div class="row">
+				
 				<div class="col">
 					
 					<div class="input-group mb-5">
@@ -97,6 +98,7 @@
 								{% else %}
 							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
 								0.00</div>
+								
 							{% endif %}
 							<div class="fw-semibold text-gray-100">Total Business</div>
 						</div>
@@ -118,9 +120,9 @@
 										alt="dashboard-user">
 								</a>
 								{% else %}
-								<a href="{% static 'Backend_Files/assets/media/user-icon.png' %}" data-lightbox="11">
+								<a href="/static/app-assets/media/user-icon.png" data-lightbox="11">
 									<img class="img-fluid rounded-circle" style="width:100px; height: 100px;"
-										src="{% static 'Backend_Files/assets/media/user-icon.png' %}"
+										src="/static/app-assets/media/user-icon.png"
 										alt="dashboard-user">
 								</a>
 								{% endif %}
@@ -188,36 +190,39 @@
 			</div>
 			<!--end::Row-->
 			<!--begin::Row-->
-			<!-- <div class="row g-5 g-xl-8">
+			{% if request.user.is_superuser %}
+			<div class="row g-5 g-xl-8">
 				
-				<div class="col-xl-6 mx-auto">
+				<div class="col-xl-5 mx-auto">
 				
-					<div class="card card-xl-stretch mb-5 mb-xl-8">
-						
+					<div class="card card-xl-stretch mb-5 mb-xl-8 bg-danger">
 						<div class="card-body p-lg-17">
 							<div class="card-block text-center">
-								<h5> <a href="{% url 'Profile' request.user.account_id %}">{{request.user.first_name|upper}} {{request.user.last_name|upper}}</a>&nbsp;</h5>
-								<a href="">
-									<span class="d-block mb-4">{{request.user.sponsor_id|upper}}</span>
-								</a>&nbsp;
-								{% if request.user.profile_pic %}
-								<a href="{{request.user.profile_pic.url}}" data-lightbox="11">
-									<img class="img-fluid rounded-circle" style="width:100px; height: 100px;"
-										src="{{request.user.profile_pic.url}}"
-										alt="dashboard-user">
-								</a>
+								<div class="row">
+									<div class="col-sm-6">
+										{% if activeUser %}
+							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
+								<span class="badge badge-circle badge-success">{{activeUser}}</span>
+								</div>
 								{% else %}
-								<a href="{% static 'Backend_Files/assets/media/user-icon.png' %}" data-lightbox="11">
-									<img class="img-fluid rounded-circle" style="width:100px; height: 100px;"
-										src="{% static 'Backend_Files/assets/media/user-icon.png' %}"
-										alt="dashboard-user">
-								</a>
-								{% endif %}
-								<div class="designer mt-3 blink_me">
-									<a href=""class="btn shadow-2 text-uppercase btn-block blink_me">
-										Click Here To Activate Your ID
-									</a>
-
+							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
+								<span class="badge badge-circle badge-success">0</span>
+								</div>
+							{% endif %}
+							<div class="fw-semibold text-white">Active Users</div>
+									</div>
+									<div class="col-sm-6">
+										{% if inactiveUser %}
+							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
+								<span class="badge badge-circle badge-dark">{{inactiveUser}}</span>
+								</div>
+								{% else %}
+							<div class="text-gray-100 fw-bold fs-1 mb-2 mt-5">
+								<span class="badge badge-circle badge-dark">0</span>
+								</div>
+							{% endif %}
+							<div class="fw-semibold text-white">Inactive Users</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -225,7 +230,8 @@
 					</div>
 				
 				</div>
-			</div> -->
+			</div>
+			{% endif %}
 			<!--end::Row-->
 		</div>
 		<!--end::Container-->

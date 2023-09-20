@@ -49,3 +49,9 @@ class ActivateIdForm(forms.ModelForm):
     class Meta:
         model = Wallet
         fields = '__all__'
+
+
+from django import forms
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField()
