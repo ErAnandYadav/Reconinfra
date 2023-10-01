@@ -37,130 +37,74 @@
         </div>
         <div class="row">
           <div class="col-lg-8">
-            <!-- {% if get_details.slug == 'green-valley' %}
+
             <div class="featured-thumb-slider-area wow fadeInUp" data-wow-delay=".4s">
               <div class="feature-box3 swiper-container">
                 <div class="swiper-wrapper">
+                  {% if get_details.image_1 %}
                   <div class="swiper-slide">
                     <div class="feature-img1 zoom-image-hover">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/Green-valley/img1.jpeg" alt="feature"
-                        width="798" height="420" />
+                      <img src="{{get_details.image_1.url}}" alt="feature" width="798" height="420" />
                     </div>
                   </div>
+                  {% endif %}
+                  {% if get_details.image_2 %}
                   <div class="swiper-slide">
                     <div class="feature-img1 zoom-image-hover">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/Green-valley/img2.jpeg" alt="feature"
-                        width="798" height="420" />
+                      <img src="{{get_details.image_2.url}}" alt="feature" width="798" height="420" />
                     </div>
                   </div>
-
+                  {% endif %}
+                  {% if get_details.image_3 %}
                   <div class="swiper-slide">
                     <div class="feature-img1 zoom-image-hover">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/Green-valley/img3.jpeg" alt="feature"
-                        width="798" height="420" />
+                      <img src="{{get_details.image_3.url}}" alt="feature" width="798" height="420" />
                     </div>
                   </div>
+                  {% endif %}
+                  {% if get_details.image_4 %}
+                  <div class="swiper-slide">
+                    <div class="feature-img4 zoom-image-hover">
+                      <img src="{{get_details.image_4.url}}" alt="feature" width="798" height="420" />
+                    </div>
+                  </div>
+                  {% endif %}
 
                 </div>
               </div>
               <div class="featured-thum-slider2 swiper-container">
                 <div class="swiper-wrapper">
+                  {% if get_details.image_1 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/Green-valley/img1.jpeg" alt="feature"
-                        width="154" height="100" />
+                      <img src="{{get_details.image_1.url}}" alt="feature" width="154" height="100" />
                     </div>
                   </div>
+                  {% endif %}
+                  {% if get_details.image_2 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/Green-valley/img2.jpeg" alt="feature"
-                        width="154" height="100" />
+                      <img src="{{get_details.image_2.url}}" alt="feature" width="154" height="100" />
                     </div>
                   </div>
+                  {% endif %}
+                  {% if get_details.image_3 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/Green-valley/img3.jpeg" alt="feature"
-                        width="154" height="100" />
+                      <img src="{{get_details.image_3.url}}" alt="feature" width="154" height="100" />
                     </div>
                   </div>
+                  {% endif %}
+                  {% if get_details.image_4 %}
+                  <div class="swiper-slide">
+                    <div class="item-img">
+                      <img src="{{get_details.image_4.url}}" alt="feature" width="154" height="100" />
+                    </div>
+                  </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
-            {% else %}
-            <div class="featured-thumb-slider-area wow fadeInUp" data-wow-delay=".4s">
-              <div class="feature-box3 swiper-container">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <div class="feature-img1 zoom-image-hover">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img1.jpeg" alt="feature" width="798"
-                        height="420" />
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="feature-img1 zoom-image-hover">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img2.jpeg" alt="feature" width="798"
-                        height="420" />
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="feature-img1 zoom-image-hover">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img3.jpeg" alt="feature" width="798"
-                        height="420" />
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-              <div class="featured-thum-slider2 swiper-container">
-                <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <div class="item-img">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img1.jpeg" alt="feature" width="154"
-                        height="100" />
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="item-img">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img2.jpeg" alt="feature" width="154"
-                        height="100" />
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="item-img">
-                      <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img3.jpeg" alt="feature" width="154"
-                        height="100" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endif %} -->
-            <div class="featured-thumb-slider-area wow fadeInUp" data-wow-delay=".4s">
-                    <div class="feature-box3 swiper-container">
-                      <div class="swiper-wrapper">
-                        {% for img in get_details.propertiesimage_set.all %}
-                        <div class="swiper-slide">
-                          <div class="feature-img1 zoom-image-hover">
-                            <img
-                              src="{{img.image.url}}" alt="feature" width="798" height="420"/>
-                          </div>
-                        </div>
-                       {% endfor %}
-                      </div>
-                    </div>
-                    <div class="featured-thum-slider2 swiper-container">
-                      <div class="swiper-wrapper">
-                        {% for img in get_details.propertiesimage_set.all %}
-                        <div class="swiper-slide">
-                          <div class="item-img">
-                            <img src="{{img.image.url}}" alt="feature" width="154" height="100"/>
-                          </div>
-                        </div>
-                        {% endfor %}
-                      </div>
-                    </div>
-                  </div>
             <div class="single-listing-box1">
 
               <div class="overview-area listing-area">
@@ -306,7 +250,6 @@
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
-
               <video width="242" height="300" controls>
                 <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.mp4' %}" type="video/mp4">
                 <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.ogg' %}" type="video/ogg">
@@ -327,5 +270,20 @@
   </div>
 </section>
 {% endif %}
+
+<section class="property-wrap2 p-4">
+  <div class="container">
+    <div class="row">
+      {% for img in get_details.propertiesimage_set.all %}
+      <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+          <div class="inner-image" >
+          <img src="{{img.image.url}}"
+            class="w-100 shadow-1-strong rounded mb-4" style="height: 220px;" alt="Property image" />
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 <!--=====================================-->
 {% endblock %}

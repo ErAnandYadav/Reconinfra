@@ -1,7 +1,7 @@
 from queue import PriorityQueue
 from django.contrib import messages
 from django.shortcuts import render, HttpResponse,redirect
-from .forms import EnquiryForm
+from .forms import *
 from .models import *
 from Reconinfra_Admin_Panel.models import *
 
@@ -71,14 +71,14 @@ def MissionandVision(request):
     return render(request, 'home/mission-and-vision.html', context)
 
 
-def CustomerLogin(request):
-    context = {}
-    try:
-        all_properties = Properties.objects.all()
-        context['all_properties'] = all_properties
-    except Exception as e:
-        print(e)
-    return render(request, 'home/login.html', context)
+# def CustomerLogin(request):
+#     context = {}
+#     try:
+#         all_properties = Properties.objects.all()
+#         context['all_properties'] = all_properties
+#     except Exception as e:
+#         print(e)
+#     return render(request, 'home/login.html', context)
 
 def ReconinfraContactUs(request):
     try:
@@ -154,13 +154,45 @@ def ReconinfraDisclaimer(request):
     return render(request, 'home/disclaimer.html', context)
 
 def CustomerProfile(request):
+    customer = request.session.get('customer_username')
+    print(customer)
+    if customer is None:
+        return redirect('/customer-login/')
     context = {}
     try:
-        all_properties = Properties.objects.all()
-        context['all_properties'] = all_properties
+        plot_bookings = PlotBooking.objects.filter(customer_username=customer)
+        bookings = PlotBooking.objects.get(customer_username=customer)
+        emi_history = EMIHistory.objects.filter(booking_id=bookings.booking_id)
+        context['plot_bookings'] = plot_bookings
+        context['emi_history'] = emi_history
     except Exception as e:
         print(e)
     return render(request, 'home/customer-profile.html', context)
 
 
 
+def EMIHistoryView(request):
+    return render(request, "home/emi-history.html")
+
+
+def CustomerLogin(request):
+    if request.method == 'POST':
+        form = CustomerLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['customer_username']
+            password = form.cleaned_data['customer_password']
+            customer = PlotBooking.objects.filter(customer_username=username).first()
+            print(username, password)
+            if customer is not None:
+                if customer.customer_password == password:
+                    request.session['customer_username'] = customer.customer_username
+                    return redirect('/customer-profile/')
+                else:
+                    messages.error(request, "Invalid login credentials")
+                    return render(request, 'home/login.html', {'form': form})
+            else:
+                messages.error(request, "Invalid login credentials")
+                return render(request, 'home/login.html', {'form': form})
+    else:
+        form = CustomerLoginForm()
+    return render(request, 'home/login.html', {'form': form})

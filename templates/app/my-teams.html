@@ -1,5 +1,4 @@
-{% extends 'app/admin-base.html' %}
-{% block body %}
+{% extends 'app/admin-base.html' %} {% block body %}
 
 
 <!--begin::Content-->
@@ -8,24 +7,24 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
-            
+
             <div class="d-flex flex-wrap flex-stack pb-7">
                 <!--begin::Title-->
                 <div class="d-flex flex-wrap align-items-center my-1">
                     <h3 class="fw-bold me-5 my-1">Teams ({{count}})</h3>
                     <!--begin::Search-->
-                    
+
                 </div>
                 <!--end::Title-->
                 <!--begin::Controls-->
                 <div class="d-flex flex-wrap my-1">
                     <div class="d-flex align-items-center position-relative my-1">
-                        
+
                         <form action="{% url 'SearchTeamsView' %}">
                             <div class="input-group">
                                 <input type="search" name="query" class="form-control rounded" value="{{query}}" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                                 <button type="submit" class="btn btn-dark">search</button>
-                              </div>
+                            </div>
                         </form>
                     </div>
                     <!--end::Search-->
@@ -40,63 +39,63 @@
                     <!--begin::Row-->
                     <div class="row g-6 g-xl-9">
                         <!--begin::Col-->
-                       {% for team in teams %}
-                       <div class="col-md-4 col-xxl-4">
-                        <!--begin::Card-->
-                        <div class="card custom-card">
-                            <!--begin::Card body-->
-                            <div class="card-body d-flex flex-center flex-column pt-12 p-9">
-                                <!--begin::Avatar-->
-                                <div class="symbol symbol-65px symbol-circle mb-5">
-                                    <img src="/static/app-assets/media/user-icon.png" alt="image">
-                                    <div class="bg-success position-absolute border border-4 border-body h-15px w-15px rounded-circle translate-middle start-100 top-100 ms-n3 mt-n3"></div>
+                        {% for team in teams %}
+                        <div class="col-md-4 col-xxl-4">
+                            <!--begin::Card-->
+                            <div class="card custom-card">
+                                <!--begin::Card body-->
+                                <div class="card-body d-flex flex-center flex-column pt-12 p-9">
+                                    <!--begin::Avatar-->
+                                    <div class="symbol symbol-65px symbol-circle mb-5">
+                                        <img src="/static/app-assets/media/user-icon.png" alt="image">
+                                        <div class="bg-success position-absolute border border-4 border-body h-15px w-15px rounded-circle translate-middle start-100 top-100 ms-n3 mt-n3"></div>
+                                    </div>
+
+                                    <a href="{% url 'TeamDetailsView' team.account_id %}" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-3">{{team.full_name|truncatechars:15}} <span class="badge badge-light-primary"> {{team.level}}</span></a>
+                                    <!--end::Name-->
+                                    <!--begin::Position-->
+                                    <div class="fw-semibold text-gray-400 mb-6">Associate ID <span class="badge badge-lg badge-light-info d-inline">{{team.associate_id}}</span></div>
+                                    <!--end::Position-->
+                                    <!--begin::Info-->
+                                    <div class="d-flex flex-center flex-wrap">
+                                        <!--begin::Stats-->
+                                        {% if team.total_business.wallet_balance %}
+                                        <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
+                                            <div class="fs-6 fw-bold text-gray-700">₹{{team.total_business.wallet_balance}}</div>
+                                            <div class="fw-semibold text-gray-400">Total Business</div>
+                                        </div>
+                                        {% else %}
+                                        <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
+                                            <div class="fs-6 fw-bold text-gray-700">₹ 0.00</div>
+                                            <div class="fw-semibold text-gray-400">Total Business</div>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
+                                            <div class="fs-6 fw-bold text-gray-700">₹{{team.teams_business}}</div>
+                                            <div class="fw-semibold text-gray-400">Team Business</div>
+                                        </div>
+                                        <!--end::Stats-->
+                                    </div>
+                                    <div class="d-flex flex-center flex-wrap">
+
+                                        <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
+                                            <div class="fs-6 fw-bold text-gray-700">{{team.direct_teams}}</div>
+                                            <div class="fw-semibold text-gray-400">Direct Teams</div>
+                                        </div>
+                                        <!--end::Stats-->
+                                        <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
+                                            <div class="fs-6 fw-bold text-gray-700">{{team.indirect_teams_count}}</div>
+                                            <div class="fw-semibold text-gray-400">Indirect Teams</div>
+                                        </div>
+
+                                    </div>
+                                    <!--end::Info-->
                                 </div>
-                                
-                                <a href="{% url 'TeamDetailsView' team.account_id %}" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-3">{{team.full_name|truncatechars:15}} <span class="badge badge-light-primary"> {{team.level}}</span></a>
-                                <!--end::Name-->
-                                <!--begin::Position-->
-                                <div class="fw-semibold text-gray-400 mb-6">Associate ID <span class="badge badge-lg badge-light-info d-inline">{{team.associate_id}}</span></div>
-                                <!--end::Position-->
-                                <!--begin::Info-->
-                                <div class="d-flex flex-center flex-wrap">
-                                    <!--begin::Stats-->
-                                    {% if team.total_business.wallet_balance %}
-                                    <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
-                                        <div class="fs-6 fw-bold text-gray-700">₹{{team.total_business.wallet_balance}}</div>
-                                        <div class="fw-semibold text-gray-400">Total Business</div>
-                                    </div>
-                                    {% else %}
-                                    <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
-                                        <div class="fs-6 fw-bold text-gray-700">₹ 0.00</div>
-                                        <div class="fw-semibold text-gray-400">Total Business</div>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
-                                        <div class="fs-6 fw-bold text-gray-700">₹{{team.teams_business}}</div>
-                                        <div class="fw-semibold text-gray-400">Team Business</div>
-                                    </div>
-                                    <!--end::Stats-->
-                                </div>
-                                <div class="d-flex flex-center flex-wrap">
-                                    
-                                    <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
-                                        <div class="fs-6 fw-bold text-gray-700">{{team.direct_teams}}</div>
-                                        <div class="fw-semibold text-gray-400">Direct Teams</div>
-                                    </div>
-                                    <!--end::Stats-->
-                                    <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-2 mx-2 mb-3">
-                                        <div class="fs-6 fw-bold text-gray-700">{{team.indirect_teams_count}}</div>
-                                        <div class="fw-semibold text-gray-400">Indirect Teams</div>
-                                    </div>
-                                    
-                                </div>
-                                <!--end::Info-->
+                                <!--end::Card body-->
                             </div>
-                            <!--end::Card body-->
+                            <!--end::Card-->
                         </div>
-                        <!--end::Card-->
-                    </div>
                         {% endfor %}
                     </div>
                     <!--end::Row-->
@@ -1150,7 +1149,7 @@
                 </div>
                 <!--end::Tab pane-->
             </div>
-          
+
         </div>
         <!--end::Container-->
     </div>

@@ -1,4 +1,3 @@
-from dataclasses import fields
 from pyexpat import model
 from .models import *
 from django import forms
@@ -6,7 +5,18 @@ from django import forms
 class AddPropertyForm(forms.ModelForm):
     class Meta:
         model = Properties
-        fields = ['name', 'location', 'city', 'plot_map', 'plot_types', 'description']
+        fields = [
+            'name', 
+            'location', 
+            'city', 
+            'plot_map', 
+            'plot_types', 
+            'description',
+            'image_1',
+            'image_2',
+            'image_3',
+            'image_4',
+        ]
 
 class PropertyImageForm(forms.ModelForm):
     class Meta:
@@ -27,7 +37,7 @@ class AddGalleryImagesForm(forms.ModelForm):
 class RewardForm(forms.ModelForm):
     class Meta:
         model = Reward
-        fields = ['product_type','title','description','product_image']                                           
+        fields = ['product_type','title', 'time_limit', 'business', 'description','product_image']                                           
                                           
 
 class TransferRequestForm(forms.ModelForm):
@@ -50,8 +60,15 @@ class ActivateIdForm(forms.ModelForm):
         model = Wallet
         fields = '__all__'
 
+class PlotImageForm(forms.ModelForm):
+    class Meta:
+        model = PropertiesImage
+        fields = '__all__'
+
 
 from django import forms
 
 class CSVUploadForm(forms.Form):
     csv_file = forms.FileField()
+
+

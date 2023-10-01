@@ -1,0 +1,212 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+
+        <div id="kt_content_container" class="container-xxl">
+
+            <div class="row">
+                <div class="col-sm-6 mx-auto">
+                    <div class="card mb-5">
+                        <div class="card-body ">
+                            {% for message in messages %}
+                            <!--begin::Alert-->
+                            <div
+                                class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+                                <div class="d-flex flex-column pt-3">
+                                    <strong>{{message}}</strong>
+                                    <!--end::Content-->
+                                </div>
+                                <button type="button"
+                                    class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto"
+                                    data-bs-dismiss="alert">
+                                    <span class="svg-icon svg-icon-2x ">
+                                        <span class="svg-icon svg-icon-2x ">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                                    transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                                <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                                    transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </button>
+                                <!--end::Close-->
+                            </div>
+                            <!--end::Alert-->
+
+                            {% endfor %}
+
+                            <h2 class="text-center mb-3"> Get EMI Details</h2>
+                            <hr>
+                            <form action="" class="form mb-5" method="post">
+                                {% csrf_token %}
+                                <div class="row mb-5">
+
+                                    <div class="d-flex flex-column mb-5 fv-row">
+
+                                        <label class="required fs-5 fw-semibold mb-2">Enter Booking id </label>
+                                        <input type="text" name="query" class="form-control form-control-solid"
+                                            placeholder="Enter Booking id" value="{{search_query}}" required>
+                                    </div>
+
+                                </div>
+                                <div class="text-center">
+
+                                    <button type="submit" class="btn btn-lg btn-dark">Search</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+            {% if result %}
+
+
+            <div class="row">
+                <div class="col-sm-4 mx-auto">
+                    <div class="card mb-5">
+                        <div class="card-body ">
+                            <h2 class="text-center mb-3"> Booking Details</h2>
+                            <hr>
+                            <div class="booking-details mb-5">
+                                <p><strong>Customer Name:</strong> {{booking.customer_name}}</p>
+                                <p><strong>Associate Id:</strong> {{booking.associate_id}}</p>
+                                <p><strong>Booking ID:</strong> {{booking.booking_id}}</p>
+                                
+                                <p><strong>Plot:</strong> {{booking.plot.name}}</p>
+                                <p><strong>Plot Number:</strong> {{booking.plot_number}}</p>
+                                <p><strong>Total Amount:</strong> ₹{{booking.total_amount}}</p>
+                                <p><strong>Down Payment:</strong> ₹{{booking.down_payment}}</p>
+                                <p><strong>Total Loan Amount:</strong> ₹{{booking.remaining_balance}}</p>
+                                <p><strong>Loan Term (Months):</strong> {{booking.emi_period}}</p>
+                                <!-- <p><strong>Monthly EMI:</strong> ₹{{booking.calculate_emi}}</p> -->
+                                <p><strong>Booking Date:</strong> {{booking.booking_date}}</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+
+                        <div class="card-body py-4">
+        
+                            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
+                                <thead>
+                                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+        
+                                        <th class="min-w-90px">SNo.</th>
+                                        <th class="min-w-125px">Amount</th>
+                                        <th class="min-w-125px">Due date</th>
+                                        <th class="min-w-100px">Status</th>
+                                        <th class="text-end min-w-100px">Update Status</th>
+                                    </tr>
+        
+                                </thead>
+        
+                                <tbody class="text-gray-600 fw-semibold">
+        
+                                    {% for data in result %}
+                                    <tr>
+        
+                                        <td class="d-flex align-items-center">
+        
+                                            <div class="d-flex flex-column">
+        
+                                                <span>{{forloop.counter}}</span>
+                                            </div>
+        
+                                        </td>
+                                        <input type="hidden" id="emi_id" name="emi_id" value="{{data.emi_id}}">
+                                        <input type="hidden" id="booking_id" name="booking_id" value="{{data.booking_id}}">
+        
+        
+                                        <td>₹{{data.amount}}</td>
+        
+        
+                                        <td>
+                                            <div class="badge badge-light-primary fw-bold">{{data.emi_due_date}}</div>
+                                        </td>
+        
+        
+                                        {% if data.emi_status == True %}
+                                        <td>
+                                            <div class="badge badge-light-success fw-bold" id="status">Paid</div>
+        
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            <div class="badge badge-light-danger fw-bold" id="status">Unpaid</div>
+        
+                                        </td>
+                                        {% endif %}
+        
+                                        <td class="">
+                                            <select class="form-select-sm" id="update-emi-status" aria-label="Select example">
+                                                <option disabled selected>Status</option>
+                                                <option value="True">Paid</option>
+                                                <option value="False">Unpaid</option>
+        
+                                            </select>
+        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+        
+                            </table>
+        
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% block js %}
+	<script>
+        $(document).ready(function() {
+            $(document).on('change', '#update-emi-status', function() {
+                var status = $(this).val();
+                var $row = $(this).closest('tr');
+                var emi_id = $row.find('#emi_id').val();
+                var booking_id = $row.find('#booking_id').val();
+               console.log()
+                console.log(booking_id, emi_id);
+                $.ajax({
+                    type: 'POST',
+                    url: '/app/pay-emi',
+                    data: {
+                        'emi_id': emi_id,
+                        'status': status,
+                        'booking_id': booking_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Status updated successfully!');
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.error_message);
+                        }
+                    }
+                });
+            });
+        });
+	</script>
+{% endblock %}
+{% endblock %}

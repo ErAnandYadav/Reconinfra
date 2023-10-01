@@ -62,7 +62,7 @@
                                     <!--begin:: Avatar -->
                                     {% if facilitator.profile_pic %}
                                     <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                        <a href="{% url 'Profile' facilitator.account_id %}">
+                                        <a href="{% url 'AssociateDetails' facilitator.account_id %}">
                                             <div class="symbol-label">
                                                 <img src="{{facilitator.profile_pic.url}}" alt="{{facilitator.first_name}}" class="w-100 h-100">
                                             </div>
@@ -71,14 +71,14 @@
                                     {% else %}
                                     <!--begin:: Avatar -->
                                     <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                        <a href="{% url 'Profile' facilitator.account_id %}">
+                                        <a href="{% url 'AssociateDetails' facilitator.account_id %}">
                                             <div class="symbol-label fs-3 bg-light-primary text-primary">{{facilitator.first_name|first|upper}}</div>
                                         </a>
                                     </div>
                                     {% endif %}
                                   
                                     <div class="d-flex flex-column">
-                                        <a href="{% url 'Profile' facilitator.account_id %}" class="text-gray-800 text-hover-primary mb-1">{{facilitator.first_name|capfirst}} {{facilitator.last_name|capfirst}}</a>
+                                        <a href="{% url 'AssociateDetails' facilitator.account_id %}" class="text-gray-800 text-hover-primary mb-1">{{facilitator.first_name|capfirst}} {{facilitator.last_name|capfirst}}</a>
                                         <span>{{facilitator.email}}</span>
                                     </div>
                                    
@@ -120,6 +120,9 @@
                                         </div>
                                         <div class="menu-item px-3">
                                             <a href="{% url 'EditFacilitatorView' facilitator.account_id %}" class="menu-link px-3">Edit</a>
+                                        </div>
+                                        <div class="menu-item px-3">
+                                            <a href="{% url 'AssociateDetails' facilitator.account_id %}" class="menu-link px-3">View</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>

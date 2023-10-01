@@ -1,5 +1,9 @@
 from django.core.mail import EmailMessage
+from datetime import datetime, timedelta
 from django.conf import settings
+from Reconinfra_Admin_Panel.models import EMIHistory, PlotBooking
+from django.db.models import Sum
+from django.db.models import Q
 import random
 import string
 import time
@@ -76,21 +80,61 @@ def find_commission_level(total_amount):
 
 
 
-from datetime import datetime, timedelta
+
+def convert_into_emi(amount, booking_id, months):
+    amount = float(amount)
+    months = int(months)
+    emi = round(amount / months, 2)
+    current_date = datetime.now()
+    payment_dates = []
+
+    for _ in range(months):
+        next_month = current_date + timedelta(days=30)
+        while next_month.day != 5:
+            next_month += timedelta(days=1)
+        payment_dates.append(next_month.strftime("%Y-%m-%d"))
+        current_date = next_month
+    emi_list = [{'emi_date': date, 'emi_amount': emi, 'booking_id': booking_id} for date in payment_dates]
+    EMIHistory.objects.bulk_create([EMIHistory(**emi_data) for emi_data in emi_list])
+
+    print(emi_list)
+
+# Example usage:
+# amount = 10000
+# booking_id = 12345
+# months = 12
+# convert_into_emi(amount, booking_id, months)
+
+
+def amount_human_format(amount):
+    final_amount = amount
+    print(final_amount,"4555555555555")
+    if final_amount is None:
+        return 0.00
+    amount = float('{:.3g}'.format(amount))
+    magnitude = 0
+    while abs(amount) >= 1000:
+        magnitude += 1
+        amount /= 1000.0
+    return '{}{}'.format('{:f}'.format(amount).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
 
 
 
-emi = round(10000 / 12,2)
-current_date = datetime.now()
-payment_dates = []
+def filter_monthely_balance():
+    current_date = datetime.now()
+    # two_days_in_future = current_date + timedelta(days=0)
+    # print(two_days_in_future)
+    start_date = datetime(current_date.year, current_date.month, 1)
 
-for _ in range(12):
-    next_month = current_date + timedelta(days=30)  # Assuming a 30-day month
-    payment_date = next_month.replace(day=5)
-    if payment_date < next_month:
-        payment_date += timedelta(days=30)
-    payment_dates.append(payment_date.strftime("%Y-%m-%d"))
-    current_date = next_month
+    # Calculate the end date (1st of the next month)
+    end_date = start_date + timedelta(days=32)
+    end_date = datetime(end_date.year, end_date.month, 1)
 
-# Create a list of dictionaries containing date and EMI for each month
-emi_list = [{'date': date, 'emi': emi} for date in payment_dates]
+    # Build the query to filter records between start_date and end_date
+    query = Q(created_at__gte=start_date, created_at__lt=end_date)
+    print(query,"578787")
+    # Fetch records that match the query
+    balance = PlotBooking.objects.filter(query).aggregate(total_balance=Sum('down_payment'))['total_balance']
+    return balance
+
+

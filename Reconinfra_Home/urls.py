@@ -19,4 +19,5 @@ urlpatterns = [
     path('disclaimer/', views.ReconinfraDisclaimer, name="ReconinfraDisclaimer"),
     path('customer-login/', views.CustomerLogin, name="CustomerLogin"),
     path('customer-profile/', views.CustomerProfile, name="CustomerProfile"),
+    path('emi-history/', views.EMIHistoryView, name="EMIHistoryView"),
 ]

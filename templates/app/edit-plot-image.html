@@ -34,13 +34,13 @@
                 {% for message in messages %}
 <!--begin::Alert-->
 <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
-    <div class="d-flex flex-column pt-3">
+    <div class="d-flex flex-column text-light pt-3">
         <strong>Message! {{message}}</strong> 
         <!--end::Content-->
     </div>
     <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-        <span class="svg-icon svg-icon-2x svg-icon">
-            <span class="svg-icon svg-icon-2x svg-icon">
+        <span class="svg-icon svg-icon-2x svg-icon-light">
+            <span class="svg-icon svg-icon-2x svg-icon-light">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
                     <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
@@ -61,7 +61,7 @@
                         <div class="flex-lg-row-fluid me-0 me-lg-20">
                             <!--begin::Form-->
                           <h2 class="text-center"> Add Plot Images</h2>
-                            <form action="" class="form mb-15" method="post" enctype="multipart/form-data">
+                            <form action="" class="form mb-15" method="post" enctype="multipart/form-data" novalidate>
                                 {% csrf_token %}
                                 <!--begin::Input group-->
                                 <div class="row mb-5">
@@ -71,11 +71,9 @@
                                     <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
                                         <span class="required">Select Plot</span>
                                     </label>
-                                    <select name="properties" data-control="select2" data-placeholder="Select a position..." class="form-select form-select-solid">
-                                        {% for plot in plots %}
-                                            <option value="{{plot.id}}">{{plot.name}}</option>
-                                        {% endfor %}
-                                    </select>
+                                    
+                                    {{form.properties|addclass:'form-select form-select-solid'|addplaceholder:""}}
+                                    {{form.properties.errors}}
                                 </div>
                                 <!--begin::Col-->
                                 <div class="d-flex flex-column mb-5 fv-row">
@@ -83,9 +81,9 @@
                                     <label class="required fs-5 fw-semibold mb-2">Images</label>
                                     <!--end::Label-->
                                     <!--end::Input-->
-                                    <input type="file" name="images" class="form-control form-control-solid" multiple />
-                                    <span class="text-secondary fs-7">Select Atleast 3 Images</span>
-                                    <!--end::Input-->
+                                    {{form.image|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                    {{form.image.errors}}
+                                    
                                 </div>
                                
                                 </div>

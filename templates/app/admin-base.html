@@ -428,6 +428,18 @@
 											<!--end:Menu link-->
 										</div>
 										<!--begin:Menu item-->
+										<!--begin:Menu item-->
+										<div class="menu-item">
+											
+											<a class="menu-link" href="{% url 'PlotImagesList' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Plot Images</span>
+											</a>
+											<!--end:Menu link-->
+										</div>
+										<!--begin:Menu item-->
 										<div class="menu-item">
 											
 											<a class="menu-link" href="{% url 'PropertyList' %}">
@@ -624,13 +636,14 @@
 											</svg>
 											
 										</span>
-										<span class="menu-title">Withdrawals Confirmation</span>
+										<span class="menu-title">Payment Requests</span>
 									</a>
 									<!--end:Menu link-->
 								</div>
+								
 								<div class="menu-item">
 									
-									<a class="menu-link" href="" onclick="alert('Coming soon')">
+									<a class="menu-link {% if request.resolver_match.url_name == 'EMIHistoryView' %}active{% endif %}" href="{% url 'EMIHistoryView' %}">
 										<span class="menu-icon">
 											<span class="svg-icon svg-icon-2">
 												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -641,7 +654,7 @@
 												</svg>
 											</span>
 										</span>
-										<span class="menu-title">Groups Business</span>
+										<span class="menu-title">Pay EMI</span>
 									</a>
 									<!--end:Menu link-->
 								</div>
@@ -707,7 +720,7 @@
 									{% if request.user.is_superuser %}
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link" href="{% url 'MyTeamsView' %}">
+											<a class="menu-link" href="{% url 'MyTreeTeamView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -719,7 +732,7 @@
 									{% else %}
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link" href="{% url 'MyTeamsView' %}">
+											<a class="menu-link" href="{% url 'MyTreeTeamView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -789,17 +802,27 @@
 										<!--end:Menu item-->
 										<div class="menu-item">
 											
+											<a class="menu-link  {% if request.resolver_match.url_name == 'MyWalletView' %}active{% endif %}" href="{% url 'MyWalletView' %}">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Wallet</span>
+											</a>
+											<!--end:Menu link-->
+										</div>
+										<!-- <div class="menu-item">
+											
 											<a class="menu-link  {% if request.resolver_match.url_name == 'TransferRequestListView' %}active{% endif %}" href="{% url 'TransferRequestListView' %}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
 												<span class="menu-title">Withdrawals</span>
 											</a>
-											<!--end:Menu link-->
-										</div>
+											
+										</div> -->
 										
 										<!--end:Menu item-->
-										<div class="menu-item">
+										<!-- <div class="menu-item">
 											
 											<a class="menu-link {% if request.resolver_match.url_name == 'TransferRequestView' %}active{% endif %}" href="{% url 'TransferRequestView' %}">
 												<span class="menu-bullet">
@@ -807,8 +830,8 @@
 												</span>
 												<span class="menu-title">Withdrawal Request</span>
 											</a>
-											<!--end:Menu link-->
-										</div>
+											
+										</div> -->
 										<!--end:Menu item-->
 									</div>
 									<!--end:Menu sub-->

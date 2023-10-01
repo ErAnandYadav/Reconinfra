@@ -19,6 +19,7 @@ def send_otp(request):
     return o
     
 def send_forget_password_mail(email, token):
+    print(email,"878787")
     subject = "Your Forget Password Link"
     message = f"Hi, clink on the link to reset your password http://reconinfra.com/accounts/change-password/{token}/"
     from_email = settings.EMAIL_HOST_USER

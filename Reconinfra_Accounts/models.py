@@ -1,14 +1,15 @@
-import uuid
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .managers import UserManager
-from django.utils.translation import gettext as _
 from django.core.validators import RegexValidator
+from django.utils.translation import gettext as _
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
+from .managers import UserManager
 from django.conf import settings
-
+from django.db import models
+import string
+import random
+import uuid
 
 
 # Create your models here.
@@ -107,10 +108,11 @@ class CustomUser(AbstractUser):
         # Calculate total business for this team member
         return PlotBooking.objects.filter(associate_id=self.sponsor_id).aggregate(wallet_balance=Sum("down_payment"))['wallet_balance'] or 0
 
-import string
-import random
+
 def generator_sponsor_id(size=8, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
+
+
 
 
 class Group(models.Model):

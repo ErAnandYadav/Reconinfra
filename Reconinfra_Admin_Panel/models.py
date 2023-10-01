@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify 
 from Reconinfra_Accounts.models import *
 from django.contrib.auth.hashers import make_password
-
+import random
 
 # Create your models here.
 class Properties(models.Model):
@@ -10,7 +10,11 @@ class Properties(models.Model):
     location = models.CharField(max_length=100, null=True)
     city = models.CharField(max_length=100, null=True)
     slug = models.SlugField(unique=True, null=True, blank=True)
-    plot_map = models.FileField(upload_to = 'Recon/PlotAvailability', null=True, blank=True)
+    image_1 = models.ImageField(upload_to='Recon/Properties-img', null=True, blank=True)
+    image_2 = models.ImageField(upload_to='Recon/Properties-img', null=True, blank=True)
+    image_3 = models.ImageField(upload_to='Recon/Properties-img', null=True, blank=True)
+    image_4 = models.ImageField(upload_to='Recon/Properties-img', null=True, blank=True)
+    plot_map = models.FileField(upload_to ='Recon/PlotAvailability', null=True, blank=True)
     PLOT_TYPES = (
         ('Residential','Residential'),
         ('Industrial','Industrial'),
@@ -51,8 +55,6 @@ class PropertiesImage(models.Model):
         
 class GalleryImages(models.Model):
     image = models.FileField(upload_to='Recon/Media-Center', null=True)
-
-import random
 
 
 
@@ -103,11 +105,11 @@ class PlotBooking(models.Model):
     down_payment = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     remaining_balance = models.DecimalField(max_digits=20, default=0, decimal_places=2, null=True, blank=True)
     BOOKING_STATUS = (
-        ('Pending', 'Pending'),
+        ('Saved', 'Saved'),
         ('Approved', 'Approved'),
         ('Disapproved', 'Disapproved'),
     )
-    booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Pending', null=True)
+    booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Saved', null=True)
     booking_date = models.CharField(max_length=100, null=True)
     booking_id = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -138,7 +140,7 @@ class PlotBooking(models.Model):
 
 
 class EMIHistory(models.Model):
-    booking_id = models.ForeignKey(PlotBooking, on_delete=models.CASCADE, null=True, blank=True)
+    booking_id = models.CharField(max_length=100, null=True)
     emi_amount = models.DecimalField(max_digits=10, decimal_places=2 ,null=True, blank=True)
     emi_date = models.CharField(max_length=100,null=True, blank=True)
     is_paid = models.BooleanField(default=False)
@@ -146,7 +148,8 @@ class EMIHistory(models.Model):
 
 class Wallet(models.Model):
     associate = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-    wallet_balance = models.IntegerField(default = 0, null=True)
+    business_level = models.CharField(max_length=20, null=True, blank=True)
+    wallet_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     total_business = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     is_active = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
@@ -171,9 +174,10 @@ class Reward(models.Model):
     product_type = models.CharField(max_length=100, null=True)
     title = models.CharField(max_length=100, null=True)
     description = models.TextField(null=True)
+    business = models.IntegerField(null=True, blank=True)
     product_image = models.ImageField(upload_to='Recon/User/Reward', null=True, blank=True)
     is_lock = models.BooleanField(default=False)
-    date_time = models.DateTimeField(auto_now_add=True)
+    time_limit = models.CharField(max_length=100, null=True, )
 
     def __str__(self):
         return f"{self.product_type} - {self.title}"

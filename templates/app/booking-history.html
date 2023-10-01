@@ -47,7 +47,7 @@
                                 <th class="min-w-125px">Total Amount</th>
                                 <th class="min-w-125px">Down Payment</th>
                                 <th class="min-w-150px">Remaining Balance</th>
-                                <th class="min-w-125px">EMI/Month</th>
+                                <!-- <th class="min-w-125px">EMI/Month</th> -->
                                 <th class="min-w-125px">Payment Date </th>
                                 <th class="min-w-125px">Booking Status </th>
                                 <th class="text-end min-w-100px">Actions</th>
@@ -94,10 +94,8 @@
                                     <div class="text-danger">₹{{payment.remaining_balance}}</div>
                                 </td>
                               
-                               
-                                <td>{{payment.calculate_emi}}/m</td>
-                                <td><span class="badge badge-success">{{payment.booking_status}}</span></td>
                                 <td>{{payment.created_at|date}}</td>
+                                <td><span class="badge badge-success">{{payment.booking_status}}</span></td>
                          
                                 <td class="text-end">
                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions 
@@ -118,6 +116,9 @@
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
                                             <a href="{% url 'DeleteBookingView' payment.id %}" class="menu-link px-3" data-kt-users-table-filter="delete_row" onclick="confirm('Are sure you want to delete ?')">Delete</a>
+                                        </div>
+                                        <div class="menu-item px-3">
+                                            <a href="/app/emi-history?booking_id={{payment.booking_id}}" class="menu-link px-3" data-kt-users-table-filter="delete_row" >EMI Details</a>
                                         </div>
                                         <!--end::Menu item-->
                                     </div>
