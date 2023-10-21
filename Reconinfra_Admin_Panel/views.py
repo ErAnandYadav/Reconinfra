@@ -655,14 +655,15 @@ def GetAllUsersView(request):
         children = CustomUser.objects.filter(referred_by_id=user.account_id)
         children_list = []
         for child in children:
-            amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
+            # amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
+            amount =Wallet.objects.filter(associate = child).aggregate(wallet=Sum('wallet_balance'))['wallet']
             
-            converted_amount = amount_human_format(amount[0])
+            # converted_amount = amount_human_format(amount[0])
             child_data = {
                 "name": child.first_name+ ' ' + child.last_name,
                 "sponsor_id": child.sponsor_id,
                 "business_level": child.business_level,
-                "total_business": amount[0] or 0,
+                "total_business": amount or 0,
                 "image": '/static/app-assets/media/user-icon.png',
                 "children": build_team_tree(child) 
             }
@@ -835,42 +836,67 @@ def TestViewAPI(request):
     amount = 10000
     sponsor_id = 'C02ZZB5Y'
     initial_total_commission = 15
+    print("initial_total_commission",initial_total_commission)
     user = CustomUser.objects.get(sponsor_id=sponsor_id)
+    
     my_business_level = user.business_level
     my_commission_percentage = commission_rates.get(my_business_level, 0)
     my_commission_amount = amount * my_commission_percentage/100
+    
     initial_total_commission = initial_total_commission - my_commission_percentage
+    
     parent_users = user.get_parent_users()
     higher_business_users = [parent for parent in parent_users if my_business_level < parent.business_level]
-
+    
     percentage_list = []
-    print(higher_business_users)
     for x in higher_business_users:
         users = CustomUser.objects.get(account_id=x.account_id)
         parents_percentage = commission_rates.get(users.business_level, 0)
-        
         percentage_list.append(parents_percentage)
-    print(percentage_list)
-    # y = 1  
-    # while y < len(percentage_list):
-    #     if percentage_list[y] <= percentage_list[y - 1]:
-    #         del percentage_list[y]
-    #     else:
-    #         y += 1
-    # print(percentage_list)
+    print("Percentage list:-",percentage_list)
+    
     differences = [percentage_list[i] - percentage_list[i - 1] for i in range(1, len(percentage_list))]
     differences = [percentage_list[0] - my_commission_percentage] + differences
-    commissions = [amount * (diff / 100) for diff in differences]
-    print(differences)
-    for i, x in enumerate(higher_business_users):
-        user = CustomUser.objects.get(account_id=x.account_id)
-        
-        # user.wallet += commissions[i]
-        # user.save()
-        print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
-    print("Higher Business Users:", [parent.business_level for parent in higher_business_users])
+    # commissions = [amount * (diff / 100) for diff in differences]
+    print("Differences:-",differences)
     
-    return HttpResponse(higher_business_users)
+   
+    distributed_commission = 0
+    commissions = []
+
+    for difference in differences:
+        if distributed_commission + difference <= initial_total_commission:
+            commission = (amount * difference) / 100
+            commissions.append(round(commission, 2))
+            distributed_commission += difference
+        else:
+            # Calculate the remaining commission to reach 15%
+            remaining_commission = initial_total_commission - distributed_commission
+            commission = (amount * remaining_commission) / 100
+            commissions.append(round(commission, 2))
+            distributed_commission += remaining_commission
+            break
+    print("Commissions:", commissions)
+    print("Total Commission:", distributed_commission + my_commission_percentage)
+    for i, x in enumerate(higher_business_users):
+        if i < len(commissions):
+            user = CustomUser.objects.get(account_id=x.account_id)
+            agent_wallet, created = Wallet.objects.get_or_create(associate_id=user.account_id)
+            agent_wallet.wallet_balance += int(commissions[i])
+            agent_wallet.total_business += int(commissions[i])
+            agent_wallet.is_active = True
+            agent_wallet.save()
+            print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
+        else:
+            print(f"Commission data not available for user {x.email}")
+    
+    return JsonResponse({
+        "Higher Business User Level": [parent.business_level for parent in higher_business_users],
+        "percentage_list": percentage_list,
+        "differences": differences,
+        "distributed_commission": distributed_commission + my_commission_percentage,
+        "remaining_commission": initial_total_commission - distributed_commission,
+    })
 
 
 
