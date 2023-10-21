@@ -1,0 +1,4 @@
+1) Download Putty and install
+2) get the ip from Your Server Eg.(68.178.162.154)
+3) Go to Putty panel type your ip and press the enter
+4) go to the putty terminal type username from your server and password

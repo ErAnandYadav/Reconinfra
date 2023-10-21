@@ -1,0 +1,289 @@
+{% extends 'home/base.html' %}
+{% block body %}
+{% load static %}
+
+<section class="single-listing-wrap1">
+  <div class="container">
+    <div class="single-property">
+      <div class="content-wrapper">
+        <div class="property-heading">
+          <div class="row">
+            <div class="col-lg-6 col-md-12">
+              <div class="single-list-cate">
+                <div class="item-categoery">{{get_details.status}}</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row align-items-center">
+            <div class="col-lg-8 col-md-12">
+              <div class="single-verified-area">
+                <div class="item-title">
+                  <h3>
+                    <a href="javascript:void(0)">{{get_details.name}}</a>
+                  </h3>
+                </div>
+              </div>
+              <div class="single-item-address">
+                <ul>
+                  <li>
+                    <i class="fas fa-map-marker-alt"></i>{{get_details.location}}
+                  </li>
+                  <li><i class="fas fa-clock"></i>{{get_details.created_at|timesince}} ago </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-8">
+
+            <div class="featured-thumb-slider-area wow fadeInUp" data-wow-delay=".4s">
+              <div class="feature-box3 swiper-container">
+                <div class="swiper-wrapper">
+                  {% if get_details.image_1 %}
+                  <div class="swiper-slide">
+                    <div class="feature-img1 zoom-image-hover">
+                      <img src="{{get_details.image_1.url}}" alt="feature" width="798" height="420" />
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if get_details.image_2 %}
+                  <div class="swiper-slide">
+                    <div class="feature-img1 zoom-image-hover">
+                      <img src="{{get_details.image_2.url}}" alt="feature" width="798" height="420" />
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if get_details.image_3 %}
+                  <div class="swiper-slide">
+                    <div class="feature-img1 zoom-image-hover">
+                      <img src="{{get_details.image_3.url}}" alt="feature" width="798" height="420" />
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if get_details.image_4 %}
+                  <div class="swiper-slide">
+                    <div class="feature-img4 zoom-image-hover">
+                      <img src="{{get_details.image_4.url}}" alt="feature" width="798" height="420" />
+                    </div>
+                  </div>
+                  {% endif %}
+
+                </div>
+              </div>
+              <div class="featured-thum-slider2 swiper-container">
+                <div class="swiper-wrapper">
+                  {% if get_details.image_1 %}
+                  <div class="swiper-slide">
+                    <div class="item-img">
+                      <img src="{{get_details.image_1.url}}" alt="feature" width="154" height="100" />
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if get_details.image_2 %}
+                  <div class="swiper-slide">
+                    <div class="item-img">
+                      <img src="{{get_details.image_2.url}}" alt="feature" width="154" height="100" />
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if get_details.image_3 %}
+                  <div class="swiper-slide">
+                    <div class="item-img">
+                      <img src="{{get_details.image_3.url}}" alt="feature" width="154" height="100" />
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if get_details.image_4 %}
+                  <div class="swiper-slide">
+                    <div class="item-img">
+                      <img src="{{get_details.image_4.url}}" alt="feature" width="154" height="100" />
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="single-listing-box1">
+
+              <div class="overview-area listing-area">
+                <h3 class="item-title">About This Listing</h3>
+                <p>
+                  {{get_details.description}}
+                </p>
+              </div>
+
+              <div class="overview-area ameniting-box">
+                <h3 class="item-title">Features & Amenities</h3>
+                <div class="row">
+                  <div class="col-lg-4">
+                    <ul class="ameniting-list">
+                      <li><i class="fas fa-check-circle"></i>TV Cable</li>
+                      <li>
+                        <i class="fas fa-check-circle"></i>Air
+                        Conditioning
+                      </li>
+                      <li><i class="fas fa-check-circle"></i>Barbeque</li>
+                      <li><i class="fas fa-check-circle"></i>Gym</li>
+                    </ul>
+                  </div>
+                  <div class="col-lg-4">
+                    <ul class="ameniting-list">
+                      <li>
+                        <i class="fas fa-check-circle"></i>Swimming Pool
+                      </li>
+                      <li><i class="fas fa-check-circle"></i>Laundry</li>
+                      <li>
+                        <i class="fas fa-check-circle"></i>Microwave
+                      </li>
+                      <li><i class="fas fa-check-circle"></i>Lawn</li>
+                    </ul>
+                  </div>
+                  <div class="col-lg-4">
+                    <ul class="ameniting-list">
+                      <li><i class="fas fa-check-circle"></i>Sauna</li>
+                      <li>
+                        <i class="fas fa-check-circle"></i>Window
+                        Coverings
+                      </li>
+                      <li>
+                        <i class="fas fa-check-circle"></i>CC Camera
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+
+              {% if get_details.slug == 'golden-city' %}
+              <div class="overview-area video-box1">
+                <h3 class="item-title">The Golden City</h3>
+
+
+                <video width="731" height="349" controls autoplay muted>
+                  <source src="{% static 'Frontend_Files/recon-videos/golden-city/main-video.mp4' %}" type="video/mp4">
+                  <source src="{% static 'Frontend_Files/recon-videos/golden-city/main-video.ogg' %}" type="video/ogg">
+                </video>
+
+              </div>
+              {% endif %}
+
+            </div>
+          </div>
+          <div class="col-lg-4 widget-break-lg sidebar-widget">
+            <div class="widget widget-contact-box">
+              <h3 class="widget-subtitle">{{get_details.name}}</h3>
+              {% if get_details.slug == 'green-valley' %}
+              <img src="/static/Frontend_Files/plot/Green-Valley.jpg">
+              {% else %}
+              <img src="/static/Frontend_Files/Reconinfra-Image/golden-city/img5.jpeg">
+
+              {% endif %}
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--=====================================-->
+<!--=   Property     Start              =-->
+
+{% if get_details.slug == 'golden-city' %}
+<section class="location-wrap1">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 col-md-7">
+        <div class="item-heading-left">
+          <span class="section-subtitle">Property Video</span>
+          <h2 class="section-title">Golden City Video's </h2>
+          <div class="bg-title-wrap" style="display: block;">
+            <span class="background-title solid">Golden City</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+              <video width="242" height="300" controls>
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-1.mp4' %}" type="video/mp4">
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-1.ogg' %}" type="video/ogg">
+              </video>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+              <video width="242" height="300" controls>
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-2.mp4' %}" type="video/mp4">
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-2.ogg' %}" type="video/ogg">
+              </video>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+
+          <video width="690" height="280" controls>
+            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-4.mp4' %}" type="video/mp4">
+            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-4.ogg' %}" type="video/ogg">
+          </video>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="location-box3 wow zoomIn" data-wow-delay=".3s">
+          <video width="500" height="280" controls>
+            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-6.mp4' %}" type="video/mp4">
+            <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-6.ogg' %}" type="video/ogg">
+          </video>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+              <video width="242" height="300" controls>
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.mp4' %}" type="video/mp4">
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-5.ogg' %}" type="video/ogg">
+              </video>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="location-box3 wow zoomIn" data-wow-delay=".2s">
+              <video width="242" height="300" controls>
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-8.mp4' %}" type="video/mp4">
+                <source src="{% static 'Frontend_Files/recon-videos/golden-city/video-8.ogg' %}" type="video/ogg">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="property-wrap2 p-4">
+  <div class="container">
+    <div class="row">
+      {% for img in get_details.propertiesimage_set.all %}
+      <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+          <div class="inner-image" >
+          <img src="{{img.image.url}}"
+            class="w-100 shadow-1-strong rounded mb-4" style="height: 220px;" alt="Property image" />
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!--=====================================-->
+{% endblock %}

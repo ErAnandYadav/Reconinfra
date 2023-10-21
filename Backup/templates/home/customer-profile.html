@@ -1,0 +1,182 @@
+{% extends 'home/base.html' %}
+{% block body %}
+{% load static %}
+{% block css %}
+<style>
+
+
+    .emi-details {
+  width: 90%;
+  max-width: 800px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.emi-details h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 30px;
+  font-weight: 500;
+  
+}
+.emi-details h2 {
+  color: #333;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: inherit;
+  margin-bottom: -3px;
+}
+
+/* Style for the EMI table */
+.emi-details table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.emi-details th, td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: center;
+}
+
+.emi-details th {
+  background-color: #f2f2f2;
+}
+
+/* Style for the booking details section */
+.booking-details {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.booking-details h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.booking-details p {
+  margin: 0;
+  color: #666;
+}
+
+
+.booking-details p strong{
+  color: var(--rt-primary-color);
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Ubuntu", sans-serif;
+    line-height: 30px;
+    z-index: 2;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+/* Button Style */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+</style>
+{% endblock %}
+<section class="blog-wrap6">
+    <div class="container">
+        <div class="row gutters-40">
+            <div class="col-lg-4 widget-break-lg sidebar-widget">
+                <div class="widget widget-categoery-box">
+                    <h3 class="widget-subtitle">Hi {{request.session.customer_username|capfirst}}!</h3>
+                    <!-- <ul class="categoery-list">
+                        <li><a href="single-listing1.html">Apartments</a></li>
+                        <li><a href="single-listing2.html">Corporate Building</a></li>
+                      
+                    </ul> -->
+                    {% for booking in plot_bookings %}
+                    <div class="booking-details mb-5">
+                        <h2 class="mb-0" style="font-size: 22px;font-weight: 500;font-family: inherit;">Booking Details:</h2>
+                        <p><strong>Associate Id:</strong> {{booking.associate_id}}</p>
+                        <p><strong>Booking ID:</strong> {{booking.booking_id}}</p>
+                        <p><strong>Plot:</strong> {{booking.plot.name}}</p>
+                        <p><strong>Total Amount:</strong> ₹{{booking.total_amount}}</p>
+                        <p><strong>Down Payment:</strong> ₹{{booking.down_payment}}</p>
+                        <p><strong>Total Loan Amount:</strong> ₹{{booking.remaining_balance}}</p>
+                       
+                        <p><strong>Loan Term (Months):</strong> {{booking.emi_period}}</p>
+                        <p><strong>Monthly EMI:</strong> ₹{{booking.calculate_emi}}</p>
+                        <p><strong>Booking Date:</strong> {{booking.booking_date}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="emi-details mx-auto">
+
+                <!-- <h1 class="emi-heading">EMI Due Dates and Booking Details</h1> -->
+                  <!-- Booking Details Section -->
+                <!-- <div class="booking-details">
+                  <h2>Booking Details</h2>
+                  <p><strong>Customer Name:</strong> John Doe</p>
+                  <p><strong>Booking ID:</strong> ABC123</p>
+                  <p><strong>Plot:</strong> Finance Product XYZ</p>
+                  <p><strong>Total Loan Amount (USD):</strong> 5000.00</p>
+                 
+                  <p><strong>Loan Term (Months):</strong> 12</p>
+                  <p><strong>Monthly EMI (USD):</strong> 500.00</p>
+                  <p><strong>Booking Date:</strong> 2023-09-23</p>
+              </div> -->
+                <!-- EMI Due Dates Table -->
+                <h2>EMI Due Dates</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Installment Number</th>
+                            <th>Due Date</th>
+                            <th>Amount (Rs)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emi in emi_history %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{emi.emi_date}}</td>
+                            <td>{{emi.emi_amount}}</td>
+                            {% if emi.is_paid == True %}
+                            <td>
+                                <span class="badge badge-success">Paid</span>
+                            </td>
+                            {% else %}
+                            <td>
+                                <span class="badge badge-warning">Upcoming</span>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        <!-- Add more rows for each EMI installment -->
+                    </tbody>
+                </table>
+    
+                
+    
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

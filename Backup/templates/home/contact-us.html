@@ -1,0 +1,101 @@
+{% extends 'home/base.html' %}
+{% block body %}
+{% load static %}
+<!--=   Breadcrumb     Start            =-->
+    <!--=====================================-->
+
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Contact Page</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+<!--=====================================-->
+<!--=   contact    Start                =-->
+<!--=====================================-->
+
+    <section class="contact-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="contact-box1">
+                        <div class="contact-img">
+                            <img src="{% static 'Frontend_Files/img/blog/contact1.jpg' %}" alt="contact" height="502" width="607">
+                        </div>
+                        <div class="contact-content">
+                            <h3 class="contact-title">Office Information</h3>
+                            <div class="contact-list">
+                                <ul>
+                                    <li>Reconinfra Real Estate Agency</li>
+                                    
+                                    <li>8/883/2 Khurram Nagar,</li>
+                                    <li>Lucknow Uttar Pradesh,</li>
+                                    <li>Pin 226022 India</li>
+                                </ul>
+                            </div>
+                            <div class="phone-box">
+                                <div class="item-lebel">Emergency Call :</div>
+                                <div class="phone-number">+86 21 6137 9292</div>
+                                <div class="item-icon"><i class="fas fa-phone-alt"></i></div>
+                            </div>
+                            <div class="social-box">
+                                <div class="item-lebel">Social Share :</div>
+                                <ul class="item-social">
+                                    <li><a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="https://twitter.com/"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://vimeo.com/"><i class="fab fa-vimeo-v"></i></a></li>
+                                    <li><a href="https://www.pinterest.com/"><i class="fab fa-pinterest-p"></i></a></li>
+                                    <li><a href="https://web.whatsapp.com/"><i class="fab fa-whatsapp"></i></a></li>
+                                </ul>
+                                <div class="item-icon"><i class="fas fa-share-alt"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="contact-box2">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d116878.45300534296!2d90.4195470442074!3d23.731268144494663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1635221509729!5m2!1sen!2sbd" width="600" height="550" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <div class="contact-content">
+                            <h3 class="contact-title">Quick Contact</h3>
+                            <p>Feel free to reach out to us with any questions or concerns. Your feedback is valuable to us. Contact our dedicated team through email or phone, and we'll be happy to assist you.
+                            </p>
+                            <form class="contact-box rt-contact-form">
+                                <div class="row">
+                                    <div class="form-group col-lg-6">
+                                        <label>Name *</label>
+                                        <input type="text" class="form-control" name="name" placeholder="First Name*" data-error="First Name is required" required>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Phone *</label>
+                                        <input type="text" class="form-control" name="phone" placeholder="Phone*" data-error="Phone is required" required>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <label>Message *</label>
+                                        <textarea name="comment" id="message" class="form-text"  placeholder="Message" cols="30" rows="5" data-error="Message Name is required" required></textarea>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        <button type="submit" class="item-btn">Send message</button>
+                                    </div>
+                                </div>
+                                <div class="form-response"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!--=====================================-->
+
+{% endblock  %}

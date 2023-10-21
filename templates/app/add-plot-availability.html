@@ -1,0 +1,115 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Careers - Apply-->
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">Add Plot Availability</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            <div class="card">
+                <!--begin::Body-->
+                <div class="card-body p-lg-17">
+                    <!--begin::Layout-->
+                    <div class="d-flex flex-column flex-lg-row mb-17">
+                        <!--begin::Content-->
+                        <div class="flex-lg-row-fluid me-0 me-lg-20">
+                            <!--begin::Form-->
+                          
+                            <form action="" class="form mb-15" method="post" novalidate>
+                                {% csrf_token %}
+                                <!--begin::Input group-->
+                                <div class="row mb-5">
+                                    <!--begin::Col-->
+                                    <div class="col-md-12 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="required fs-5 fw-semibold mb-2">Select Plot</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        {{form.properties|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.properties.errors}}
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-5">
+                                <!--begin::Col-->
+                                <div class="col-md-12 fv-row">
+                                    <!--end::Label-->
+                                    <label class="required fs-5 fw-semibold mb-2">Plot Number</label>
+                                    <!--end::Label-->
+                                    <!--end::Input-->
+                                    {{form.plot_number|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                    {{form.plot_number.errors}}
+                                    <!--end::Input-->
+                                </div>
+                                </div>
+                                <!--end::Col-->
+                               
+                                <div class="d-flex flex-column mb-5 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                                        <span class="required">Status</span>
+                                        
+                                    </label>
+                                    {{form.plot_status|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                    {{form.plot_status.errors}}
+                                    
+                                </div>
+                                
+                                
+                                
+                                <div class="separator mb-8"></div>
+                                <!--end::Separator-->
+                                <!--begin::Submit-->
+                                <button type="submit" class="btn btn-primary" id="kt_careers_submit_button">
+                                    <!--begin::Indicator label-->
+                                    <span class="indicator-label">Submit</span>
+                                    <!--end::Indicator label-->
+                                    <!--begin::Indicator progress-->
+                                    <span class="indicator-progress">Please wait... 
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    <!--end::Indicator progress-->
+                                </button>
+                                <!--end::Submit-->
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Content-->
+                        
+                    </div>
+                    <!--end::Layout-->
+                    
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Careers - Apply-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+{% endblock %}

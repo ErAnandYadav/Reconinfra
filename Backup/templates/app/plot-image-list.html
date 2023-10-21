@@ -1,0 +1,80 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <div id="kt_content_container" class="container-xxl">
+            <div class="page-header mb-4">
+                <div class="page-block">
+                    <div class="row align-items-center">
+                        <div class="col-md-12">
+                            <div class="page-header-title">
+                                <h5 class="m-b-10">Dashboard</h5>
+                            </div>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/app/" class="p-1">
+                                        <i class="fas fa-home"></i>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="#!">Plot Images</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                {% for message in messages %}
+                <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+                    <div class="d-flex flex-column pt-3">
+                        <strong>Message! {{message}}</strong>
+                    </div>
+                    <button type="button"
+                        class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto"
+                        data-bs-dismiss="alert">
+                        <span class="svg-icon svg-icon-2x ">
+                            <span class="svg-icon svg-icon-2x ">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                        transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                    <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                        transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                </svg>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+                {% endfor %}
+                <div class="row g-10 m-3">
+                    {% for img in images %}
+                    <div class="col-md-4">
+                        <div class="card-xl-stretch me-md-6">
+                            <a class="d-block overlay" data-fslightbox="lightbox-hot-sales" href="{{img.image.url}}">
+                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('{{img.image.url}}')"></div>
+                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
+                                    <i class="bi bi-eye-fill fs-2x text-white"></i>
+                                </div>
+                            </a>
+                            <div class="mt-5">
+                                <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">{{img.properties.name}}</a>
+                                <div class="fs-6 fw-bold mt-5 d-flex flex-stack">
+                                    <a href="{% url 'UpdatePlotImage' img.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                    <a href="{% url 'DeletePlotImage' img.id %}" class="btn btn-sm btn-danger" onclick="alert('Are you sure you want to delete ?')">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

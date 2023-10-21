@@ -1,0 +1,120 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">Add Plot Images</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            <!--begin::Careers - Apply-->
+            <div class="card">
+                {% for message in messages %}
+<!--begin::Alert-->
+<div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+    <div class="d-flex flex-column pt-3">
+        <strong>Message! {{message}}</strong> 
+        <!--end::Content-->
+    </div>
+    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+        <span class="svg-icon svg-icon-2x svg-icon">
+            <span class="svg-icon svg-icon-2x svg-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+            </span>
+        </span>
+    </button>
+    <!--end::Close-->
+</div>
+<!--end::Alert-->
+
+{% endfor %}
+                <!--begin::Body-->
+                <div class="card-body p-lg-17">
+                    <!--begin::Layout-->
+                    <div class="d-flex flex-column flex-lg-row mb-17">
+                        <!--begin::Content-->
+                        <div class="flex-lg-row-fluid me-0 me-lg-20">
+                            <!--begin::Form-->
+                          <h2 class="text-center"> Add Plot Images</h2>
+                            <form action="" class="form mb-15" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <!--begin::Input group-->
+                                <div class="row mb-5">
+                                                                 
+                                <div class="d-flex flex-column mb-5 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                                        <span class="required">Select Plot</span>
+                                    </label>
+                                    <select name="properties" data-control="select2" data-placeholder="Select a position..." class="form-select form-select-solid">
+                                        {% for plot in plots %}
+                                            <option value="{{plot.id}}">{{plot.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!--begin::Col-->
+                                <div class="d-flex flex-column mb-5 fv-row">
+                                    <!--end::Label-->
+                                    <label class="required fs-5 fw-semibold mb-2">Images</label>
+                                    <!--end::Label-->
+                                    <!--end::Input-->
+                                    <input type="file" name="images" class="form-control form-control-solid" multiple />
+                                    <span class="text-secondary fs-7">Select Atleast 3 Images</span>
+                                    <!--end::Input-->
+                                </div>
+                               
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="kt_careers_submit_button">
+                                    <!--begin::Indicator label-->
+                                    <span class="indicator-label">Submit</span>
+                                    <!--end::Indicator label-->
+                                    <!--begin::Indicator progress-->
+                                    <span class="indicator-progress">Please wait... 
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    <!--end::Indicator progress-->
+                                </button>
+                                <!--end::Submit-->
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Content-->
+                        
+                    </div>
+                    <!--end::Layout-->
+                    
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Careers - Apply-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+{% endblock %}

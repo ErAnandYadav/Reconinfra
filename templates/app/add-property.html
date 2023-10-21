@@ -1,0 +1,163 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        
+        <div id="kt_content_container" class="container-xxl">
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">Add Plots</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            
+            <div class="card">
+                
+                <div class="card-body p-lg-17">
+                    
+                    <div class="d-flex flex-column flex-lg-row mb-17">
+                        
+                        <div class="flex-lg-row-fluid me-0 me-lg-20">
+                            
+                          <h2 class="text-center"> Add Property</h2>
+                            <form action="" class="form mb-15" method="post" enctype="multipart/form-data" novalidate>
+                                {% csrf_token %}
+                                
+                                <div class="row mb-5">
+                                    
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        
+                                        <label class="required fs-5 fw-semibold mb-2">Plot Name</label>
+                                        
+                                        
+                                        {{form.name|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.name.errors}}
+                                        
+                                    </div>
+                                    
+                                    
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        
+                                        <label class="required fs-5 fw-semibold mb-2">Address</label>
+                                        
+                                        
+                                        {{form.location|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.location.errors}}
+                                        
+                                    </div>
+                                    
+                                    
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        
+                                        <label class="required fs-5 fw-semibold mb-2">City</label>
+                                        
+                                        
+                                        {{form.city|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.city.errors}}
+                                        
+                                    </div>
+                                    
+                                    
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <label class="required fs-5 fw-semibold mb-2">Plot Image1</label>
+                                        {{form.image_1|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.image_1.errors}}
+                                    </div>
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <label class="required fs-5 fw-semibold mb-2">Plot Image2</label>
+                                        {{form.image_2|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.image_2.errors}}
+                                    </div>
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <label class="required fs-5 fw-semibold mb-2">Plot Image3</label>
+                                        {{form.image_3|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.image_3.errors}}
+                                    </div>
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <label class="required fs-5 fw-semibold mb-2">Plot Image4</label>
+                                        {{form.image_4|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.image_4.errors}}
+                                    </div>
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <label class="required fs-5 fw-semibold mb-2">Plot Map</label>
+                                        {{form.plot_map|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.plot_map.errors}}
+                                    </div>
+                                    
+                                   
+                                    
+                                <div class="d-flex flex-column mb-5 fv-row">
+                                    
+                                    <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                                        <span class="required">Plot Type</span>
+                                        
+                                    </label>
+                                    <select name="plot_types" data-control="select2" data-placeholder="Select a position..." class="form-select form-select-solid">
+                                        <option value="Residential">Residential</option>
+                                        <option value="Industrial">Industrial</option>
+                                        <option value="Commercial">Commercial</option>
+                                        {{form.plot_types.errors}}
+                                    </select>
+                                    
+                                </div>
+                               
+                                    
+                                    
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        
+                                        <label class="required fs-5 fw-semibold mb-2">Description</label>
+                                        
+                                        
+                                        {{form.description|addclass:'form-control form-control-solid'|addplaceholder:""}}
+                                        {{form.description.errors}}
+                                        
+                                    </div>
+                                    
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="kt_careers_submit_button">
+                                    
+                                    <span class="indicator-label">Submit</span>
+                                    
+                                    
+                                    <span class="indicator-progress">Please wait... 
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    
+                                </button>
+                                
+                            </form>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                    
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+{% endblock %}

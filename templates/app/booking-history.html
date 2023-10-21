@@ -1,0 +1,117 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% for message in messages %}
+
+<div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row m-3 p-4 mb-10">
+    <div class="d-flex flex-column pt-3">
+        <strong>Message! {{message}}</strong> 
+        
+    </div>
+    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+        <span class="svg-icon svg-icon-2x ">
+            <span class="svg-icon svg-icon-2x">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                </svg>
+            </span>
+        </span>
+    </button>
+    
+</div>
+
+
+{% endfor %}
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        
+        <div id="kt_content_container" class="container-xxl">
+            
+            <div class="card">
+                
+                <div class="card-body py-4">
+                    
+                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
+                        
+                        <thead>
+                            
+                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                               
+                                <th class="min-w-125px">Booking ID</th>
+                                <th class="min-w-125px">Associate ID</th>
+                                <th class="min-w-125px">Project Name</th>
+                                <th class="min-w-125px">Plot Number</th>
+                                <th class="min-w-125px">EMI Period </th>
+                                <th class="min-w-125px">Total Amount</th>
+                                <th class="min-w-125px">Down Payment</th>
+                                <th class="min-w-150px">Remaining Balance</th>
+                                
+                                <th class="min-w-125px">Payment Date </th>
+                                <th class="min-w-125px">Booking Status </th>
+                                <th class="text-end min-w-100px">Actions</th>
+                            </tr>
+                            
+                        </thead>
+                        
+                        
+                        <tbody class="text-gray-600 fw-semibold">
+                           {% for payment in booking_history %}
+                            <tr>
+                               
+                           
+                                <td>{{payment.booking_id}}</td>
+                                <td>{{payment.associate_id}}</td>
+                                <td>{{payment.plot.name}}</td>
+                                <td>{{payment.plot_number}}</td>
+                                {% if payment.emi_period %}
+                                <td>{{payment.emi_period}} Months</td>
+                                {% else %}
+                                <td>No EMI Available</td>
+                                {% endif %}
+                                <td>
+                                    <div class="text-success">₹{{payment.total_amount}}</div>
+                                </td>
+                           
+                                {% if payment.down_payment %}
+                                <td>
+                                    <div class="text-primary">₹{{payment.down_payment}}</div>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <div class="text-primary">-</div>
+                                </td>
+                                {% endif %}
+                                <td>
+                                    <div class="text-danger">₹{{payment.remaining_balance}}</div>
+                                </td>
+                              
+                                <td>{{payment.created_at|date}}</td>
+                                <td><span class="badge badge-success">{{payment.booking_status}}</span></td>
+                         
+                                <td class="text-end">
+                                    <a href="/app/emi-history?booking_id={{payment.booking_id}}" class="btn btn-sm btn-light-dark me-2">View EMI</a>
+                                    
+                                </td>
+                                
+                            </tr>
+                            
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+{% endblock %}

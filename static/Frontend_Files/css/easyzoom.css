@@ -1,0 +1,19 @@
+/* Shrink wrap strategy 1 */
+.easyzoom {
+overflow: hidden;
+
+}
+.easyzoom img {
+    display: block;
+}
+
+
+/* Shrink wrap strategy 2 */
+.easyzoom {
+    display: inline-block;
+}
+.easyzoom img {
+    vertical-align: bottom;
+	max-width: unset;
+	height: unset;
+}

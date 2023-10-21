@@ -1,0 +1,212 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">Add Agent Payment</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+           
+            <div class="card">
+                {% for message in messages %}
+                <!--begin::Alert-->
+                <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+                    <div class="d-flex flex-column text-light pt-3">
+                        <strong>Message! {{message}}</strong>
+                        <!--end::Content-->
+                    </div>
+                    <button type="button"
+                        class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto"
+                        data-bs-dismiss="alert">
+                        <span class="svg-icon svg-icon-2x svg-icon-light">
+                            <span class="svg-icon svg-icon-2x svg-icon-light">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                        transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                    <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                        transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                </svg>
+                            </span>
+                        </span>
+                    </button>
+                    <!--end::Close-->
+                </div>
+                <!--end::Alert-->
+
+                {% endfor %}
+                <!--begin::Body-->
+                <div class="card-header">
+                    <h2 class="text-center pt-3"> Payment Details Form</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!--begin::Layout-->
+                        <div class="col-lg-8 mx-auto">
+                            <div class="d-flex flex-column flex-lg-row mb-17">
+                                <!--begin::Content-->
+                                <div class="flex-lg-row-fluid me-0 me-lg-20">
+                                    <!--begin::Form-->
+                                    <form action="" class="form mb-15" method="post" novalidate>
+                                        {% csrf_token %}
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <!--end::Label-->
+                                                <label class="required  fw-semibold mb-2">Booking ID</label>
+                                                <!--end::Label-->
+                                                <!--end::Input-->
+                                                {{form.booking|addclass:'form-control form-control-solid'|addid:'booking'}}
+                                                {{form.booking.errors}}
+
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <!--begin::Label-->
+                                                <label class="d-flex align-items-center  fw-semibold mb-2">
+                                                    <span class="required">Agent</span>
+                                                </label>
+                                                {{form.agent|addclass:'form-control form-control-solid'|addid:'agent'}}
+                                                {{form.agent.errors}}
+                                            </div>
+                                            <!--begin::Col-->
+                                            
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <!--end::Label-->
+                                                <label class="required  fw-semibold mb-2">Payment Method</label>
+                                                <!--end::Label-->
+                                                <!--end::Input-->
+                                                {{form.payment_method|addclass:'form-control form-control-solid'|addid:'payment_method'}}
+                                                {{form.payment_method.errors}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <!--end::Label-->
+                                                <label class="required  fw-semibold mb-2">Total Amount</label>
+                                                <!--end::Label-->
+                                                <!--end::Input-->
+                                                {{form.total_amount|addclass:'form-control form-control-solid'|addplaceholder:'Total Amount'|addid:'total_amount'}}
+                                                {{form.total_amount.errors}}
+
+                                            </div>
+
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <!--end::Label-->
+                                                <label class="required  fw-semibold mb-2" id="emi_period_label">EMI Period</label>
+                                                <!--end::Label-->
+                                                <!--end::Input-->
+                                                {{form.emi_period|addclass:'form-control form-control-solid'|addid:'emi_period'}}
+
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <!--end::Label-->
+                                                <label class="required  fw-semibold mb-2" id="pay_payment_label">Down Payment</label>
+                                                <!--end::Label-->
+                                                <!--end::Input-->
+                                                {{form.pay_payment|addclass:'form-control form-control-solid'|addplaceholder:'Down Payment'|addid:'pay_payment'}}
+
+                                            </div>
+                                            
+                                        </div>
+                                        <hr>
+                                        <div class="row justify-content-between">
+                                            <div class="col-xs-12 col-sm-12 col-md-4 ">
+                                                <a href="/app/booking-list" class="btn btn-secondary mr-0 d-block d-md-inline-block">
+                                                    <i class="fas fa-caret-left"></i>List</a>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-right">
+                                                <button type="submit" class="btn  btn-primary mr-0 btn-block">
+                                                    <i class="fas fa-save"></i>Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                        </div>
+                        <!--end::Layout-->
+                    </div>
+
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Careers - Apply-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+{% block js%}
+<script>
+    $(document).ready(function() {
+        $("#agent").select2({
+            placeholder: "Select Agent"
+        });
+        $("#booking").select2({
+            placeholder: "Select Booking ID"
+        });
+        $("#payment_method").select2({
+            placeholder: "Payment Method"
+        });
+        $("#emi_period").select2({
+            placeholder: "EMI Period"
+        });
+        
+        // On Change Append Input Box
+        $('#payment_method').on('change', function () {
+            var my_data = $(this).val();
+            console.log(my_data)
+            if (my_data == 'Full Payment') {
+                $('#pay_payment').addClass('d-none');
+                $('#pay_payment_label').addClass('d-none');
+                $('#emi_period').prop('disabled', 'disabled');
+                
+            } else {
+                $('#down_payment').removeClass('d-none');
+            }
+        });
+    });
+    $('#booking').on('change', function(){
+        var booking_id = $(this).val();
+        $.ajax({
+            url: 'http://127.0.0.1:8000/app/get-agent-booked-details/?booking_id=' + booking_id,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data,"jhfgjfhgjfhjgfjgh")
+                $('#dynamicInput').val(data.dynamic_value);
+            },
+            error: function() {
+                console.log('Error fetching dynamic value.');
+            }
+        });
+        
+    });
+    
+</script>
+{% endblock %}
+{% endblock %}
