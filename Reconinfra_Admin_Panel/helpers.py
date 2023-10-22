@@ -149,5 +149,95 @@ def filter_monthely_balance():
 
 
 
+from django.http import JsonResponse
+from decimal import Decimal
+from Reconinfra_Accounts.models import *
+from .models import *
+def commission_distribution(amount, sponsor_id):
+    commission_rates = {
+        'Level1': 5,
+        'Level2': 7,
+        'Level3': 8,
+        'Level4': 9,
+        'Level5': 10,
+        'Level6': 11,
+        'Level7': 12,
+        'Level8': 13,
+        'Level9': 14,
+        'Level10': 15,
+    }
+    amount = amount
+    sponsor_id = sponsor_id
+    initial_total_commission = 15
+    print("initial_total_commission",initial_total_commission)
+    user = CustomUser.objects.get(sponsor_id=sponsor_id)
+    
+    my_business_level = user.business_level
+    my_commission_percentage = commission_rates.get(my_business_level, 0)
+    my_commission_amount = amount * my_commission_percentage/100
+    agent_wallet, created = Wallet.objects.get_or_create(associate_id=user.account_id)
+    agent_wallet.wallet_balance += Decimal(my_commission_amount)
+    agent_wallet.total_business += Decimal(my_commission_amount)
+    agent_wallet.is_active = True
+    agent_wallet.save()
+    
+    initial_total_commission = initial_total_commission - my_commission_percentage
+    
+    parent_users = user.get_parent_users()
+    higher_business_users = [parent for parent in parent_users if my_business_level < parent.business_level]
+    
+    percentage_list = []
+    for x in higher_business_users:
+        users = CustomUser.objects.get(account_id=x.account_id)
+        parents_percentage = commission_rates.get(users.business_level, 0)
+        percentage_list.append(parents_percentage)
+    print("Percentage list:-",percentage_list)
+    
+    differences = [percentage_list[i] - percentage_list[i - 1] for i in range(1, len(percentage_list))]
+    differences = [percentage_list[0] - my_commission_percentage] + differences
+    print("Differences:-",differences)
+    
+    distributed_commission = 0
+    commissions = []
+
+    for difference in differences:
+        if distributed_commission + difference <= initial_total_commission:
+            commission = (amount * difference) / 100
+            commissions.append(round(commission, 2))
+            distributed_commission += difference
+        else:
+            # Calculate the remaining commission to reach 15%
+            remaining_commission = initial_total_commission - distributed_commission
+            commission = (amount * remaining_commission) / 100
+            commissions.append(round(commission, 2))
+            distributed_commission += remaining_commission
+            break
+    
+    for i, x in enumerate(higher_business_users):
+        if i < len(commissions):
+            user = CustomUser.objects.get(account_id=x.account_id)
+            
+            agent_wallet, created = Wallet.objects.get_or_create(associate_id=user.account_id)
+            agent_wallet.wallet_balance += Decimal(commissions[i])
+            agent_wallet.total_business += Decimal(commissions[i])
+            agent_wallet.is_active = True
+            agent_wallet.save()
+
+            user.is_wallet_active = True
+            user.save()
+            
+            print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
+        else:
+            print(f"Commission data not available for user {x.email}")
+    data = ({
+        "Higher Business User Level": [parent.business_level for parent in higher_business_users],
+        "percentage_list": percentage_list,
+        "differences": differences,
+        "distributed_commission": distributed_commission + my_commission_percentage,
+        "remaining_commission": initial_total_commission - distributed_commission,
+    })
+    return data
+
+
 
 

@@ -2,15 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect,get_object_or_404
 from Reconinfra_Accounts.models import *
 from django.core.mail import send_mail
-from django.http import HttpResponse
 from django.contrib import messages
-from django.utils import timezone
 from django.db.models import Sum
 from django.conf import settings
 from .helpers import *
 from .forms import *
 from .models import *
 import random
+from django.utils import timezone
 # Create your views here.
 
 
@@ -466,13 +465,17 @@ def update_commissions(booking_id):
             form.add_error('associate_id', "Invalid associate id")
             context['form'] = form
             return render(request, "app/plots-booking.html", context)
-        commission = calculate_commission(paid_amount, business_level)
-        print("Associate Commission:", commission)
-        agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
-        agent_wallet.wallet_balance += commission
-        agent_wallet.total_business += commission
-        agent_wallet.is_active = True
-        agent_wallet.save()
+        
+        # commission = calculate_commission(paid_amount, business_level)
+        # print("Associate Commission:", commission)
+        # agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
+        # agent_wallet.wallet_balance += commission
+        # agent_wallet.total_business += commission
+        # agent_wallet.is_active = True
+        # agent_wallet.save()
+        
+        commission_distribution(paid_amount, associate_id)
+        
         associate_total_business = PlotBooking.objects.filter(associate_id=associate.sponsor_id).aggregate(total_bisness = Sum('down_payment'))['total_bisness']
         commission_level = find_commission_level(associate_total_business)
         convert_into_emi(remaining_balance, booking_id, emi_period)
@@ -501,13 +504,16 @@ def if_full_payment(booking_id):
             form.add_error('associate_id', "Invalid associate id")
             context['form'] = form
             return render(request, "app/plots-booking.html", context)
-        commission = calculate_commission(amount, business_level)
-        print("Associate Commission:", commission)
-        agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
-        agent_wallet.wallet_balance += commission
-        agent_wallet.total_business += commission
-        agent_wallet.is_active = True
-        agent_wallet.save()
+        # commission = calculate_commission(amount, business_level)
+        # print("Associate Commission:", commission)
+        # agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
+        # agent_wallet.wallet_balance += commission
+        # agent_wallet.total_business += commission
+        # agent_wallet.is_active = True
+        # agent_wallet.save()
+        
+        commission_distribution(amount, associate_id)
+        
         associate_total_business = PlotBooking.objects.filter(associate_id=associate.sponsor_id).aggregate(total_bisness = Sum('down_payment'))['total_bisness']
         commission_level = find_commission_level(associate_total_business)
         if commission_level:
@@ -555,11 +561,14 @@ def PlotBookingView(request):
                 
                 if booking_method =='EMI':
                     EMIHistory.objects.create(booking_id=booking_id, amount=booking_amount, payment_date=booking_date, booking_status=booking_status, payment_method=payment_method, number=cheque_number, is_paid=True)
+                    
                     if booking_status =='Approved':
                         update_commissions(booking_id)
+                        
                 if booking_method =='Full Payment' and booking_status =='Approved':
                     print("Full Payment working",booking_amount)
                     if_full_payment(booking_id)
+               
                 html_content = f"Dear {customerName},Your booking has been successfully Saved. Your login ID Username: {customer_username} and Password: {customer_password} Thank you for choosing Recon Group."
                 html_content2 = f"Dear random,Your booking has been successfully Saved booking id {booking_id}.Thank you for choosing Recon Group."
                 subject ="Booking Confirmation"
@@ -655,15 +664,14 @@ def GetAllUsersView(request):
         children = CustomUser.objects.filter(referred_by_id=user.account_id)
         children_list = []
         for child in children:
-            # amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
-            amount =Wallet.objects.filter(associate = child).aggregate(wallet=Sum('wallet_balance'))['wallet']
+            amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
             
-            # converted_amount = amount_human_format(amount[0])
+            converted_amount = amount_human_format(amount[0])
             child_data = {
                 "name": child.first_name+ ' ' + child.last_name,
                 "sponsor_id": child.sponsor_id,
                 "business_level": child.business_level,
-                "total_business": amount or 0,
+                "total_business": amount[0] or 0,
                 "image": '/static/app-assets/media/user-icon.png',
                 "children": build_team_tree(child) 
             }
@@ -820,83 +828,8 @@ def MyWalletView(request):
     return render(request, 'app/wallet.html', context)
 
 
-def TestViewAPI(request):
-    commission_rates = {
-        'Level1': 5,
-        'Level2': 7,
-        'Level3': 8,
-        'Level4': 9,
-        'Level5': 10,
-        'Level6': 11,
-        'Level7': 12,
-        'Level8': 13,
-        'Level9': 14,
-        'Level10': 15,
-    }
-    amount = 10000
+def TestAllInOneAPI(request):
+    amount = 99999
     sponsor_id = 'C02ZZB5Y'
-    initial_total_commission = 15
-    print("initial_total_commission",initial_total_commission)
-    user = CustomUser.objects.get(sponsor_id=sponsor_id)
-    
-    my_business_level = user.business_level
-    my_commission_percentage = commission_rates.get(my_business_level, 0)
-    my_commission_amount = amount * my_commission_percentage/100
-    
-    initial_total_commission = initial_total_commission - my_commission_percentage
-    
-    parent_users = user.get_parent_users()
-    higher_business_users = [parent for parent in parent_users if my_business_level < parent.business_level]
-    
-    percentage_list = []
-    for x in higher_business_users:
-        users = CustomUser.objects.get(account_id=x.account_id)
-        parents_percentage = commission_rates.get(users.business_level, 0)
-        percentage_list.append(parents_percentage)
-    print("Percentage list:-",percentage_list)
-    
-    differences = [percentage_list[i] - percentage_list[i - 1] for i in range(1, len(percentage_list))]
-    differences = [percentage_list[0] - my_commission_percentage] + differences
-    # commissions = [amount * (diff / 100) for diff in differences]
-    print("Differences:-",differences)
-    
-   
-    distributed_commission = 0
-    commissions = []
-
-    for difference in differences:
-        if distributed_commission + difference <= initial_total_commission:
-            commission = (amount * difference) / 100
-            commissions.append(round(commission, 2))
-            distributed_commission += difference
-        else:
-            # Calculate the remaining commission to reach 15%
-            remaining_commission = initial_total_commission - distributed_commission
-            commission = (amount * remaining_commission) / 100
-            commissions.append(round(commission, 2))
-            distributed_commission += remaining_commission
-            break
-    print("Commissions:", commissions)
-    print("Total Commission:", distributed_commission + my_commission_percentage)
-    for i, x in enumerate(higher_business_users):
-        if i < len(commissions):
-            user = CustomUser.objects.get(account_id=x.account_id)
-            agent_wallet, created = Wallet.objects.get_or_create(associate_id=user.account_id)
-            agent_wallet.wallet_balance += int(commissions[i])
-            agent_wallet.total_business += int(commissions[i])
-            agent_wallet.is_active = True
-            agent_wallet.save()
-            print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
-        else:
-            print(f"Commission data not available for user {x.email}")
-    
-    return JsonResponse({
-        "Higher Business User Level": [parent.business_level for parent in higher_business_users],
-        "percentage_list": percentage_list,
-        "differences": differences,
-        "distributed_commission": distributed_commission + my_commission_percentage,
-        "remaining_commission": initial_total_commission - distributed_commission,
-    })
-
-
-
+    data = commission_distribution(amount, sponsor_id)
+    return JsonResponse(data)

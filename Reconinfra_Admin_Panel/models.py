@@ -35,8 +35,7 @@ class Properties(models.Model):
 class PlotNumber(models.Model):
     properties = models.ForeignKey(Properties, on_delete=models.DO_NOTHING)
     PLOT_STATUS = (
-        ('Pending', 'Pending'),
-        ('Hold', 'Hold'),
+        ('Freeze', 'Freeze'),
         ('Available', 'Available'),
         ('Booked', 'Booked'),
         ('Registerd', 'Registerd'),

@@ -39,5 +39,5 @@ urlpatterns = [
     # path('pay-emi', views.PayEMIView, name="PayEMIView" ),
     path('emi-pay/<int:pk>', views.EMIPay, name="EMIPay" ),
     path('my-wallet', views.MyWalletView, name="MyWalletView" ),
-    path('test-api', views.TestViewAPI, name="TestViewAPI" ),
+    path('test-api', views.TestAllInOneAPI, name="TestAllInOneAPI" ),
 ]
