@@ -1,0 +1,87 @@
+{% extends 'home/base.html' %}
+{% block css %}
+   <style>
+    .plotAvl span {
+        padding: 20px;
+        line-height: 3;
+    }
+    
+    .hold{
+        background-color: #fef984;
+        border: 1px solid;
+        color: #000;
+    }
+    .pending {
+        color: #000;
+        border: 1px solid;
+        
+    }
+    .booked {
+        
+        border: 1px solid #000;
+        
+    }
+    .available {
+        background-color: #00c194;
+        border: 1px solid;
+        color: #000;
+    }
+    
+    .registered {
+        
+        border: 1px solid;
+        color: #000;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+{% load static %}
+<!--=   Location     Start              =-->
+<!--=====================================-->
+<section class="location-wrap1">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-md-7 col-sm-12">
+                <div class="item-heading-center">
+                    <h2 class="section-title mx-autu">Golden City Plots Availability</h2>
+                    <div class="bg-title-wrap" style="display: block;">
+                        <span class="background-title solid">Availability</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="">
+            <div class="mx-auto">
+                <ul class="mx-auto" style=" background: white;">
+                    <li class="pt-3 px-3 Headstatus" style="margin: 38px;">
+                        <strong class="hold p-2"><span>Hold</span></strong>
+                        <strong class="available p-2"><span>Available</span></strong>
+                        <strong class="booked p-2"><span>Booked</span></strong>
+                        <strong class="pending p-2"><span>Pending</span></strong>
+                        <strong class="registered p-2"><span>Registered</span></strong>
+                    </li>
+                    <li class="plotAvl" style="margin: 38px;">
+                        {% for x in plot_availability%}
+                        <span data-bs-toggle="tooltip" data-bs-custom-class="tooltip-inverse" data-bs-placement="top" title="" data-bs-original-title="{{x.plot_dimensions}}"><strong class="{{x.plot_status}} p-2">{{x.plot_number}}</strong></span>
+                        {% endfor %}
+                    </li>
+                    
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+    <div class="container">
+        <div class="col lg-12 text-center">
+            <div class="item-img">
+                <img src="{% static 'Frontend_Files/plot/golden-city.jpg' %}" style="width: 700px;">
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+{% endblock %}

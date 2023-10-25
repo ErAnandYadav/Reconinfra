@@ -1,9 +1,12 @@
 from django.core.mail import EmailMessage
 from datetime import datetime, timedelta
 from django.conf import settings
-from Reconinfra_Admin_Panel.models import EMIHistory, PlotBooking
 from django.db.models import Sum
 from django.db.models import Q
+from django.http import JsonResponse
+from decimal import Decimal
+from Reconinfra_Accounts.models import *
+from .models import *
 import random
 import string
 import time
@@ -149,10 +152,7 @@ def filter_monthely_balance():
 
 
 
-from django.http import JsonResponse
-from decimal import Decimal
-from Reconinfra_Accounts.models import *
-from .models import *
+
 def commission_distribution(amount, sponsor_id):
     commission_rates = {
         'Level1': 5,
@@ -241,3 +241,32 @@ def commission_distribution(amount, sponsor_id):
 
 
 
+from django.db.models import Count
+def get_multilevel_chain_count(user):
+    count = 0
+
+    # Get the users referred by the current user
+    child_users = CustomUser.objects.filter(referred_by=user)
+
+    for child_user in child_users:
+        count += 1  # Count the immediate child user
+        count += get_multilevel_chain_count(child_user)  # Recursively count their children
+
+    return count
+
+
+def get_team_business(user):
+    total_business = 0
+
+    # Get the child users of the current user
+    child_users = CustomUser.objects.filter(referred_by=user)
+    
+    # Calculate the total business for child users
+    child_users_business = PlotBooking.objects.filter(associate_id__in=child_users.values_list('sponsor_id', flat=True))
+    total_business += child_users_business.aggregate(total=Sum('down_payment'))['total'] or 0
+
+    # Iterate through child users and sum their team's business
+    for child_user in child_users:
+        total_business += get_team_business(child_user)  # Recursively sum their team's business
+
+    return total_business

@@ -173,23 +173,51 @@ def UpdatePlotImage(request, pk):
 
 @login_required(login_url='/accounts/auth-login/')
 def AddPlotAvailability(request):
+    print("Function work")
     context = {}
     if request.method =='POST':
-        try:
-            form = AddPlotAvailabilityForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Plot Availability Added Successfully!')
-                return redirect('/app/add-plot-availability')
-            else:
-                print(form.errors)
-                form.errors['__all__'] = "Somethong wrong"
-                return render(request, 'app/add-plot-availability.html', {'form':form})
-        except Exception as e:
-            print(e)
+        print("post working")
+        form = AddPlotAvailabilityForm(request.POST)
+        
+        print(form)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Plot Availability Added Successfully!')
+            return redirect('/app/add-plot-availability')
+        print(form.add_error)
+        form.errors['__all__'] = "Somethong wrong"
+        return render(request, 'app/add-plot-availability.html', {'form':form})
+       
     form = AddPlotAvailabilityForm()
     context['form'] = form
     return render(request, 'app/add-plot-availability.html', context)
+
+def ChoosePlot(request):
+    context = {}
+    plots = Properties.objects.all()
+    context['plots'] = plots
+    return render(request, 'app/choose-plot.html', context)
+
+def UpdatePlotAvailability(request, plot_id):
+    if request.method =='POST':
+        plot_number = request.POST.get('plot_number')
+        print(plot_number,"][][][]][]")
+        status = request.POST.get('status')
+        instance = PlotAvailabilities.objects.get(plot_number = plot_number)
+        instance.plot_status = status
+        instance.save()
+        messages.success(request, f"Plot number {plot_number} is {status} successfully!")
+        return redirect('/app/choose-plot')
+    context = {}
+    instance = PlotAvailabilities.objects.filter(properties_id = plot_id)
+    context['plot_number'] = instance
+    return render(request, 'app/update-plot-availability.html', context)
+
+def GetPlotNumber(request):
+    country_id = request.GET.get('country_id')
+    cities = City.objects.filter(country_id=country_id)
+    city_list = [{"id": city.id, "name": city.name} for city in cities]
+    return JsonResponse({"cities": city_list})
 
 @login_required(login_url='/accounts/auth-login/')
 def AddGalleryImage(request):
@@ -364,7 +392,7 @@ def TransferRequestListView(request):
     return render(request, "app/fund-transfer-request-list.html", context)
 
 @login_required(login_url='/accounts/auth-login/')
-def WithdrawalsRequestListView(request):
+def PayoutTransferView(request):
     context = {}
     try:
         withdrawals = TransferRequest.objects.all().order_by('-created_at')
@@ -569,11 +597,11 @@ def PlotBookingView(request):
                     print("Full Payment working",booking_amount)
                     if_full_payment(booking_id)
                
-                html_content = f"Dear {customerName},Your booking has been successfully Saved. Your login ID Username: {customer_username} and Password: {customer_password} Thank you for choosing Recon Group."
+                html_content = f"Dear {customerName},Your booking has been successfully Saved. Your login ID Username: {customer_username}, Password: {customer_password} and your booking ID {booking_id}Thank you for choosing Recon Group."
                 html_content2 = f"Dear random,Your booking has been successfully Saved booking id {booking_id}.Thank you for choosing Recon Group."
                 subject ="Booking Confirmation"
-                # send_email(html_content, subject, email)
-                # send_email2(html_content2, subject, email)
+                send_email(html_content, subject, email)
+                send_email2(html_content2, subject, email)
                 messages.success(request, "Payment Saved Successfully!")
                 return redirect('/app/booking-history')
             context['form'] = form
@@ -601,6 +629,7 @@ def UpdateBookingPlot(request, booking_id):
 
             if pay_payment is None:
                     pay_payment = total_amount
+                    
             associate = CustomUser.objects.filter(sponsor_id=associate_id).first()
             if associate is None:
                 form.add_error('associate_id', "Invalid associate id")
@@ -654,8 +683,9 @@ def ActivateIdView(request):
 
 
 @login_required(login_url='/accounts/auth-login/')
-def MyTreeTeamView(request):
-    return render(request, 'app/tree-team.html')
+def TreeTeamView(request):
+    
+    return render(request, 'app/team-tree-view.html')
 
 
 from django.http import JsonResponse
@@ -664,8 +694,8 @@ def GetAllUsersView(request):
         children = CustomUser.objects.filter(referred_by_id=user.account_id)
         children_list = []
         for child in children:
+            # amount = Wallet.objects.filter(associate=child).aggregate(wallet_balance = Sum("wallet_balance"))['wallet_balance'],
             amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
-            
             converted_amount = amount_human_format(amount[0])
             child_data = {
                 "name": child.first_name+ ' ' + child.last_name,
@@ -676,6 +706,7 @@ def GetAllUsersView(request):
                 "children": build_team_tree(child) 
             }
             children_list.append(child_data)
+        
         return children_list
 
     superusers = CustomUser.objects.filter(account_id=request.user.account_id)
@@ -696,9 +727,10 @@ def GetAllUsersView(request):
             "image": '/static/app-assets/media/logos/page-loader.png',
             "children": build_team_tree(superuser)  
         }
+        
         teams_list.append(team_data)
 
-    print(teams_list, "87777777777777777")
+    
     return JsonResponse(teams_list, safe=False)
 
 
@@ -799,16 +831,12 @@ def EMIPay(request, pk):
             print(amount)
             form.save()
             booking_details = PlotBooking.objects.filter(booking_id=booking_id).first()
+            associate_id = booking_details.associate_id
             print(booking_details.remaining_balance -amount)
-            wallet_object = Wallet.objects.get(associate__sponsor_id = booking_details.associate_id)
-            commission = calculate_commission(amount, wallet_object.business_level)
-            print("commission", commission)
-            wallet_object.wallet_balance +=commission
-            wallet_object.total_business +=commission
+            commission_distribution(amount, associate_id)
             booking_details.remaining_balance -=amount
             booking_details.down_payment +=amount
             booking_details.save()
-            wallet_object.save()
             messages.success(request, "EMI Paid Successfully")
             return redirect('/app/booking-history') 
         print(form.errors)
@@ -827,9 +855,24 @@ def MyWalletView(request):
     context['withdrawals'] = withdrawals
     return render(request, 'app/wallet.html', context)
 
+@login_required(login_url='/accounts/auth-login/')
+def TeamsSizeView(request):
+    context = {}
+    team_size = get_multilevel_chain_count(request.user)
+    team_business = get_team_business(request.user)
+    self_business = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).aggregate(self_business=Sum('down_payment'))['self_business']
+    context['team_size'] = team_size
+    context['team_business'] = team_business
+    context['self_business'] = self_business or 0.00
+    return render(request, 'app/team-size.html', context)
+
+
 
 def TestAllInOneAPI(request):
-    amount = 99999
-    sponsor_id = 'C02ZZB5Y'
-    data = commission_distribution(amount, sponsor_id)
-    return JsonResponse(data)
+    # Start counting from the request.user
+    teams_size = get_multilevel_chain_count(request.user)
+    total_team_business = get_team_business(request.user)
+    return JsonResponse({"status": 200, "multilevel_chain_count": teams_size, "total_team_business":total_team_business})
+
+
+

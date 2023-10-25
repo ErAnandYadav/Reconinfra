@@ -25,8 +25,8 @@ class PropertyImageForm(forms.ModelForm):
 
 class AddPlotAvailabilityForm(forms.ModelForm):
     class Meta:
-        model = PlotNumber
-        fields = ['properties', 'plot_status', 'plot_number']
+        model = PlotAvailabilities
+        fields = ['properties', 'plot_status', 'plot_dimensions', 'plot_number']
 
 
 class AddGalleryImagesForm(forms.ModelForm):

@@ -20,4 +20,6 @@ urlpatterns = [
     path('customer-login/', views.CustomerLogin, name="CustomerLogin"),
     path('customer-profile/', views.CustomerProfile, name="CustomerProfile"),
     path('emi-history/', views.EMIHistoryView, name="EMIHistoryView"),
+    path('check-plot-availability/<str:slug>/', views.CheckPlotAvailability, name="CheckPlotAvailability"),
+    path('test-plot/', views.TestPlotAPI, name="TestPlotAPI"),
 ]

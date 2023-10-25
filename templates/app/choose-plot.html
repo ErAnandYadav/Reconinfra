@@ -1,0 +1,88 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load my_filter %}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        
+        <div id="kt_content_container" class="container-xxl">
+            
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">Select Plot </a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            <div class="row">
+
+                <div class="col-sm-6 mx-auto">
+                    {% for message in messages %}
+                    <div class="alert alert-dismissible {{message.tags}} d-flex flex-column flex-sm-row p-5 mb-10">
+                        <div class="d-flex flex-column fs-6 pt-3">
+                            <strong>{{message}}</strong>
+                            
+                        </div>
+                        <button type="button"
+                            class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto"
+                            data-bs-dismiss="alert">
+                            <span class="svg-icon svg-icon-2x svg-icon">
+                                <span class="svg-icon svg-icon-2x svg-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                            transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                            transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                    </svg>
+                                </span>
+                            </span>
+                        </button>
+                        
+                    </div>
+                    
+    
+                    {% endfor %}
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h3 class="card-title text-center">Select Plot to Update Status</h3>
+                            
+                        </div>
+                        
+                        <div class="card-body ">
+                            
+                            <div class="row">
+                                {% for plot in plots %}
+                                <div class="col-4 mx-auto">
+                                    <a href="{% url 'UpdatePlotAvailability' plot.id %}" class="btn btn-light-dark">{{plot.name}}</a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+{% endblock %}

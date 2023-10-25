@@ -33,7 +33,7 @@ class Properties(models.Model):
         return self.name
 
 class PlotNumber(models.Model):
-    properties = models.ForeignKey(Properties, on_delete=models.DO_NOTHING)
+    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
     PLOT_STATUS = (
         ('Freeze', 'Freeze'),
         ('Available', 'Available'),
@@ -194,3 +194,19 @@ class Reward(models.Model):
 
     def __str__(self):
         return f"{self.product_type} - {self.title}"
+
+
+class PlotAvailabilities(models.Model):
+    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
+    PLOT_STATUS = (
+        ('hold', 'Hold'),
+        ('available', 'Available'),
+        ('booked', 'Booked'),
+        ('registered', 'Registered'),
+        ('pending', 'Pending'),
+    )
+    plot_status = models.CharField(max_length=100, choices=PLOT_STATUS, default='available', null=True)
+    plot_dimensions = models.CharField(max_length=100, null=True, blank=True)
+    plot_number = models.CharField(max_length = 100, null=True, unique=True, blank=True, error_messages ={"unique":"Plot Number Already Exist"})
+    def __str__(self):
+        return self.plot_number

@@ -196,3 +196,20 @@ def CustomerLogin(request):
     else:
         form = CustomerLoginForm()
     return render(request, 'home/login.html', {'form': form})
+
+def CheckPlotAvailability(request, slug):
+    context = {}
+    try:
+        all_properties = Properties.objects.all()
+        plot_availability = PlotAvailabilities.objects.filter(properties__slug = slug)
+        context['all_properties'] = all_properties
+        context['plot_availability'] = plot_availability
+        context['slug'] = slug
+    except Exception as e:
+        print(e)
+    return render(request, "home/check-plot-availabilty.html", context)
+
+
+def TestPlotAPI(request):
+    plot_availability = PlotAvailabilities.objects.all()
+    return render(request, "home/test-availabilty.html", {'plot_availability':plot_availability})

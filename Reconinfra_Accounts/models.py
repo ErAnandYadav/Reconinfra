@@ -42,7 +42,7 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(upload_to='Recon/User/Profile-Picture', null=True, blank=True)
     is_admin = models.BooleanField(default=False)
-    is_facilitator = models.BooleanField(default=False)
+    is_facilitator = models.BooleanField(default=True)
     is_accountent = models.BooleanField(default=False)
     aadhar_number = models.CharField(max_length=20, null=True, unique=True, blank=True)
     aadhar_front = models.ImageField(upload_to='Recon/User/Aadhar', null=True, blank=True)
@@ -118,6 +118,7 @@ class CustomUser(AbstractUser):
             current_user = parent
         return parent_users
 
+    
 
     
 def generator_sponsor_id(size=8, chars=string.ascii_uppercase + string.digits):
