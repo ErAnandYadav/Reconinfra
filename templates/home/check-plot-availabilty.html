@@ -2,38 +2,40 @@
 {% block css %}
    <style>
     .plotAvl span {
-        padding: 20px;
-        line-height: 3;
+        width: 71px;
+        text-align: center;
     }
     
     .hold{
         background-color: #fef984;
-        border: 1px solid;
+        border: 1px solid #fef984;
         color: #000;
     }
     .pending {
         color: #000;
-        border: 1px solid;
+        border: 1px solid orange;
         
     }
     .booked {
-        
-        border: 1px solid #000;
+        border: 1px solid red;
         
     }
     .available {
         background-color: #00c194;
-        border: 1px solid;
+        border: 1px solid #00c194;
         color: #000;
     }
     
     .registered {
         
-        border: 1px solid;
+        border: 1px solid ;
         color: #000;
     }
     .Headstatus strong{
-        margin: 8px;
+        margin: 3px;
+        height: fit-content !important;
+        border-radius: 5px;
+
     }
 </style>
 {% endblock %}
@@ -62,38 +64,39 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
-
+            <div class="col-12 col-sm-8"> <!-- On small screens, take the full width. On larger screens, take 8 columns -->
                 <div class="mx-auto">
-                    <ul class="mx-auto" style=" background: white;">
-                        <li class="pt-3 px-3 Headstatus" style="margin: 0px;">
-                            <strong class="hold p-2"><span>Hold</span></strong>
-                            <strong class="available p-2"><span>Available</span></strong>
-                            <strong class="booked p-2"><span>Booked</span></strong>
-                            <strong class="pending p-2"><span>Pending</span></strong>
-                            <strong class="registered p-2"><span>Registered</span></strong>
+                    <ul class="mx-auto p-4" style="background: white;">
+                        <li class="Headstatus d-flex flex-wrap gap-2" style="margin: 0px;">
+                            <strong class="hold  px-2"><span>Hold</span></strong>
+                            <strong class="available px-2"><span>Available</span></strong>
+                            <strong class="booked px-2"><span>Booked</span></strong>
+                            <strong class="pending px-2"><span>Pending</span></strong>
+                            <strong class="registered px-2"><span>Registered</span></strong>
                         </li>
-                        <li class="plotAvl" style="margin-top: 30px;">
+                        <li class="plotAvl d-flex justify-content-center flex-wrap gap-4 mx-2" style="margin-top: 30px;">
                             {% for x in plot_availability %}
-                            <span data-bs-toggle="tooltip" data-bs-custom-class="tooltip-inverse" data-bs-placement="top" title="" data-bs-original-title="{{x.plot_dimensions}}"><strong class="{{x.plot_status}} p-2">{{x.plot_number}}</strong></span>
+                            <span class="{{x.plot_status}} px-2 py-1 fw-bold" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-inverse" data-bs-placement="top" title="" data-bs-original-title="{{x.plot_dimensions}}">
+                                {{x.plot_number}}
+                            </span>
                             {% endfor %}
                         </li>
-                        
                     </ul>
                 </div>
             </div>
-            <div class="col lg-4 text-center">
+            <div class="col-12 col-sm-4 text-center"> <!-- On small screens, take the full width. On larger screens, take 4 columns -->
                 <div class="item-img">
                     {% if slug == 'golden-city' %}
-                    
-                    <img src="{% static 'Frontend_Files/plot/golden-city.jpg' %}" style="width: 700px;">
+                    <img src="{% static 'Frontend_Files/plot/golden-city.jpg' %}" style="max-width: 100%;">
                     {% else %}
-                    <img src="{% static 'Frontend_Files/plot/Green-Valley-Final.jpg' %}" style="width: 960px;">
+                    <img src="{% static 'Frontend_Files/plot/Green-Valley-Final.jpg' %}" style="max-width: 100%;">
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    
+    
     
 </section>
 <!--=====================================-->

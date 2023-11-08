@@ -10,6 +10,7 @@ urlpatterns = [
     path('auth-register/', views.UserRegister, name="Register" ),
     path('referral-link/<str:sponsor_id>', views.ReferralLinkView, name="ReferralLinkView" ),
     path('user-profile/<str:id>/', views.Profile, name="Profile" ),
+    path('associate-details/<str:id>/', views.AssociateDetails, name="AssociateDetails" ),
     path('update-bank-details/', views.UpdateBankDetails, name="UpdateBankDetails" ),
     path('change-profile-picture/', views.ChangeProfilePicture, name="ChangeProfilePicture" ),
     path('my-teams/', views.MyTeamsView, name="MyTeamsView" ),

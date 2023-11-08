@@ -101,13 +101,13 @@
         <div class="row gutters-40">
             <div class="col-lg-4 widget-break-lg sidebar-widget">
                 <div class="widget widget-categoery-box">
-                    <h3 class="widget-subtitle">Hi {{request.session.customer_username|capfirst}}!</h3>
-                    <!-- <ul class="categoery-list">
-                        <li><a href="single-listing1.html">Apartments</a></li>
-                        <li><a href="single-listing2.html">Corporate Building</a></li>
-                      
-                    </ul> -->
-                    {% for booking in plot_bookings %}
+                  <!-- <ul class="categoery-list">
+                    <li><a href="single-listing1.html">Apartments</a></li>
+                    <li><a href="single-listing2.html">Corporate Building</a></li>
+                    
+                  </ul> -->
+                  {% for booking in plot_bookings %}
+                  <h3 class="widget-subtitle">Hi {{booking.customer_name|capfirst}}!</h3>
                     <div class="booking-details mb-5">
                         <h2 class="mb-0" style="font-size: 22px;font-weight: 500;font-family: inherit;">Booking Details:</h2>
                         <p><strong>Associate Id:</strong> {{booking.associate_id}}</p>

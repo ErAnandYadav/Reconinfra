@@ -31,8 +31,8 @@ def Admin_Panel_Home(request):
     try:
         if request.user.is_superuser:
             
-            balance = PlotBooking.objects.all().aggregate(total_business = Sum("down_payment"))
-            monthly_business = PlotBooking.objects.filter(query).aggregate(monthly_business=Sum('down_payment'))['monthly_business']
+            balance = PlotBooking.objects.all().exclude(booking_status ="Saved").aggregate(total_business = Sum("down_payment"))
+            monthly_business = PlotBooking.objects.filter(query).exclude(booking_status ="Saved").aggregate(monthly_business=Sum('down_payment'))['monthly_business']
             context['balance'] = balance
             context['monthly_business'] = monthly_business
             activeUser = CustomUser.objects.filter(is_wallet_active = True).exclude(is_superuser=True).count
@@ -41,10 +41,10 @@ def Admin_Panel_Home(request):
             context['inactiveUser'] = inactiveUser
             rewards = Reward.objects.all()
         else:
-            balance = PlotBooking.objects.filter(associate_id= request.user.sponsor_id).aggregate(total_business = Sum("down_payment")) or 0
+            balance = PlotBooking.objects.filter(associate_id= request.user.sponsor_id).exclude(booking_status ="Saved").aggregate(total_business = Sum("down_payment")) or 0
             
             print(balance)
-            monthly_business = PlotBooking.objects.filter(query).filter(associate_id=request.user.sponsor_id).aggregate(monthly_business=Sum('down_payment'))['monthly_business'] or 0.00
+            monthly_business = PlotBooking.objects.filter(query).filter(associate_id=request.user.sponsor_id).exclude(booking_status ="Saved").aggregate(monthly_business=Sum('down_payment'))['monthly_business'] or 0.00
             context['balance'] = balance
             context['monthly_business'] = monthly_business
             activeUser = CustomUser.objects.filter(is_wallet_active = True).exclude(is_superuser=True).count
@@ -319,6 +319,31 @@ def RewardListView(request):
     return render(request, "app/reward-list.html", context)
 
 @login_required(login_url='/accounts/auth-login/')
+def AssociateRewardListView(request):
+    context = {}
+    try:
+        balance = PlotBooking.objects.filter(associate_id= request.user.sponsor_id).exclude(booking_status ="Saved").aggregate(total_business = Sum("down_payment"))['total_business'] or 0
+        print(balance)
+        rewards = Reward.objects.all()
+        rewards_list = []
+        for x in rewards:
+            data = {
+                "title": x.title,
+                "product_type": x.product_type,
+                "description": x.description,
+                "business": x.business,
+                "product_image": x.product_image,
+                "is_lock": x.is_lock,
+                "time_limit": x.time_limit,
+                "progress": round(float(((balance) / x.business) * 100),2)
+            }
+            rewards_list.append(data)
+        context['rewards'] = rewards_list
+    except Exception as e:
+        print(e)
+    return render(request, "app/associate-reward-list.html", context)
+
+@login_required(login_url='/accounts/auth-login/')
 def UpdateRewardView(request, pk):
     reward_instance = get_object_or_404(Reward, pk=pk)
     if request.method == 'POST':
@@ -462,7 +487,7 @@ def AddPaymentView(request, booking_id):
                 plots_booking.save()
                 if status == 'Approved':
                     update_commissions(booking_id)
-                messages.success(request, "Paymwent added successfully")
+                messages.success(request, "Payment added successfully")
                 return redirect('/app/saved-booking-form')
             context['form'] = form
             context['booking_id'] = booking_id
@@ -480,6 +505,7 @@ def update_commissions(booking_id):
         paid_amount = EMIHistory.objects.filter(booking_id=booking_id).aggregate(paid_amount = Sum('amount'))['paid_amount']
         print("paid_amount:-", paid_amount)
         plot_booking = PlotBooking.objects.filter(booking_id=booking_id).first()
+        booking_date = plot_booking.booking_date
         associate_id = plot_booking.associate_id
         total_amount = plot_booking.total_amount
         remaining_balance = total_amount - paid_amount
@@ -493,20 +519,11 @@ def update_commissions(booking_id):
             form.add_error('associate_id', "Invalid associate id")
             context['form'] = form
             return render(request, "app/plots-booking.html", context)
-        
-        # commission = calculate_commission(paid_amount, business_level)
-        # print("Associate Commission:", commission)
-        # agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
-        # agent_wallet.wallet_balance += commission
-        # agent_wallet.total_business += commission
-        # agent_wallet.is_active = True
-        # agent_wallet.save()
-        
-        commission_distribution(paid_amount, associate_id)
-        
-        associate_total_business = PlotBooking.objects.filter(associate_id=associate.sponsor_id).aggregate(total_bisness = Sum('down_payment'))['total_bisness']
+    
+        associate_total_business = PlotBooking.objects.filter(associate_id=associate.sponsor_id).exclude(booking_status ="Saved").aggregate(total_bisness = Sum('down_payment'))['total_bisness']
         commission_level = find_commission_level(associate_total_business)
         convert_into_emi(remaining_balance, booking_id, emi_period)
+        commission_distribution(paid_amount, associate_id)
         if commission_level:
             print(f"Commission Level for {associate_total_business}: {commission_level}")
             associate.business_level = commission_level
@@ -532,17 +549,10 @@ def if_full_payment(booking_id):
             form.add_error('associate_id', "Invalid associate id")
             context['form'] = form
             return render(request, "app/plots-booking.html", context)
-        # commission = calculate_commission(amount, business_level)
-        # print("Associate Commission:", commission)
-        # agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
-        # agent_wallet.wallet_balance += commission
-        # agent_wallet.total_business += commission
-        # agent_wallet.is_active = True
-        # agent_wallet.save()
-        
+
         commission_distribution(amount, associate_id)
         
-        associate_total_business = PlotBooking.objects.filter(associate_id=associate.sponsor_id).aggregate(total_bisness = Sum('down_payment'))['total_bisness']
+        associate_total_business = PlotBooking.objects.filter(associate_id=associate.sponsor_id).exclude(booking_status ="Saved").aggregate(total_bisness = Sum('down_payment'))['total_bisness']
         commission_level = find_commission_level(associate_total_business)
         if commission_level:
             print(f"Commission Level for {associate_total_business}: {commission_level}")
@@ -563,7 +573,7 @@ def PlotBookingView(request):
         try:
             form = PlotBookingForm(request.POST)
             if form.is_valid():
-                booking_id = generate_booking_id()
+                booking_id = generate_booking_id().upper()
                 form_obj = form.save(commit=False)
                 customerName = form.cleaned_data.get('customer_name')
                 email = form.cleaned_data.get('customer_email')
@@ -576,6 +586,12 @@ def PlotBookingView(request):
                 booking_date = form.cleaned_data.get('booking_date')
                 booking_status = form.cleaned_data.get('booking_status')
                 cheque_number = form.cleaned_data.get('cheque_number')
+                
+                if booking_method == 'EMI' and booking_amount >= total_amount:
+                    messages.error(request, "The booking amount must be less than the total amount.")
+                    form.add_error("down_payment", "The booking amount must be less than the total amount.")
+                    return render(request, "app/plots-booking.html", {'form':form})
+                
                 if booking_method =='Full Payment':
                     booking_amount = total_amount
                 customer_username = email.split('@')[0]
@@ -587,12 +603,10 @@ def PlotBookingView(request):
                 form_obj.save()
                 print(total_amount, booking_amount)
                 
-                if booking_method =='EMI':
+                if booking_method =='EMI' and booking_status =='Approved':
                     EMIHistory.objects.create(booking_id=booking_id, amount=booking_amount, payment_date=booking_date, booking_status=booking_status, payment_method=payment_method, number=cheque_number, is_paid=True)
-                    
-                    if booking_status =='Approved':
-                        update_commissions(booking_id)
-                        
+                    update_commissions(booking_id)
+                         
                 if booking_method =='Full Payment' and booking_status =='Approved':
                     print("Full Payment working",booking_amount)
                     if_full_payment(booking_id)
@@ -614,58 +628,68 @@ def PlotBookingView(request):
 
 
 @login_required(login_url='/accounts/auth-login/')
-def UpdateBookingPlot(request, booking_id):
-    obj = get_object_or_404(PlotBooking, pk = booking_id)
+def UpdateSavedForm(request, booking_id):
+    plot_booking = get_object_or_404(PlotBooking, pk = booking_id)
     if request.method =='POST':
-        form = PlotBookingForm(request.POST, instance=obj)
+        form = PlotBookingForm(request.POST, instance=plot_booking)
         if form.is_valid():
-            form_obj = form.save()
-            customerName = form.cleaned_data.get('customer_name')
-            email = form.cleaned_data.get('customer_email')
+            
+            emi_period = form.cleaned_data.get('emi_period')
             associate_id = form.cleaned_data.get('associate_id')
-            total_amount = form.cleaned_data.get('total_amount')
-            pay_payment = form.cleaned_data.get('down_payment')
+            booking_method = form.cleaned_data.get('booking_method')
             booking_status = form.cleaned_data.get('booking_status')
-
-            if pay_payment is None:
-                    pay_payment = total_amount
-                    
-            associate = CustomUser.objects.filter(sponsor_id=associate_id).first()
-            if associate is None:
-                form.add_error('associate_id', "Invalid associate id")
-                context['form'] = form
-                return render(request, "app/plots-booking.html", context)
-            commission = calculate_commission(pay_payment, associate.business_level)
-            agent_wallet, created = Wallet.objects.get_or_create(associate_id=associate.account_id)
-            agent_wallet.wallet_balance += commission
-            agent_wallet.total_business += pay_payment
-            agent_wallet.is_active = True
-            agent_wallet.save()
-            commission_level = find_commission_level(agent_wallet.total_business)
-            if commission_level:
-                print(f"Commission Level for {agent_wallet.total_business}: {commission_level}")
-                associate.business_level = commission_level
-                associate.save()
-            else:
-                print("Total amount exceeds the highest slab.")
-            html_content = f"Dear {customerName}! We are delighted to inform you that your booking with Recon Group has been {booking_status}."
-            subject ="Booking Confirmation"
-            send_email(html_content, subject, email)
+            
+            form_obj = form.save(commit=False)
+            
+            remaining_balance = form_obj.remaining_balance
+            paid_amount = form_obj.down_payment
+            booked_id = form_obj.booked_id
+            print(remaining_balance, paid_amount, "545") 
+            
+            associate_total_business = PlotBooking.objects.filter(associate_id=associate_id).exclude(booking_status ="Saved").aggregate(total_bisness = Sum('down_payment'))['total_bisness'] or 0
+            commission_level = find_commission_level(associate_total_business)
+            
+            user = CustomUser.objects.get(sponsor_id=associate_id)
+            
+            if booking_method =='EMI' and booking_status =='Approved':
+                convert_into_emi(remaining_balance, booked_id, emi_period)
+                commission_distribution(paid_amount, associate_id)
+                user.business_level = commission_level
+                user.save()
+                
+            if booking_method =='Full Payment' and booking_status =='Approved':
+                commission_distribution(paid_amount, associate_id)
+                user.business_level = commission_level
+                user.save()
+                
+            form_obj.save()
             messages.success(request, "Booking updated successfully!")
-            return redirect('/app/booking-history')
+            return redirect('/app/saved-booking-form')
     else:
-        form = PlotBookingForm(instance= obj)
-    return render(request, "app/edit-booking-plot.html", {'form' : form})
+        form = PlotBookingForm(instance= plot_booking)
+    return render(request, "app/update-saved-form-plot.html", {'form' : form})
 
 @login_required(login_url='/accounts/auth-login/')
-def DeleteBookingView(request, booking_id):
+def ViewBookingHistory(request, booking_id):
+    obj = get_object_or_404(PlotBooking, pk = booking_id)
+    form = PlotBookingForm(instance= obj)
+    return render(request, "app/view-booking-history.html", {'form' : form})
+
+
+
+@login_required(login_url='/accounts/auth-login/')
+def DeleteSavedFormView(request, booking_id):
     try:
         obj = get_object_or_404(PlotBooking, pk = booking_id)
+        emi_instance = get_object_or_404(EMIHistory, booking_id = obj.booking_id)
+        emi_instance.delete()
         obj.delete()
-        messages.success(request, "Plot Booking History Deleted Successfully!")
-        return redirect('/app/booking-history')
+        messages.success(request, "Saved form and related data deleted successfully!")
+        return redirect('/app/saved-booking-form')
     except Exception as e:
         print(e)
+        messages.error(request, "Data not delete due to internal policy!")
+        return redirect('/app/saved-booking-form')
 
 from django.http import JsonResponse
 def ActivateIdView(request):
@@ -695,7 +719,7 @@ def GetAllUsersView(request):
         children_list = []
         for child in children:
             # amount = Wallet.objects.filter(associate=child).aggregate(wallet_balance = Sum("wallet_balance"))['wallet_balance'],
-            amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
+            amount = PlotBooking.objects.filter(associate_id=child.sponsor_id).exclude(booking_status ="Saved").aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
             converted_amount = amount_human_format(amount[0])
             child_data = {
                 "name": child.first_name+ ' ' + child.last_name,
@@ -714,10 +738,10 @@ def GetAllUsersView(request):
     for superuser in superusers:
         converted_amount = 0
         if request.user.is_superuser:
-            amount = PlotBooking.objects.all().aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
+            amount = PlotBooking.objects.all().exclude(booking_status ="Saved").aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
             converted_amount = amount[0] or 0
         else:
-            amount = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
+            amount = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).exclude(booking_status ="Saved").aggregate(wallet_balance = Sum("down_payment"))['wallet_balance'],
         converted_amount = amount[0] or 0
         team_data = {
             "name": superuser.first_name+ ' ' + superuser.last_name,
@@ -792,34 +816,6 @@ def EMIHistoryView(request):
     return render(request, "app/emi-history.html", context)
 
 
-# def PayEMIView(request):
-#     if request.method == 'POST':
-#         emi_id = request.POST.get('emi_id')
-#         booking_id = request.POST.get('booking_id')
-#         status = request.POST.get('status')
-#         print(booking_id,"7878787")
-#         try:
-#             booking = EMIHistory.objects.get(id=emi_id)
-#             booking.is_paid = status
-#             booking.save()
-#             booking_details = PlotBooking.objects.filter(booking_id=booking_id).first()
-#             print(booking_details)
-#             wallet_object = Wallet.objects.get(associate__sponsor_id = booking_details.associate_id)
-#             commission = calculate_commission(booking.amount, wallet_object.business_level)
-#             wallet_object.wallet_balance +=commission
-#             booking_details.remaining_balance -=booking.amount
-#             booking_details.down_payment +=booking.amount
-#             booking_details.save()
-#             wallet_object.save()
-#             html_content = f"Hi {booking_details.customer_name} Your EMI payment has been successfully processed."
-#             subject = "EMI Payment Confirmation"
-#             email = booking_details.customer_email
-#             # send_email(html_content, subject, email)
-#             return JsonResponse({'success': True})
-#         except EMIHistory.DoesNotExist:
-#             return JsonResponse({'success': False, 'error_message': 'Booking not found'})
-#     return JsonResponse({'success': False, 'error_message': 'Invalid request'})
-
 @login_required(login_url='/accounts/auth-login/')
 def EMIPay(request, pk):
     emi_instance = get_object_or_404(EMIHistory, pk=pk)
@@ -860,13 +856,11 @@ def TeamsSizeView(request):
     context = {}
     team_size = get_multilevel_chain_count(request.user)
     team_business = get_team_business(request.user)
-    self_business = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).aggregate(self_business=Sum('down_payment'))['self_business']
+    self_business = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).exclude(booking_status ="Saved").aggregate(self_business=Sum('down_payment'))['self_business']
     context['team_size'] = team_size
     context['team_business'] = team_business
     context['self_business'] = self_business or 0.00
     return render(request, 'app/team-size.html', context)
-
-
 
 def TestAllInOneAPI(request):
     # Start counting from the request.user

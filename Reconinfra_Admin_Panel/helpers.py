@@ -98,16 +98,16 @@ def convert_into_emi(amount, booking_id, months):
             next_month += timedelta(days=1)
         payment_dates.append(next_month.strftime("%Y-%m-%d"))
         current_date = next_month
-    emi_list = [{'emi_date': date, 'emi_amount': emi, 'booking_id': booking_id} for date in payment_dates]
+    emi_list = [{'payment_date': date, 'amount': emi, 'booking_id': booking_id} for date in payment_dates]
     print('emi_list:',emi_list)
-    if emi_hostory:
-        for x in emi_list:
-            emi = EMIHistory(
-                amount= x['emi_amount'],
-                payment_date= x['emi_date'],
-                booking_id=x['booking_id']
-            )
-            emi.save()
+    # if emi_hostory:
+    #     for x in emi_list:
+    #         emi = EMIHistory(
+    #             amount= x['amount'],
+    #             payment_date= x['payment_date'],
+    #             booking_id=x['booking_id']
+    #         )
+    #         emi.save()
     EMIHistory.objects.bulk_create([EMIHistory(**emi_data) for emi_data in emi_list])
 
 
@@ -166,12 +166,11 @@ def commission_distribution(amount, sponsor_id):
         'Level9': 14,
         'Level10': 15,
     }
-    amount = amount
     sponsor_id = sponsor_id
     initial_total_commission = 15
     print("initial_total_commission",initial_total_commission)
     user = CustomUser.objects.get(sponsor_id=sponsor_id)
-    
+    user.is_wallet_active = True
     my_business_level = user.business_level
     my_commission_percentage = commission_rates.get(my_business_level, 0)
     my_commission_amount = amount * my_commission_percentage/100

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify 
 from Reconinfra_Accounts.models import *
 from django.contrib.auth.hashers import make_password
-
+import random
 
 # Create your models here.
 class Properties(models.Model):
@@ -33,7 +33,7 @@ class Properties(models.Model):
         return self.name
 
 class PlotNumber(models.Model):
-    properties = models.ForeignKey(Properties, on_delete=models.DO_NOTHING)
+    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
     PLOT_STATUS = (
         ('Freeze', 'Freeze'),
         ('Available', 'Available'),
@@ -56,8 +56,25 @@ class PropertiesImage(models.Model):
 class GalleryImages(models.Model):
     image = models.FileField(upload_to='Recon/Media-Center', null=True)
 
-import random
-
+class EMIHistory(models.Model):
+    booking_id = models.CharField(max_length=100, null=True)
+    PAYMENT_METHOD = (
+        ('Cheque','Cheque'),
+        ('DD','DD'),
+        ('Cash','Cash'),
+        ('NEFT/IMPS/RTGS','NEFT/IMPS/RTGS'),
+    )
+    payment_method = models.CharField(max_length=100,choices=PAYMENT_METHOD, default="N/A", null=True)
+    number = models.CharField(max_length=100, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2 ,null=True, blank=True)
+    payment_date = models.CharField(max_length=100,null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
+    BOOKING_STATUS = (
+        ('Saved', 'Saved'),
+        ('Approved', 'Approved'),
+        ('Disapproved', 'Disapproved'),
+    )
+    booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Saved', null=True, blank=True)
 
 
 class PlotBooking(models.Model):
@@ -107,11 +124,11 @@ class PlotBooking(models.Model):
     down_payment = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     remaining_balance = models.DecimalField(max_digits=20, default=0, decimal_places=2, null=True, blank=True)
     BOOKING_STATUS = (
-        ('Pending', 'Pending'),
+        ('Saved', 'Saved'),
         ('Approved', 'Approved'),
         ('Disapproved', 'Disapproved'),
     )
-    booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Pending', null=True)
+    booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Saved', null=True)
     booking_date = models.CharField(max_length=100, null=True)
     booking_id = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -141,16 +158,11 @@ class PlotBooking(models.Model):
         return check_password(raw_password, self.customer_password)
 
 
-class EMIHistory(models.Model):
-    booking_id = models.CharField(max_length=100, null=True)
-    emi_amount = models.DecimalField(max_digits=10, decimal_places=2 ,null=True, blank=True)
-    emi_date = models.CharField(max_length=100,null=True, blank=True)
-    is_paid = models.BooleanField(default=False)
-
 
 class Wallet(models.Model):
     associate = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-    wallet_balance = models.IntegerField(default = 0, null=True)
+    business_level = models.CharField(max_length=20, null=True, blank=True)
+    wallet_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     total_business = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     is_active = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
@@ -175,9 +187,26 @@ class Reward(models.Model):
     product_type = models.CharField(max_length=100, null=True)
     title = models.CharField(max_length=100, null=True)
     description = models.TextField(null=True)
+    business = models.IntegerField(null=True, blank=True)
     product_image = models.ImageField(upload_to='Recon/User/Reward', null=True, blank=True)
     is_lock = models.BooleanField(default=False)
-    date_time = models.DateTimeField(auto_now_add=True)
+    time_limit = models.CharField(max_length=100, null=True, )
 
     def __str__(self):
         return f"{self.product_type} - {self.title}"
+
+
+class PlotAvailabilities(models.Model):
+    properties = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
+    PLOT_STATUS = (
+        ('hold', 'Hold'),
+        ('available', 'Available'),
+        ('booked', 'Booked'),
+        ('registered', 'Registered'),
+        ('pending', 'Pending'),
+    )
+    plot_status = models.CharField(max_length=100, choices=PLOT_STATUS, default='available', null=True)
+    plot_dimensions = models.CharField(max_length=100, null=True, blank=True)
+    plot_number = models.CharField(max_length = 100, null=True, unique=True, blank=True, error_messages ={"unique":"Plot Number Already Exist"})
+    def __str__(self):
+        return self.plot_number

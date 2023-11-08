@@ -25,8 +25,8 @@ class PropertyImageForm(forms.ModelForm):
 
 class AddPlotAvailabilityForm(forms.ModelForm):
     class Meta:
-        model = PlotNumber
-        fields = ['properties', 'plot_status', 'plot_number']
+        model = PlotAvailabilities
+        fields = ['properties', 'plot_status', 'plot_dimensions', 'plot_number']
 
 
 class AddGalleryImagesForm(forms.ModelForm):
@@ -37,7 +37,7 @@ class AddGalleryImagesForm(forms.ModelForm):
 class RewardForm(forms.ModelForm):
     class Meta:
         model = Reward
-        fields = ['product_type','title','description','product_image']                                           
+        fields = ['product_type','title', 'time_limit', 'business', 'description','product_image']                                           
                                           
 
 class TransferRequestForm(forms.ModelForm):
@@ -63,6 +63,11 @@ class ActivateIdForm(forms.ModelForm):
 class PlotImageForm(forms.ModelForm):
     class Meta:
         model = PropertiesImage
+        fields = '__all__'
+
+class AddPaymentForm(forms.ModelForm):
+    class Meta:
+        model = EMIHistory
         fields = '__all__'
 
 

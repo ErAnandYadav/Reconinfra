@@ -23,7 +23,7 @@
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a href="#!">Update Booking Details</a>
+                                    <a href="#!">View Booking Details</a>
                                 </li>
                             </ul>
                         </div>
@@ -60,7 +60,7 @@
                 {% endfor %}
                 <!--begin::Body-->
                 <div class="card-header">
-                    <h2 class="text-center pt-3"> Update Booking Details</h2>
+                    <h2 class="text-center pt-3"> View Booking Details</h2>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -228,12 +228,12 @@
                                         <div class="row justify-content-between">
                                             <div class="col-xs-12 col-sm-12 col-md-4 ">
                                                 <a href="/app/booking-history" class="btn btn-secondary mr-0 d-block d-md-inline-block">
-                                                <i class="fas fa-caret-left"></i>List</a>
+                                                <i class="fas fa-caret-left"></i>Back</a>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-right">
-                                                <button type="submit" class="btn  btn-primary mr-0 btn-block">
+                                                <!-- <button type="submit" class="btn  btn-primary mr-0 btn-block">
                                                     <i class="fas fa-save"></i>Submit
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </div>
                                     </form>
@@ -258,37 +258,14 @@
 {% block js%}
 <script>
     $(document).ready(function() {
-        
-        
-        $('#associate_id').attr('maxlength', 8);
-        $('#associate_id').on('keyup', function() {
-        const id = this.value;
-        console.log(id);
-        const nameContainer = document.getElementById("output");
-
-        if (id.length === 8) {
-        console.log("Request sent");
-        fetch(`/accounts/get-associate-name/${id}`)
-            .then(response => response.json())
-            .then(data => {
-            nameContainer.innerHTML = `<span class="text-success" style="font-style: italic;font-family: sans-serif;">${data.name}</span>`;
-            })
-            .catch(error => {
-            console.error('Error:', error);
-            });
-        } else {
-        nameContainer.innerHTML = "";
-        }
-    });
-        $("#booking_date").flatpickr();
-        $("#booking_status").select2({
-            placeholder: "Select Booking Status"
+        $("#location").select2({
+            placeholder: "Select City"
         });
         $("#plot").select2({
             placeholder: "Select Plot"
         });
-        $("#emi_period").select2({
-            placeholder: "Select EMI Period"
+        $("#plot_availability").select2({
+            placeholder: "Select Plot Availability"
         });
         $("#payment_method").select2({
             placeholder: "Payment Method"
@@ -296,47 +273,27 @@
         $("#booking_method").select2({
             placeholder: "Booking Method"
         });
+        $("#emi_installments").select2({
+            placeholder: "EMI Installment"
+        });
         
-        
-        // On Change Append Input Box
         // On Change Append Input Box
         $('#payment_method').on('change', function () {
             var value = $(this).val();
+            console.log(value);
+
             $('#chequeNumber, #DDNumber').addClass('d-none');
-            
+
             if (value === 'Cheque') {
                 $('#chequeNumber').removeClass('d-none');
-                $('#chequeNumberLebel').removeClass('d-none');
-                $('#DDNumberLebel').addClass('d-none');
-                $('#otherMethod').addClass('d-none');
             } else if (value === 'DD') {
-                $('#chequeNumberLebel').addClass('d-none');
-                $('#otherMethod').addClass('d-none');
                 $('#chequeNumber').removeClass('d-none');
+                $('#chequeNumberLebel').addClass('d-none');
                 $('#DDNumberLebel').removeClass('d-none');
             }
-            else if (value === 'NEFT/IMPS/RTGS') {
-                $('#chequeNumberLebel').addClass('d-none');
-                $('#otherMethod').removeClass('d-none');
-                $('#chequeNumber').removeClass('d-none');
-               
-                $('#DDNumberLebel').addClass('d-none');
-            }
-        });
-        $('#booking_method').on('change', function () {
-            var value = $(this).val();
-            if(value === 'Full Payment'){
-                $('#emiPeriod').addClass('d-none');
-                $('#downPayment').addClass('d-none');
-            } else {
-                $('#emiPeriod').removeClass('d-none');
-                $('#downPayment').removeClass('d-none');
-            }
-            
         });
 
     });
-
 </script>
 {% endblock %}
 {% endblock %}

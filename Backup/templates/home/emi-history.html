@@ -1,0 +1,53 @@
+{% extends 'home/base.html' %}
+{% block body %}
+<main class="site-main content-area">
+    <div class="container">
+        <div class="emi-details mx-auto">
+
+            <h1 class="emi-heading">EMI Due Dates and Booking Details</h1>
+
+            <!-- EMI Due Dates Table -->
+            <h2>EMI Due Dates</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Installment Number</th>
+                        <th>Due Date</th>
+                        <th>Amount (USD)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-10-15</td>
+                        <td>500.00</td>
+                        <td>Paid</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2023-11-15</td>
+                        <td>500.00</td>
+                        <td>Unpaid</td>
+                    </tr>
+                    <!-- Add more rows for each EMI installment -->
+                </tbody>
+            </table>
+
+            <!-- Booking Details Section -->
+            <div class="booking-details">
+                <h2>Booking Details</h2>
+                <p><strong>Customer Name:</strong> John Doe</p>
+                <p><strong>Booking ID:</strong> ABC123</p>
+                <p><strong>Product:</strong> Finance Product XYZ</p>
+                <p><strong>Total Loan Amount (USD):</strong> 5000.00</p>
+                <p><strong>Interest Rate:</strong> 5%</p>
+                <p><strong>Loan Term (Months):</strong> 12</p>
+                <p><strong>Monthly EMI (USD):</strong> 500.00</p>
+                <p><strong>Booking Date:</strong> 2023-09-23</p>
+            </div>
+
+        </div>
+    </div>
+</main>
+{% endblock%}

@@ -40,6 +40,7 @@
                             <!--begin::Table row-->
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                
+                                <th class="min-w-125px">Associate ID</th>
                                 <th class="min-w-125px">Full Name</th>
                                 <th class="min-w-125px">Amount</th>
                                 <th class="min-w-125px">status</th>
@@ -55,6 +56,7 @@
                            {% for fund in transfers %}
                             <tr>
                                
+                                <td>{{fund.user.sponsor_id}} </td>
                                 <td>{{fund.user.first_name}} {{fund.user.last_name}}</td>
                                 <td>{{fund.amount}}</td>
                                 {% if fund.status == 'pending' %}
@@ -66,7 +68,7 @@
                                 {% if fund.status == 'approved' %}
                                 <td><span class="badge badge-light-success">Approved</span></td>
                                 {% endif %}
-                                <td>{{fund.created_at}}</td>
+                                <td>{{fund.created_at|date}}</td>
                               
                                 <!-- <td class="text-end">
                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions 

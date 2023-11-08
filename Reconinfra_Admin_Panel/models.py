@@ -76,6 +76,8 @@ class EMIHistory(models.Model):
     )
     booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Saved', null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.booking_id} - {self.amount}'
 
 class PlotBooking(models.Model):
     associate_id = models.CharField(max_length=10, null=True)
@@ -162,6 +164,7 @@ class PlotBooking(models.Model):
 class Wallet(models.Model):
     associate = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     business_level = models.CharField(max_length=20, null=True, blank=True)
+    plot_number = models.CharField(max_length=100, null=True, blank=True)
     wallet_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     total_business = models.DecimalField(max_digits=20, decimal_places=2, default=0, null=True, blank=True)
     is_active = models.BooleanField(default=False)

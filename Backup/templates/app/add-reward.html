@@ -78,6 +78,24 @@
                                 <div class="row mb-5">
                                     <div class="d-flex flex-column mb-5 fv-row">
                                         <!--end::Label-->
+                                        <label class="required fs-5 fw-semibold mb-2">Business Amount</label>
+                                        <!--end::Label-->
+                                        {{form.business|addclass:'form-control form-control-solid'|addplaceholder:''}}
+                                        {{form.business.errors}}
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--end::Label-->
+                                        <label class="required fs-5 fw-semibold mb-2">Time Limit</label>
+                                        <!--end::Label-->
+                                        {{form.time_limit|addclass:'form-control form-control-solid'|addplaceholder:''}}
+                                        {{form.time_limit.errors}}
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--end::Label-->
                                         <label class="required fs-5 fw-semibold mb-2">Description</label>
                                         <!--end::Label-->
                                         {{form.description|addclass:'form-control form-control-solid'|addplaceholder:'Write About Product'}}

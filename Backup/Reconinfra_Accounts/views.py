@@ -161,16 +161,53 @@ def Profile(request, id):
     return render(request, "app/profile.html",context)
 
 
+
+def AssociateDetails(request, id):
+    context = {}
+    instance = get_object_or_404(CustomUser, account_id=id)
+    print(instance.sponsor_id,"87878787")
+    context['user_details'] = instance
+    form = UserUpdateForm(request.POST or None,request.FILES or None, instance=instance)
+    if form.is_valid():
+        profile_pic = form.cleaned_data.get('profile_pic')
+        print(profile_pic)
+        form.save()
+        return redirect('/app/')
+    balance = PlotBooking.objects.filter(associate_id=instance.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))
+    print(balance,"popopop")
+    monthly_business = PlotBooking.objects.filter(associate_id=instance.sponsor_id, created_at__month = timezone.now().month).aggregate(wallet_balance = Sum("down_payment"))
+    context['balance'] = balance
+    context['monthly_business'] = monthly_business
+    context['form'] = form
+    form.errors['__all__'] = "Something went wrong"
+    print(form.errors)
+    return render(request, "app/associate-details.html",context)
+
 def UpdateBankDetails(request):
     context = {}
     try:
         form = UpdateBankDetailsForm()
         context['form'] = form
+        if request.user.is_superuser:
+            balance = PlotBooking.objects.all().aggregate(wallet_balance = Sum("down_payment"))
+            monthly_business = PlotBooking.objects.filter(created_at__month = timezone.now().month).aggregate(wallet_balance = Sum("down_payment"))
+            context['balance'] = balance
+            context['monthly_business'] = monthly_business
+            context['form'] = form
+        else:
+            balance = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))
+            monthly_business = PlotBooking.objects.filter(associate_id=request.user.sponsor_id, created_at__month = timezone.now().month).aggregate(wallet_balance = Sum("down_payment"))
+            context['balance'] = balance
+            context['monthly_business'] = monthly_business
+            context['form'] = form
+            form.errors['__all__'] = "Something went wrong"
+            print(form.errors)
     except Exception as e:
         print(e)
     return render(request, "app/update-bank-details.html",context)
 
 def ChangeProfilePicture(request):
+    context = {}
     if request.method =='POST':
         profile_pic = request.FILES.get('profile_pic')
         print(profile_pic)
@@ -179,7 +216,21 @@ def ChangeProfilePicture(request):
         user.save()
         messages.success(request, "Profile picture updated successfully")
         return redirect('/accounts/change-profile-picture/')
-    return render(request, "app/change-profile-picture.html")
+    if request.user.is_superuser:
+        balance = PlotBooking.objects.all().aggregate(wallet_balance = Sum("down_payment"))
+        monthly_business = PlotBooking.objects.filter(created_at__month = timezone.now().month).aggregate(wallet_balance = Sum("down_payment"))
+        context['balance'] = balance
+        context['monthly_business'] = monthly_business
+       
+    else:
+        balance = PlotBooking.objects.filter(associate_id=request.user.sponsor_id).aggregate(wallet_balance = Sum("down_payment"))
+        monthly_business = PlotBooking.objects.filter(associate_id=request.user.sponsor_id, created_at__month = timezone.now().month).aggregate(wallet_balance = Sum("down_payment"))
+        context['balance'] = balance
+        context['monthly_business'] = monthly_business
+       
+        
+        print(form.errors)
+    return render(request, "app/change-profile-picture.html", context)
 
 
 
@@ -287,9 +338,6 @@ def SearchTeamsView(request):
         teams_list.append(data)
     
     return render(request, "app/my-teams.html",{'teams':teams_list, 'count':count, 'query':query})
-
-
-
 
 
 

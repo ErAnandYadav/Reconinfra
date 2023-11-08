@@ -716,8 +716,6 @@
 									
 								</div>
 
-								
-								
 								<div class="menu-item">
 									
 									<a class="menu-link {% if request.resolver_match.url_name == 'EMIHistoryView' %}active{% endif %}" href="{% url 'EMIHistoryView' %}">
@@ -737,7 +735,8 @@
 								</div>
 								{% endif %}
 								
-								{% if request.user.is_facilitator %}
+								{% if not request.user.is_superuser and not request.user.is_accountant %}
+
 								<div class="menu-item">
 									<a class="menu-link" href="{% url 'Profile' request.user.account_id %}">
 										<span class="menu-icon">
@@ -852,7 +851,7 @@
 
 								<div class="menu-item">
 									
-									<a class="menu-link" href="" onclick="alert('Coming soon')">
+									<a class="menu-link" href="{% url 'AssociateRewardListView' %}">
 										<span class="menu-icon">
 											
 											<span class="svg-icon svg-icon-2">
@@ -1101,6 +1100,17 @@
 		
     });
 	
+	// Delete Saved form pop up
+	document.querySelectorAll("#saved_form").forEach(function(button) {
+        button.addEventListener("click", function() {
+        const formId = button.getAttribute("data-form-id");
+        console.log(formId)
+        // When the Delete button in the modal is clicked, redirect to the delete view or send an AJAX request
+        document.getElementById("confirmDelete").addEventListener("click", function() {
+            window.location.href = `/app/delete-saved-form/${formId}`; // Replace with your URL
+        });
+        });
+    });
 </script>
 
 		{% block js%}

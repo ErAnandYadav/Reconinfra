@@ -144,14 +144,20 @@
                                     <li>
                                         <a href="javascript:void(0)">Plots Availability</a>
                                         <ul class="dropdown-menu-col-1">
+                                            {% for plot in all_properties%}
                                             <li>
+                                                <a href="/check-plot-availability/{{plot.slug}}/">
+                                                   {{plot.name}}</a>
+                                            </li>
+                                            {% endfor %}
+                                            <!-- <li>
                                                 <a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plots</a>
                                                
                                             </li>
                                             <li>
                                                 <a href="{% url 'GreenValleyPlotAvailability' %}">Green Valley Plots</a>
                                                
-                                            </li>
+                                            </li> -->
                                            
                                         </ul>
                                     </li>
@@ -259,14 +265,20 @@
                             <li class="list menu-item-parent menu-item-has-children">
                                 <a class="animation" href="javascript:void(0)">Plots Availability</a>
                                 <ul class="main-menu__dropdown sub-menu">
-                                    <li>
+                                    {% for plot in all_properties%}
+                                            <li>
+                                                <a href="/check-plot-availability/{{plot.slug}}/">
+                                                   {{plot.name}}</a>
+                                            </li>
+                                            {% endfor %}
+                                    <!-- <li>
                                         <a href="{% url 'GoldenCityPlotAvailability' %}">Golden City Plots</a>
                                        
                                     </li>
                                     <li>
                                         <a href="{% url 'GreenValleyPlotAvailability' %}">Green Valley Plots</a>
                                        
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </li>
 

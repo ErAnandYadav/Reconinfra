@@ -22,7 +22,7 @@
 									</a>
 								</li>
 								<li class="breadcrumb-item">
-									<a href="#!">Add Agent Payment</a>
+									<a href="#!">Add Payment</a>
 								</li>
 							</ul>
 						</div>
@@ -60,7 +60,7 @@
                 {% endfor %}
                 <!--begin::Body-->
                 <div class="card-header">
-                    <h2 class="text-center pt-3"> Payment Details Form</h2>
+                    <h2 class="text-center pt-3"> Add Payment Form</h2>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -74,22 +74,14 @@
                                         {% csrf_token %}
                                         <!--begin::Input group-->
                                         <div class="row mb-5">
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required  fw-semibold mb-2">Booking ID</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.booking|addclass:'form-control form-control-solid'|addid:'booking'}}
-                                                {{form.booking.errors}}
-
-                                            </div>
+                                 
                                             <div class="d-flex flex-column mb-5 fv-row">
                                                 <!--begin::Label-->
                                                 <label class="d-flex align-items-center  fw-semibold mb-2">
-                                                    <span class="required">Agent</span>
+                                                    <span class="required">Booking ID</span>
                                                 </label>
-                                                {{form.agent|addclass:'form-control form-control-solid'|addid:'agent'}}
-                                                {{form.agent.errors}}
+                                                <input type="text" class="form-control form-control-solid" name="booking_id" value="{{booking_id}}">
+                                                
                                             </div>
                                             <!--begin::Col-->
                                             
@@ -101,41 +93,49 @@
                                                 {{form.payment_method|addclass:'form-control form-control-solid'|addid:'payment_method'}}
                                                 {{form.payment_method.errors}}
                                             </div>
-                                            <div class="d-flex flex-column mb-5 fv-row">
+                                            <div class="d-flex flex-column mb-5 fv-row " id="number_div">
                                                 <!--end::Label-->
-                                                <label class="required  fw-semibold mb-2">Total Amount</label>
-                                                <!--end::Label-->
-                                                <!--end::Input-->
-                                                {{form.total_amount|addclass:'form-control form-control-solid'|addplaceholder:'Total Amount'|addid:'total_amount'}}
-                                                {{form.total_amount.errors}}
-
-                                            </div>
-
-                                            <div class="d-flex flex-column mb-5 fv-row">
-                                                <!--end::Label-->
-                                                <label class="required  fw-semibold mb-2" id="emi_period_label">EMI Period</label>
+                                                <label class="  fw-semibold mb-2" id="number_label">Number</label>
                                                 <!--end::Label-->
                                                 <!--end::Input-->
-                                                {{form.emi_period|addclass:'form-control form-control-solid'|addid:'emi_period'}}
+                                                {{form.number|addclass:'form-control form-control-solid'|addplaceholder:'Number'|addid:'number'}}
+                                                {{form.number.errors}}
 
                                             </div>
                                             <div class="d-flex flex-column mb-5 fv-row">
                                                 <!--end::Label-->
-                                                <label class="required  fw-semibold mb-2" id="pay_payment_label">Down Payment</label>
+                                                <label class="required  fw-semibold mb-2">Amount</label>
                                                 <!--end::Label-->
                                                 <!--end::Input-->
-                                                {{form.pay_payment|addclass:'form-control form-control-solid'|addplaceholder:'Down Payment'|addid:'pay_payment'}}
+                                                {{form.amount|addclass:'form-control form-control-solid'|addplaceholder:'Amount'|addid:'amount'}}
+                                                {{form.amount.errors}}
 
                                             </div>
+
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                
+                                                <label class="required  fw-semibold mb-2" id="payment_date_label">Payment Date</label>
+                                                
+                                                {{form.payment_date|addclass:'form-control form-control-solid'|addplaceholder:'Select Payment Date'|addid:'payment_date'}}
+                                            </div>
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                <label class="required  fw-semibold mb-2" >Status</label>
+                                                <select name="status" class="form-control form-control-solid" id="status">
+                                                    <option value="Saved" selected>Saved</option>
+                                                  
+                                                    <option value="Approved">Approved</option>
+                                                  
+                                                    <option value="Disapproved">Disapproved</option>
+                                                  
+                                                  </select>
+                                            </div>
+                                            
                                             
                                         </div>
                                         <hr>
                                         <div class="row justify-content-between">
-                                            <div class="col-xs-12 col-sm-12 col-md-4 ">
-                                                <a href="/app/booking-list" class="btn btn-secondary mr-0 d-block d-md-inline-block">
-                                                    <i class="fas fa-caret-left"></i>List</a>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 text-right">
+                                            
+                                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 mx-auto text-right">
                                                 <button type="submit" class="btn  btn-primary mr-0 btn-block">
                                                     <i class="fas fa-save"></i>Submit
                                                 </button>
@@ -163,8 +163,8 @@
 {% block js%}
 <script>
     $(document).ready(function() {
-        $("#agent").select2({
-            placeholder: "Select Agent"
+        $("#status").select2({
+           
         });
         $("#booking").select2({
             placeholder: "Select Booking ID"
@@ -175,37 +175,17 @@
         $("#emi_period").select2({
             placeholder: "EMI Period"
         });
+        $("#payment_date").flatpickr();
         
         // On Change Append Input Box
         $('#payment_method').on('change', function () {
-            var my_data = $(this).val();
-            console.log(my_data)
-            if (my_data == 'Full Payment') {
-                $('#pay_payment').addClass('d-none');
-                $('#pay_payment_label').addClass('d-none');
-                $('#emi_period').prop('disabled', 'disabled');
-                
-            } else {
-                $('#down_payment').removeClass('d-none');
-            }
+            var payment_method = $(this).val();
+            console.log(payment_method)
+            const showNumberDiv = payment_method === 'Cheque' || payment_method === 'DD' || payment_method === 'NEFT/IMPS/RTGS';
+            $('#number_div').toggleClass('d-none', !showNumberDiv);
         });
     });
-    $('#booking').on('change', function(){
-        var booking_id = $(this).val();
-        $.ajax({
-            url: 'http://127.0.0.1:8000/app/get-agent-booked-details/?booking_id=' + booking_id,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.log(data,"jhfgjfhgjfhjgfjgh")
-                $('#dynamicInput').val(data.dynamic_value);
-            },
-            error: function() {
-                console.log('Error fetching dynamic value.');
-            }
-        });
-        
-    });
+   
     
 </script>
 {% endblock %}

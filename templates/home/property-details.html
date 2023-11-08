@@ -44,28 +44,28 @@
                   {% if get_details.image_1 %}
                   <div class="swiper-slide">
                     <div class="feature-img1 zoom-image-hover">
-                      <img src="{{get_details.image_1.url}}" alt="feature" width="798" height="420" />
+                      <img src="{{get_details.image_1.url}}" alt="feature" width="798" height="420" style="height: 420px;"/>
                     </div>
                   </div>
                   {% endif %}
                   {% if get_details.image_2 %}
                   <div class="swiper-slide">
                     <div class="feature-img1 zoom-image-hover">
-                      <img src="{{get_details.image_2.url}}" alt="feature" width="798" height="420" />
+                      <img src="{{get_details.image_2.url}}" alt="feature" width="798" height="420" style="height: 420px;"/>
                     </div>
                   </div>
                   {% endif %}
                   {% if get_details.image_3 %}
                   <div class="swiper-slide">
                     <div class="feature-img1 zoom-image-hover">
-                      <img src="{{get_details.image_3.url}}" alt="feature" width="798" height="420" />
+                      <img src="{{get_details.image_3.url}}" alt="feature" width="798" height="420" style="height: 420px;"/>
                     </div>
                   </div>
                   {% endif %}
                   {% if get_details.image_4 %}
                   <div class="swiper-slide">
                     <div class="feature-img4 zoom-image-hover">
-                      <img src="{{get_details.image_4.url}}" alt="feature" width="798" height="420" />
+                      <img src="{{get_details.image_4.url}}" alt="feature" width="798" height="420" style="height: 420px;"/>
                     </div>
                   </div>
                   {% endif %}
@@ -77,28 +77,28 @@
                   {% if get_details.image_1 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="{{get_details.image_1.url}}" alt="feature" width="154" height="100" />
+                      <img src="{{get_details.image_1.url}}" alt="feature" width="154" height="100" style="height: 130px;"/>
                     </div>
                   </div>
                   {% endif %}
                   {% if get_details.image_2 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="{{get_details.image_2.url}}" alt="feature" width="154" height="100" />
+                      <img src="{{get_details.image_2.url}}" alt="feature" width="154" height="100" style="height: 130px;"/>
                     </div>
                   </div>
                   {% endif %}
                   {% if get_details.image_3 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="{{get_details.image_3.url}}" alt="feature" width="154" height="100" />
+                      <img src="{{get_details.image_3.url}}" alt="feature" width="154" height="100" style="height: 130px;"/>
                     </div>
                   </div>
                   {% endif %}
                   {% if get_details.image_4 %}
                   <div class="swiper-slide">
                     <div class="item-img">
-                      <img src="{{get_details.image_4.url}}" alt="feature" width="154" height="100" />
+                      <img src="{{get_details.image_4.url}}" alt="feature" width="154" height="100" style="height: 130px;"/>
                     </div>
                   </div>
                   {% endif %}
@@ -164,6 +164,17 @@
                 <video width="731" height="349" controls autoplay muted>
                   <source src="{% static 'Frontend_Files/recon-videos/golden-city/main-video.mp4' %}" type="video/mp4">
                   <source src="{% static 'Frontend_Files/recon-videos/golden-city/main-video.ogg' %}" type="video/ogg">
+                </video>
+
+              </div>
+              {% else %}
+              <div class="overview-area video-box1">
+                <h3 class="item-title">The Green Valley</h3>
+
+
+                <video width="731" height="349" controls autoplay muted>
+                  <source src="{% static 'Frontend_Files/green-vally/main.mp4' %}" type="video/mp4">
+                  <source src="{% static 'Frontend_Files/green-vally/main.ogg' %}" type="video/ogg">
                 </video>
 
               </div>
