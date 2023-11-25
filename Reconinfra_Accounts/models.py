@@ -42,12 +42,12 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(upload_to='Recon/User/Profile-Picture', null=True, blank=True)
     is_admin = models.BooleanField(default=False)
-    is_facilitator = models.BooleanField(default=True)
+    is_facilitator = models.BooleanField(default=False)
     is_accountent = models.BooleanField(default=False)
-    aadhar_number = models.CharField(max_length=20, null=True, unique=True, blank=True)
+    aadhar_number = models.CharField(max_length=20, null=True, blank=True)
     aadhar_front = models.ImageField(upload_to='Recon/User/Aadhar', null=True, blank=True)
     aadhar_back = models.ImageField(upload_to='Recon/User/Aadhar', null=True, blank=True)
-    pan_number = models.CharField(max_length=11, null=True, unique=True, blank=True)
+    pan_number = models.CharField(max_length=11, null=True, blank=True)
     pan_front = models.ImageField(upload_to='Recon/User/PAN', null=True, blank=True)
     pan_back = models.ImageField(upload_to='Recon/User/PAN', null=True, blank=True)
     account_holder_name = models.CharField(max_length = 50, null=True, blank=True)
@@ -64,7 +64,7 @@ class CustomUser(AbstractUser):
     state = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True)
     city = models.ForeignKey(City, on_delete=models.DO_NOTHING, null=True)
     address = models.CharField(max_length=150, null=True)
-    referred_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='sponsored_by', null=True, blank=True)
+    referred_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='children', null=True, blank=True)
     sponsor_id = models.CharField(max_length = 500, null=True, blank=True)
     is_wallet_active = models.BooleanField(default=False)
     BUSINESS_LEVEL = (
@@ -114,6 +114,17 @@ class CustomUser(AbstractUser):
         while current_user.referred_by:
             parent = current_user.referred_by
             if parent.business_level >= current_user.business_level:
+                parent_users.append(parent)
+            current_user = parent
+        return parent_users
+    
+    
+    def get_parent_for_level_up(self):
+        parent_users = [self]
+        current_user = self
+        while current_user.referred_by:
+            parent = current_user.referred_by
+            if parent.business_level <= current_user.business_level:
                 parent_users.append(parent)
             current_user = parent
         return parent_users

@@ -120,7 +120,6 @@ def convert_into_emi(amount, booking_id, months):
 
 def amount_human_format(amount):
     final_amount = amount
-    print(final_amount,"4555555555555")
     if final_amount is None:
         return 0.00
     amount = float('{:.3g}'.format(amount))
@@ -148,8 +147,6 @@ def filter_monthely_balance():
     # Fetch records that match the query
     balance = PlotBooking.objects.filter(query).aggregate(total_balance=Sum('down_payment'))['total_balance']
     return balance
-
-
 
 
 
@@ -224,7 +221,7 @@ def commission_distribution(amount, sponsor_id):
 
             user.is_wallet_active = True
             user.save()
-            
+            level_up_with_teams_and_self_business(user)
             print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
         else:
             print(f"Commission data not available for user {x.email}")
@@ -269,3 +266,39 @@ def get_team_business(user):
         total_business += get_team_business(child_user)  # Recursively sum their team's business
 
     return total_business
+
+
+def level_up_with_teams_and_self_business(user):
+    team_business = get_team_business(user)
+    
+    self_business = PlotBooking.objects.filter(associate_id=user.sponsor_id).exclude(booking_status ="Saved").aggregate(self_business=Sum('down_payment'))['self_business'] or 0
+    total_business = team_business+self_business
+    find_business_level = find_commission_level(total_business)
+    users = get_all_parent_users(user)
+    print("user", users,"total_business", total_business , "self_business", self_business)
+    print(users)
+    for user in users:
+        print(user)
+        user = CustomUser.objects.get(account_id=user.account_id)
+        user.business_level = find_business_level
+        user.save()
+    return JsonResponse({"self-business": self_business, "team_business": team_business, "total_business": total_business, 'find_business_level':find_business_level})
+
+
+def get_all_parent_users(user):
+    # Initialize a set to store all parent users
+    parent_users = set()
+
+    # Get the parent user of the current user
+    parent_user = user.referred_by
+    
+    # If a parent user exists, add it to the set
+    if parent_user:
+        if parent_user.business_level <= user.business_level:
+            print(parent_user.business_level, user.business_level)
+            parent_users.add(parent_user)
+            # Recursively find all parent users for the current parent user
+            parent_users.update(get_all_parent_users(parent_user))
+
+    return parent_users
+

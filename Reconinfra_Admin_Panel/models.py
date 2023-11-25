@@ -193,12 +193,28 @@ class Reward(models.Model):
     business = models.IntegerField(null=True, blank=True)
     product_image = models.ImageField(upload_to='Recon/User/Reward', null=True, blank=True)
     is_lock = models.BooleanField(default=False)
-    time_limit = models.CharField(max_length=100, null=True, )
-
+    time_limit = models.CharField(max_length=100, null=True,)
+    STATUS_CHOICES = (
+        ('Lock', 'Lock'),
+        ('Unlock', 'Unlock'),
+        ('Claimed', 'Claimed'),
+    )
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Lock', null=True, blank=True)
+    
     def __str__(self):
         return f"{self.product_type} - {self.title}"
 
 
+class ClaimedReward(models.Model):
+    reward = models.ForeignKey(Reward, on_delete=models.CASCADE, null=True)
+    associate = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    claim_date = models.DateTimeField(auto_now_add=True, null=True)
+    STATUS_CHOICES = (
+        ('Requested', 'Requested'),
+        ('Transferd', 'Transferd'),
+    )
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=True, blank=True)
+    
 class PlotAvailabilities(models.Model):
     properties = models.ForeignKey(Properties, on_delete=models.CASCADE, null=True)
     PLOT_STATUS = (

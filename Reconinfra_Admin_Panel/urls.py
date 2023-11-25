@@ -2,6 +2,7 @@ from django.urls import path
 from .import views
 
 urlpatterns = [
+    
     path('', views.Admin_Panel_Home, name="admin_dashboard" ),
     path('add-property', views.AddProperties, name="AddProperties" ),
     path('property-list', views.PropertyList, name="PropertyList" ),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('add-reward', views.AddRewardView, name="AddRewardView" ),
     path('reward-list', views.RewardListView, name="RewardListView" ),
     path('associate-reward-list', views.AssociateRewardListView, name="AssociateRewardListView" ),
+    path('claim-reward', views.ClaimRewardView, name="ClaimRewardView" ),
     path('update-reward/<int:pk>', views.UpdateRewardView, name="UpdateRewardView" ),
     path('delete-reward/<int:pk>', views.DeleteRewardView, name="DeleteRewardView" ),
     path('facilitator-list', views.FacilitatorListView, name="FacilitatorListView" ),
@@ -45,4 +47,5 @@ urlpatterns = [
     path('choose-plot', views.ChoosePlot, name="ChoosePlot" ),
     path('update-plot-availability/<int:plot_id>', views.UpdatePlotAvailability, name="UpdatePlotAvailability" ),
     path('test-api', views.TestAllInOneAPI, name="TestAllInOneAPI" ),
+    path('level_up_with_teams_and_self_business', views.level_up_with_teams_and_self_business, name="level_up_with_teams_and_self_business" ),
 ]

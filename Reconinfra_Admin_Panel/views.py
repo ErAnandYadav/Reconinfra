@@ -318,30 +318,59 @@ def RewardListView(request):
         print(e)
     return render(request, "app/reward-list.html", context)
 
+from django.db.models import Sum, F
 @login_required(login_url='/accounts/auth-login/')
+
 def AssociateRewardListView(request):
     context = {}
     try:
-        balance = PlotBooking.objects.filter(associate_id= request.user.sponsor_id).exclude(booking_status ="Saved").aggregate(total_business = Sum("down_payment"))['total_business'] or 0
+        user_sponsor_id = request.user.sponsor_id
+        balance = PlotBooking.objects.filter(associate_id=user_sponsor_id).exclude(booking_status="Saved").aggregate(total_business=Sum(F("down_payment")))['total_business'] or 0
         print(balance)
+
         rewards = Reward.objects.all()
         rewards_list = []
-        for x in rewards:
+        for i in range(len(rewards) - 1):
+            rm_balance = rewards[i + 1].business - rewards[i].business
+            progress = min(round((balance / rm_balance) * 100, 2), 100)
+            print(f"Subtracting {rewards[i].business} from {rewards[i + 1].business}: Result = {rm_balance}")
+            if progress == 100 and rewards[i].status == 'Lock':
+                rewards[i].status = 'Unlock'
+                rewards[i].save()
+
             data = {
-                "title": x.title,
-                "product_type": x.product_type,
-                "description": x.description,
-                "business": x.business,
-                "product_image": x.product_image,
-                "is_lock": x.is_lock,
-                "time_limit": x.time_limit,
-                "progress": round(float(((balance) / x.business) * 100),2)
+                "id": rewards[i].id,
+                "title": rewards[i].title,
+                "product_type": rewards[i].product_type,
+                "description": rewards[i].description,
+                "business": rewards[i].business,
+                "product_image": rewards[i].product_image,
+                "is_lock": rewards[i].is_lock,
+                "status": rewards[i].status,
+                "time_limit": rewards[i].time_limit,
+                "progress": progress,
             }
             rewards_list.append(data)
+
         context['rewards'] = rewards_list
+
     except Exception as e:
         print(e)
+
     return render(request, "app/associate-reward-list.html", context)
+
+
+def ClaimRewardView(request):
+    reward_id = request.GET.get('reward_id')
+    associate = request.user
+    print(reward_id)
+    reward = Reward.objects.get(id = reward_id)
+    print(reward)
+    ClaimedReward.objects.create(reward=reward, associate=associate, status="Requested")
+    reward.is_lock = True
+    reward.status = 'Claimed'
+    reward.save()
+    return JsonResponse({'status':200})
 
 @login_required(login_url='/accounts/auth-login/')
 def UpdateRewardView(request, pk):
@@ -472,13 +501,15 @@ def AddPaymentView(request, booking_id):
         if request.method =='POST':
             status = request.POST.get('status')
             booking_id = request.POST.get('booking_id')
+            payment_method = request.POST.get('payment_method')
+            number = request.POST.get('number')
+            payment_date = request.POST.get('payment_date')
             form = AddPaymentForm(request.POST)
             if form.is_valid():
                 amount = form.cleaned_data.get('amount')
                 plots_booking = PlotBooking.objects.filter(booking_id=booking_id).first()
                 form_obj = form.save()
                 form_obj.is_paid = True
-                form_obj.booking_status = status
                 form_obj.booking_status = status
                 form_obj.save()
                 plots_booking.remaining_balance -=amount
@@ -586,7 +617,7 @@ def PlotBookingView(request):
                 booking_date = form.cleaned_data.get('booking_date')
                 booking_status = form.cleaned_data.get('booking_status')
                 cheque_number = form.cleaned_data.get('cheque_number')
-                
+
                 if booking_method == 'EMI' and booking_amount >= total_amount:
                     messages.error(request, "The booking amount must be less than the total amount.")
                     form.add_error("down_payment", "The booking amount must be less than the total amount.")
@@ -606,6 +637,7 @@ def PlotBookingView(request):
                 if booking_method =='EMI' and booking_status =='Approved':
                     EMIHistory.objects.create(booking_id=booking_id, amount=booking_amount, payment_date=booking_date, booking_status=booking_status, payment_method=payment_method, number=cheque_number, is_paid=True)
                     update_commissions(booking_id)
+                    
                          
                 if booking_method =='Full Payment' and booking_status =='Approved':
                     print("Full Payment working",booking_amount)
@@ -614,8 +646,10 @@ def PlotBookingView(request):
                 html_content = f"Dear {customerName},Your booking has been successfully Saved. Your login ID Username: {customer_username}, Password: {customer_password} and your booking ID {booking_id}Thank you for choosing Recon Group."
                 html_content2 = f"Dear random,Your booking has been successfully Saved booking id {booking_id}.Thank you for choosing Recon Group."
                 subject ="Booking Confirmation"
+                
                 send_email(html_content, subject, email)
                 send_email2(html_content2, subject, email)
+                
                 messages.success(request, "Payment Saved Successfully!")
                 return redirect('/app/booking-history')
             context['form'] = form
@@ -643,8 +677,7 @@ def UpdateSavedForm(request, booking_id):
             
             remaining_balance = form_obj.remaining_balance
             paid_amount = form_obj.down_payment
-            booked_id = form_obj.booked_id
-            print(remaining_balance, paid_amount, "545") 
+            booked_id = form_obj.booking_id
             
             associate_total_business = PlotBooking.objects.filter(associate_id=associate_id).exclude(booking_status ="Saved").aggregate(total_bisness = Sum('down_payment'))['total_bisness'] or 0
             commission_level = find_commission_level(associate_total_business)
@@ -674,7 +707,6 @@ def ViewBookingHistory(request, booking_id):
     obj = get_object_or_404(PlotBooking, pk = booking_id)
     form = PlotBookingForm(instance= obj)
     return render(request, "app/view-booking-history.html", {'form' : form})
-
 
 
 @login_required(login_url='/accounts/auth-login/')
@@ -712,7 +744,6 @@ def TreeTeamView(request):
     return render(request, 'app/team-tree-view.html')
 
 
-from django.http import JsonResponse
 def GetAllUsersView(request):
     def build_team_tree(user):
         children = CustomUser.objects.filter(referred_by_id=user.account_id)
@@ -863,10 +894,10 @@ def TeamsSizeView(request):
     return render(request, 'app/team-size.html', context)
 
 def TestAllInOneAPI(request):
+    user = request.user
     # Start counting from the request.user
-    teams_size = get_multilevel_chain_count(request.user)
-    total_team_business = get_team_business(request.user)
+    teams_size = get_multilevel_chain_count(user)
+    total_team_business = get_team_business(user)
+    level_up_with_teams_and_self_business(user)
     return JsonResponse({"status": 200, "multilevel_chain_count": teams_size, "total_team_business":total_team_business})
-
-
 
