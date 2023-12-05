@@ -1,0 +1,138 @@
+{% extends 'app/admin-base.html' %}
+{% block body %}
+{% load humanize %}
+
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        
+        <div id="kt_content_container" class="container-xxl">
+            <div class="page-header mb-4">
+				<div class="page-block">
+					<div class="row align-items-center">
+						<div class="col-md-12">
+							<div class="page-header-title">
+								<h5 class="m-b-10">Dashboard</h5>
+							</div>
+							<ul class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="/app/" class="p-1">
+										<i class="fas fa-home"></i>
+									</a>
+								</li>
+								<li class="breadcrumb-item">
+									<a href="#!">Rewards Transfer</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+            
+            <div class="card mb-5 mb-xl-8">
+                
+                <div class="card-header border-0 pt-5">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bold fs-3 mb-1">Rewards Transfer</span>
+                        
+                    </h3>
+                    
+                </div>
+                
+                
+                <div class="card-body py-3">
+                    
+                    <div class="table-responsive">
+                        
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                            
+                            <thead>
+                                <tr class="fw-bold text-muted">
+                                    
+                                    <th class="min-w-200px">Reward</th>
+                                    <th class="min-w-150px">Associates</th>
+                                    <th class="min-w-150px">Claimed Date</th>
+                                   
+                                    <!-- <th class="min-w-100px text-end">Actions</th> -->
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {% for reward in rewards %}
+                                <tr>
+                                   
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="symbol symbol-45px me-5">
+                                                <img src="{{reward.reward.product_image.url}}" alt="">
+                                            </div>
+                                            <div class="d-flex justify-content-start flex-column">
+                                                <a href="" class="text-dark fw-bold text-hover-primary fs-6">{{reward.reward.product_type}}</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        
+                                        <span class="text-muted fw-semibold text-muted d-block fs-6">{{reward.associate.first_name}} ({{reward.associate.sponsor_id}})</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted fw-semibold text-muted d-block fs-6">{{reward.claim_date|naturaltime}}</span>
+                                        
+                                    </td>
+                                    
+                                    <!-- <td>
+                                        <div class="d-flex justify-content-end flex-shrink-0">
+                                            
+                                            <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                                                <span class="svg-icon svg-icon-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16"> <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/> </svg>
+                                                </span>   
+                                            </a>
+                                            
+                                        </div>
+                                    </td> -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            
+                        </table>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+{% block js%}
+<script>
+    $(document).ready(function(){
+        $(document).on('click', '#claimReward', function(){
+            var id = $(this).attr('reward-id');
+            $.ajax({
+                url: "/app/claim-reward",
+                method: 'GET',
+                data: {
+                    "reward_id": id
+                },
+                success: function(data) {
+                    if(data.status ==200){
+
+                        alert("Reward claimed successfully");
+                        window.location.href = '/app/associate-reward-list'
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+{% endblock %}

@@ -118,16 +118,6 @@ class CustomUser(AbstractUser):
             current_user = parent
         return parent_users
     
-    
-    def get_parent_for_level_up(self):
-        parent_users = [self]
-        current_user = self
-        while current_user.referred_by:
-            parent = current_user.referred_by
-            if parent.business_level <= current_user.business_level:
-                parent_users.append(parent)
-            current_user = parent
-        return parent_users
 
     
 

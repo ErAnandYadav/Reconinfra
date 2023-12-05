@@ -118,6 +118,16 @@
                                                 
                                                 {{form.payment_date|addclass:'form-control form-control-solid'|addplaceholder:'Select Payment Date'|addid:'payment_date'}}
                                             </div>
+
+                                            <div class="d-flex flex-column mb-5 fv-row">
+                                                
+                                                <label class="required  fw-semibold mb-2" id="payment_date_label">EMI Status</label>
+                                                
+                                                <select class="form-select form-select-solid" name="emi_status" data-control="select2" data-placeholder="Select EMI Status">
+                                                    <option></option>
+                                                    <option value="Delay">Delay</option>
+                                                </select>
+                                            </div>
                                             <div class="d-flex flex-column mb-5 fv-row">
                                                 <div class="form-check form-check-custom form-check-success form-check-solid">
                                                     {{form.is_paid|addclass:'form-check-input'|addid:'is_paid'}}

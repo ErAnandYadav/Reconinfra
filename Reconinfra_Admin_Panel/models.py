@@ -74,6 +74,7 @@ class EMIHistory(models.Model):
         ('Approved', 'Approved'),
         ('Disapproved', 'Disapproved'),
     )
+    emi_status = models.CharField(max_length=100, null=True, blank=True)
     booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Saved', null=True, blank=True)
 
     def __str__(self):
@@ -132,7 +133,13 @@ class PlotBooking(models.Model):
     )
     booking_status = models.CharField(max_length=100, choices=BOOKING_STATUS, default='Saved', null=True)
     booking_date = models.CharField(max_length=100, null=True)
+    EMI_DATE = (
+        ('05', '05'),
+        ('25', '25'),
+    )
+    emi_date = models.CharField(max_length=50, choices=EMI_DATE, null=True, blank=True)
     booking_id = models.CharField(max_length=100, null=True, blank=True)
+    remark = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def save(self, *args, **kwargs):

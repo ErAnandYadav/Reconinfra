@@ -28,12 +28,13 @@ def UserRegister(request):
             aadhar_number = form.cleaned_data.get('aadhar_number')
             pan_number = form.cleaned_data.get('pan_number')
             confirm_password = request.POST.get('confirm_password')
+            print(aadhar_number)
             
-            if CustomUser.objects.filter(aadhar_number=aadhar_number).first():
+            if aadhar_number and CustomUser.objects.filter(aadhar_number=aadhar_number).first():
                 form.add_error('aadhar_number', "Aadhar number already exist")
                 return render(request, 'app/user-register.html', {'form' : form})
             
-            if CustomUser.objects.filter(pan_number=pan_number).first():
+            if pan_number and CustomUser.objects.filter(pan_number=pan_number).first():
                 form.add_error('pan_number', "PAN number already exist")
                 return render(request, 'app/user-register.html', {'form' : form})
             
@@ -76,6 +77,18 @@ def ReferralLinkView(request, sponsor_id):
             phone_number = form.cleaned_data.get("phone_number")
             password = form.cleaned_data.get('password')
             confirm_password = request.POST.get('confirm_password')
+            aadhar_number = form.cleaned_data.get('aadhar_number')
+            pan_number = form.cleaned_data.get('pan_number')
+            
+            if aadhar_number and CustomUser.objects.filter(aadhar_number=aadhar_number).first():
+                form.add_error('aadhar_number', "Aadhar number already exist")
+                return render(request, 'app/user-register.html', {'form' : form})
+            
+            if pan_number and CustomUser.objects.filter(pan_number=pan_number).first():
+                form.add_error('pan_number', "PAN number already exist")
+                return render(request, 'app/user-register.html', {'form' : form})
+            
+            
             if password != confirm_password:
                 form.add_error('password', "Password and Confirm Password does not Match")
                 return render(request, 'app/user-register.html', {'form' : form})

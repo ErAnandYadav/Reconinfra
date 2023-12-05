@@ -24,6 +24,7 @@ urlpatterns = [
     path('claim-reward', views.ClaimRewardView, name="ClaimRewardView" ),
     path('update-reward/<int:pk>', views.UpdateRewardView, name="UpdateRewardView" ),
     path('delete-reward/<int:pk>', views.DeleteRewardView, name="DeleteRewardView" ),
+    path('reward-requests', views.RewardRequestsView, name="RewardRequestsView" ),
     path('facilitator-list', views.FacilitatorListView, name="FacilitatorListView" ),
     path('transfer-request', views.TransferRequestView, name="TransferRequestView" ),
     path('transfer-request-list', views.TransferRequestListView, name="TransferRequestListView" ),

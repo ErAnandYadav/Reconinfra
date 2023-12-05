@@ -84,38 +84,49 @@ def find_commission_level(total_amount):
 
 
 
-
-def convert_into_emi(amount, booking_id, months):
+def convert_into_emi(amount, booking_id, months, booking_date, emi_date_sp):
     amount = float(amount)
     months = int(months)
     emi = round(amount / months, 2)
-    current_date = datetime.now()
+    current_date_str = str(booking_date)
+    emi_date = datetime.strptime(current_date_str, "%Y-%m-%d")
     payment_dates = []
     emi_hostory = EMIHistory.objects.filter(booking_id=booking_id).first()
     for _ in range(months):
-        next_month = current_date + timedelta(days=30)
-        while next_month.day != 5:
+        next_month = emi_date + timedelta(days=30)
+        while next_month.day != int(emi_date_sp):
             next_month += timedelta(days=1)
         payment_dates.append(next_month.strftime("%Y-%m-%d"))
-        current_date = next_month
+        emi_date = next_month
     emi_list = [{'payment_date': date, 'amount': emi, 'booking_id': booking_id} for date in payment_dates]
     print('emi_list:',emi_list)
-    # if emi_hostory:
-    #     for x in emi_list:
-    #         emi = EMIHistory(
-    #             amount= x['amount'],
-    #             payment_date= x['payment_date'],
-    #             booking_id=x['booking_id']
-    #         )
-    #         emi.save()
+    
     EMIHistory.objects.bulk_create([EMIHistory(**emi_data) for emi_data in emi_list])
 
+def generate_emi_dates(amount, months, current_date):
+    emi_dates = []
+    current_date_str = "2023-10-15"
+    start_date = datetime.strptime(current_date_str, "%Y-%m-%d")
+    # Skip the current month
+    current_month = start_date.month
+    next_month = current_month + 1
+    if next_month > 12:
+        next_month = 1
 
-# Example usage:
-# amount = 10000
-# booking_id = 12345
-# months = 12
-# convert_into_emi(amount, booking_id, months)
+    for i in range(months):
+        month = next_month + i
+        year = start_date.year
+
+        while month > 12:
+            month -= 12
+            year += 1
+
+        emi_date = datetime(year, month, start_date.day)
+        emi_dates.append(emi_date)
+    print(emi_dates)
+    for date in emi_dates:
+        print(date.strftime('%d-%m-%Y'))
+
 
 
 def amount_human_format(amount):
@@ -177,63 +188,69 @@ def commission_distribution(amount, sponsor_id):
     agent_wallet.is_active = True
     agent_wallet.save()
     
+    
     initial_total_commission = initial_total_commission - my_commission_percentage
     
     parent_users = user.get_parent_users()
+    for yx in parent_users:
+        
+        print("parent_users",yx.business_level)
+    print("my_business_level",my_business_level)
     higher_business_users = [parent for parent in parent_users if my_business_level < parent.business_level]
-    
     percentage_list = []
-    for x in higher_business_users:
-        users = CustomUser.objects.get(account_id=x.account_id)
-        parents_percentage = commission_rates.get(users.business_level, 0)
-        percentage_list.append(parents_percentage)
-    print("Percentage list:-",percentage_list)
-    
-    differences = [percentage_list[i] - percentage_list[i - 1] for i in range(1, len(percentage_list))]
-    differences = [percentage_list[0] - my_commission_percentage] + differences
-    print("Differences:-",differences)
-    
-    distributed_commission = 0
-    commissions = []
+    if higher_business_users:
+        print("higher_business_users",higher_business_users)
+        for x in higher_business_users:
+            users = CustomUser.objects.get(account_id=x.account_id)
+            parents_percentage = commission_rates.get(users.business_level, 0)
+            percentage_list.append(parents_percentage)
+        print("Percentage list:-",percentage_list)
+        
+        differences = [percentage_list[i] - percentage_list[i - 1] for i in range(1, len(percentage_list))]
+        differences = [percentage_list[0] - my_commission_percentage] + differences
+        print("Differences:-",differences)
+        
+        distributed_commission = 0
+        commissions = []
 
-    for difference in differences:
-        if distributed_commission + difference <= initial_total_commission:
-            commission = (amount * difference) / 100
-            commissions.append(round(commission, 2))
-            distributed_commission += difference
-        else:
-            # Calculate the remaining commission to reach 15%
-            remaining_commission = initial_total_commission - distributed_commission
-            commission = (amount * remaining_commission) / 100
-            commissions.append(round(commission, 2))
-            distributed_commission += remaining_commission
-            break
-    
-    for i, x in enumerate(higher_business_users):
-        if i < len(commissions):
-            user = CustomUser.objects.get(account_id=x.account_id)
-            
-            agent_wallet, created = Wallet.objects.get_or_create(associate_id=user.account_id)
-            agent_wallet.wallet_balance += Decimal(commissions[i])
-            agent_wallet.total_business += Decimal(commissions[i])
-            agent_wallet.is_active = True
-            agent_wallet.save()
+        for difference in differences:
+            if distributed_commission + difference <= initial_total_commission:
+                commission = (amount * difference) / 100
+                commissions.append(round(commission, 2))
+                distributed_commission += difference
+            else:
+                # Calculate the remaining commission to reach 15%
+                remaining_commission = initial_total_commission - distributed_commission
+                commission = (amount * remaining_commission) / 100
+                commissions.append(round(commission, 2))
+                distributed_commission += remaining_commission
+                break
+        
+        for i, x in enumerate(higher_business_users):
+            if i < len(commissions):
+                user = CustomUser.objects.get(account_id=x.account_id)
+                
+                agent_wallet, created = Wallet.objects.get_or_create(associate_id=user.account_id)
+                agent_wallet.wallet_balance += Decimal(commissions[i])
+                agent_wallet.total_business += Decimal(commissions[i])
+                agent_wallet.is_active = True
+                agent_wallet.save()
 
-            user.is_wallet_active = True
-            user.save()
-            level_up_with_teams_and_self_business(user)
-            print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
-        else:
-            print(f"Commission data not available for user {x.email}")
-    data = ({
-        "Higher Business User Level": [parent.business_level for parent in higher_business_users],
-        "percentage_list": percentage_list,
-        "differences": differences,
-        "distributed_commission": distributed_commission + my_commission_percentage,
-        "remaining_commission": initial_total_commission - distributed_commission,
-    })
-    return data
-
+                user.is_wallet_active = True
+                user.save()
+                
+                print(f"Saved {commissions[i]} commission to {user.first_name}'s wallet.")
+            else:
+                print(f"Commission data not available for user {x.email}")
+        data = ({
+            "Higher Business User Level": [parent.business_level for parent in higher_business_users],
+            "percentage_list": percentage_list,
+            "differences": differences,
+            "distributed_commission": distributed_commission + my_commission_percentage,
+            "remaining_commission": initial_total_commission - distributed_commission,
+        })
+        return data
+    print("No Hugher User")
 
 
 
@@ -268,21 +285,41 @@ def get_team_business(user):
     return total_business
 
 
-def level_up_with_teams_and_self_business(user):
+def level_up_with_teams_and_self_business(user, booked_amount):
+    print("54858347658475634876587456874")
     team_business = get_team_business(user)
+    find_level_amount = 0
     
     self_business = PlotBooking.objects.filter(associate_id=user.sponsor_id).exclude(booking_status ="Saved").aggregate(self_business=Sum('down_payment'))['self_business'] or 0
-    total_business = team_business+self_business
-    find_business_level = find_commission_level(total_business)
+    if team_business == 0 and self_business == 0:
+        find_level_amount += booked_amount
+    else:
+        find_level_amount += float(team_business)+float(self_business)
+    total_business_1 = float(team_business)+float(self_business)+float(booked_amount)
+    
     users = get_all_parent_users(user)
-    print("user", users,"total_business", total_business , "self_business", self_business)
-    print(users)
-    for user in users:
-        print(user)
-        user = CustomUser.objects.get(account_id=user.account_id)
-        user.business_level = find_business_level
-        user.save()
-    return JsonResponse({"self-business": self_business, "team_business": team_business, "total_business": total_business, 'find_business_level':find_business_level})
+    print("users", users, "self_business", self_business, 'team_business', team_business, "find_level_amount", find_level_amount, "total_business_1", total_business_1)
+    for x in users:
+         
+        team_self_business = PlotBooking.objects.filter(associate_id=x.sponsor_id).exclude(booking_status ="Saved").aggregate(self_business=Sum('down_payment'))['self_business'] or 0
+        teams_business = get_team_business(x)
+        final_teams_and_self_business = float(team_self_business) + float(teams_business)
+        find_business_level = find_commission_level(final_teams_and_self_business)
+        data = {
+            "User": x,
+            "find_business_level": find_business_level,
+            "team_self_business": team_self_business,
+            "teams_business": teams_business,
+            "final_teams_and_self_business": final_teams_and_self_business
+        }
+        print(data)
+        parent_user = CustomUser.objects.get(account_id=x.account_id)
+        
+        if find_business_level > parent_user.business_level:
+            
+            parent_user.business_level = find_business_level
+            parent_user.save()
+    return JsonResponse({"self-business": self_business, "team_business": team_business, "total_business": find_level_amount, 'find_business_level':find_business_level})
 
 
 def get_all_parent_users(user):
@@ -294,7 +331,7 @@ def get_all_parent_users(user):
     
     # If a parent user exists, add it to the set
     if parent_user:
-        if parent_user.business_level <= user.business_level:
+        if parent_user.business_level:
             print(parent_user.business_level, user.business_level)
             parent_users.add(parent_user)
             # Recursively find all parent users for the current parent user
